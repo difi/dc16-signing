@@ -14,6 +14,10 @@
     </properties>
 
     <dependencies>
-        
+        <dependency>
+            <groupId>no.digipost.signature</groupId>
+            <artifactId>signature-api-client-java</artifactId>
+            <version>1.2</version>
+        </dependency>
     </dependencies>
 </project>
