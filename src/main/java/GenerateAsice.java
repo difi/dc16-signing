@@ -15,6 +15,7 @@ import no.digipost.signature.client.core.exceptions.CertificateException;
 import no.digipost.signature.client.direct.*;
 import no.digipost.signature.client.security.KeyStoreConfig;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.batch.BatchProperties;
 
 import java.io.*;
@@ -40,25 +41,35 @@ public class GenerateAsice {
         KS.load(new FileInputStream("C:\\Users\\camp-eul\\Documents\\GitHub\\dc16-signing\\src\\main\\resources\\kontaktinfo-client-test.jks"),"changeit".toCharArray());
         System.out.println(KS.toString());
 
+        String nextAlias = KS.aliases().nextElement();
+        System.out.println(nextAlias);
+        //for (KS.aliases().nextElement(); KS.aliases().hasMoreElements();)
+        //    System.out.println(KS.aliases().nextElement());
+
+
 
 
         List<ASiCEAttachable> files = new ArrayList<>();
         CreateSignature signatureC = new CreateSignature();
         Manifest manifest = new Manifest("Example".getBytes());
+
         byte[] documentBytes = "Example".getBytes();
         this.clientConfiguration = ClientConfiguration.builder(KeyStoreConfig.fromKeyStore(new FileInputStream("C:\\Users\\camp-eul\\Documents\\GitHub\\dc16-signing\\src\\main\\resources\\kontaktinfo-client-test.jks")
-                ,"","changeit",".."))
+                ,nextAlias,"changeit","changeit"))
                 .globalSender(new Sender("123456789"))
                 .build();
-
+        System.out.println(clientConfiguration.toString());
 
         this.createASiCE = new CreateASiCE(manifestCreator,clientConfiguration);
         System.out.println(this.createASiCE.toString());
-        DirectSigner signer = DirectSigner.builder("12").build();
+        DirectSigner signer = DirectSigner.builder("12345678910").build();
+
         DirectDocument document = DirectDocument.builder("Subject", "Dokument til signering.pdf", documentBytes).build();
+
         DirectClient directClient = new DirectClient(clientConfiguration);
 
-        SignatureJob signatureJob = new DirectJob.Builder(signer,document,"","","").build();
+
+        SignatureJob signatureJob = new DirectJob.Builder(signer,document,"http://sender.org/onCompletion","http://sender.org/onRejection","http://sender.org/onError").build();
 
         DirectJobResponse directJobResponse = directClient.create((DirectJob)signatureJob);
         System.out.println(directJobResponse.getStatusUrl());
