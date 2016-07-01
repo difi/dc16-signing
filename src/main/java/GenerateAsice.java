@@ -32,13 +32,19 @@ public class GenerateAsice {
     private ClientConfiguration clientConfiguration;
     private KeyStore keyStore;
     private ManifestCreator manifestCreator = new CreateDirectManifest();
-    GenerateAsice(){};
+    private File kontaktInfoClientTest;
+
+    public GenerateAsice(){
+        ClassLoader classLoader = getClass().getClassLoader(); //Creates classLoader to load file
+        this.kontaktInfoClientTest = new File(classLoader.getResource("kontaktinfo-client-test.jks").getFile()); //Sets field kontaktInfoClientTest to file kontaktinfo-client-test.jks
+    }
+
 
     public void createAsice() throws KeyStoreException, NoSuchAlgorithmException,NoSuchProviderException, FileNotFoundException, IOException,java.security.cert.CertificateException {
         InputStream inputStream = new ByteArrayInputStream("example".getBytes());
 
         KeyStore KS = KeyStore.getInstance("JKS");
-        KS.load(new FileInputStream("C:\\Users\\camp-eul\\Documents\\GitHub\\dc16-signing\\src\\main\\resources\\kontaktinfo-client-test.jks"),"changeit".toCharArray());
+        KS.load(new FileInputStream(this.kontaktInfoClientTest),"changeit".toCharArray());
         System.out.println(KS.toString());
 
         String nextAlias = KS.aliases().nextElement();
@@ -54,7 +60,7 @@ public class GenerateAsice {
         Manifest manifest = new Manifest("Example".getBytes());
 
         byte[] documentBytes = "Example".getBytes();
-        this.clientConfiguration = ClientConfiguration.builder(KeyStoreConfig.fromKeyStore(new FileInputStream("C:\\Users\\camp-eul\\Documents\\GitHub\\dc16-signing\\src\\main\\resources\\kontaktinfo-client-test.jks")
+        this.clientConfiguration = ClientConfiguration.builder(KeyStoreConfig.fromKeyStore(new FileInputStream(this.kontaktInfoClientTest)
                 ,nextAlias,"changeit","changeit"))
                 .globalSender(new Sender("123456789"))
                 .build();
