@@ -13,12 +13,12 @@ public class GenerateAsice {
     public Document document;
     public DocumentBundle documentPackage;
     public DirectDocument doc;
-    public ClientConfiguration client;
+    //public ClientConfiguration client;
 
     public GenerateAsice (){
-        manifest = new createManifest(job, sender);
+        //manifest = new createManifest(job, sender);
 
-        document = new CreateASiCE(manifest, client);
+        //document = new CreateASiCE(manifest, client);
 
     }
 }

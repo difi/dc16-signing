@@ -67,6 +67,11 @@ public class GenerateAsice {
         DocumentBundle asice = createASiCE.createASiCE(signatureJob);
         dumper(asice,signatureJob);
 
+        DirectClient directClient = new DirectClient(clientConfiguration);
+
+        directClient.create((DirectJob)signatureJob);
+
+
 
         return asice;
     }
