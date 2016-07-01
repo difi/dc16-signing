@@ -14,17 +14,34 @@ import java.security.*;
 
 public class GenerateAsice {
 
-
     private CreateASiCE createASiCE;
     private ClientConfiguration clientConfiguration;
     private KeyStore keyStore;
     private KeyStoreConfig keyStoreConfig;
     private ManifestCreator manifestCreator = new CreateDirectManifest();
     private File kontaktInfoClientTest;
+    private File dokumentTilSignering;
 
     public GenerateAsice(){
         ClassLoader classLoader = getClass().getClassLoader(); //Creates classLoader to load file
         this.kontaktInfoClientTest = new File(classLoader.getResource("kontaktinfo-client-test.jks").getFile()); //Sets field kontaktInfoClientTest to file kontaktinfo-client-test.jks
+        this.dokumentTilSignering = new File(classLoader.getResource("Dokument til signering.pdf").getFile());
+
+    }
+
+    /**
+     *
+     * @return StringBuilder-object which is used to find the path to "dokumentTilSignering"
+     */
+    public StringBuilder setAbsolutePathToPDF(){
+        StringBuilder stringBuilder = new StringBuilder(this.dokumentTilSignering.getAbsolutePath());
+
+        for(int i=0; i < stringBuilder.length(); i++){
+            if(stringBuilder.charAt(i) == '%'){
+                stringBuilder.replace(i, i+3, " ");
+            }
+        }
+        return stringBuilder;
     }
 
     public void setupKeystoreConfig(){
@@ -58,10 +75,11 @@ public class GenerateAsice {
                 .globalSender(new Sender("123456789"))
                 .build();
 
+        String getPDFPath = this.setAbsolutePathToPDF().toString();
         this.createASiCE = new CreateASiCE(manifestCreator,clientConfiguration);
 
         DirectSigner signer = DirectSigner.builder("12345678910").build();
-        DirectDocument document = pdfToDocument("C:\\Users\\camp-eul\\Documents\\GitHub\\dc16-signing\\src\\main\\resources\\Dokument til signering.pdf");
+        DirectDocument document = pdfToDocument(getPDFPath);
         SignatureJob signatureJob = new DirectJob.Builder(signer,document,"http://sender.org/onCompletion","http://sender.org/onRejection","http://sender.org/onError").build();
 
         DocumentBundle asice = createASiCE.createASiCE(signatureJob);
@@ -89,6 +107,7 @@ public class GenerateAsice {
         dumper.process(signatureJob,asiceInputStream);
 
     }
+
 
     public static void main(String[] args) throws KeyStoreException, java.security.cert.CertificateException, NoSuchAlgorithmException, NoSuchProviderException, IOException {
         GenerateAsice generateAsice = new GenerateAsice();
