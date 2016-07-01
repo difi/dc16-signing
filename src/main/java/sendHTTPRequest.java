@@ -48,7 +48,7 @@ public class SendHTTPRequest {
 
             DirectClient directClient = new DirectClient(client);
 
-        DirectJobResponse directJobResponse = directClient.create((DirectJob)signatureJob);
+            DirectJobResponse directJobResponse = directClient.create((DirectJob)signatureJob);
         }
     }
 
