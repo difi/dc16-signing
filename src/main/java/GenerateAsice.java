@@ -86,6 +86,9 @@ public class GenerateAsice {
 
         return asice;
     }
+    public KeyStoreConfig getKeyStoreConfig(){
+        return this.keyStoreConfig;
+    }
 
     public SignatureJob getSignatureJob(){
         return this.signatureJob;
@@ -119,8 +122,12 @@ public class GenerateAsice {
 
         CreateRequest createRequest = new CreateRequest();
         SignatureJob signatureJob = generateAsice.getSignatureJob();
-        createRequest.configure(generateAsice.getDirectClient());
-        createRequest.sendRequest(signatureJob);
+        //createRequest.configure(generateAsice.getDirectClient());
+       // createRequest.sendRequest(signatureJob);
+
+        KeyStoreConfig keyStoreConfig = generateAsice.getKeyStoreConfig();
+        SendHTTPRequest sendHTTPRequest = new SendHTTPRequest();
+        sendHTTPRequest.sendRequest(signatureJob, keyStoreConfig);
 
     }
 
