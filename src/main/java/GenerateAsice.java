@@ -1,3 +1,4 @@
+import com.google.common.io.ByteStreams;
 import no.digipost.signature.client.ClientConfiguration;
 import no.digipost.signature.client.asice.*;
 import no.digipost.signature.client.asice.manifest.CreateDirectManifest;
@@ -21,34 +22,33 @@ public class GenerateAsice {
     private KeyStoreConfig keyStoreConfig;
     private ManifestCreator manifestCreator = new CreateDirectManifest();
     private File kontaktInfoClientTest;
+    private SignatureJob signatureJob;
+
 
     public GenerateAsice(){
         ClassLoader classLoader = getClass().getClassLoader(); //Creates classLoader to load file
         this.kontaktInfoClientTest = new File(classLoader.getResource("kontaktinfo-client-test.jks").getFile()); //Sets field kontaktInfoClientTest to file kontaktinfo-client-test.jks
     }
 
+    /**
+     * Setups the keystore and keystoreconfig
+     */
     public void setupKeystoreConfig(){
         try {
             this.keyStore = KeyStore.getInstance("JKS");
             this.keyStore.load((new FileInputStream(this.kontaktInfoClientTest)),"changeit".toCharArray());
             this.keyStoreConfig = KeyStoreConfig.fromKeyStore(new FileInputStream(this.kontaktInfoClientTest)
                     ,keyStore.aliases().nextElement(),"changeit","changeit");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public DirectDocument pdfToDocument(String pdfPath) {
-
-        byte[] pdfBytes = new byte[(int)pdfPath.length()];
-        try {
-            new DataInputStream(new FileInputStream(pdfPath)).readFully(pdfBytes);
-            DirectDocument document = DirectDocument.builder("Subject", "Dokument til signering.pdf", pdfBytes).build();
-            return document;
-        } catch (IOException e) {
-            e.printStackTrace();
+    public DirectDocument pdfToDocument(String pdfPath) throws IOException {
+        try (FileInputStream inputStream = new FileInputStream(pdfPath)) {
+            return DirectDocument.builder("Subject", "document.pdf", ByteStreams.toByteArray(inputStream)).build();
         }
-        return null;
     }
 
     public DocumentBundle createAsice() throws KeyStoreException, NoSuchAlgorithmException,NoSuchProviderException, FileNotFoundException, IOException,java.security.cert.CertificateException {
@@ -62,18 +62,20 @@ public class GenerateAsice {
 
         DirectSigner signer = DirectSigner.builder("12345678910").build();
         DirectDocument document = pdfToDocument("C:\\Users\\camp-eul\\Documents\\GitHub\\dc16-signing\\src\\main\\resources\\Dokument til signering.pdf");
-        SignatureJob signatureJob = new DirectJob.Builder(signer,document,"http://sender.org/onCompletion","http://sender.org/onRejection","http://sender.org/onError").build();
-
+        this.signatureJob = new DirectJob.Builder(signer,document,"http://sender.org/onCompletion","http://sender.org/onRejection","http://sender.org/onError").build();
         DocumentBundle asice = createASiCE.createASiCE(signatureJob);
         dumper(asice,signatureJob);
 
-        DirectClient directClient = new DirectClient(clientConfiguration);
-
-        directClient.create((DirectJob)signatureJob);
-
-
-
         return asice;
+    }
+
+    public SignatureJob getSignatureJob(){
+        return this.signatureJob;
+    }
+
+    public DirectClient getDirectClient(){
+        DirectClient directClient = new DirectClient(this.clientConfiguration);
+        return directClient;
     }
 
     /**
@@ -95,6 +97,11 @@ public class GenerateAsice {
         generateAsice.setupKeystoreConfig();
 
         generateAsice.createAsice();
+
+        CreateRequest createRequest = new CreateRequest();
+        SignatureJob signatureJob = generateAsice.getSignatureJob();
+        createRequest.configure(generateAsice.getDirectClient());
+        createRequest.sendRequest(signatureJob);
 
     }
 
