@@ -1,11 +1,7 @@
-import no.digipost.signature.api.xml.thirdparty.asice.ASiCManifest;
 import no.digipost.signature.client.ClientConfiguration;
 import no.digipost.signature.client.asice.*;
-import no.digipost.signature.client.asice.archive.CreateZip;
 import no.digipost.signature.client.asice.manifest.CreateDirectManifest;
-import no.digipost.signature.client.asice.manifest.Manifest;
 import no.digipost.signature.client.asice.manifest.ManifestCreator;
-import no.digipost.signature.client.asice.signature.*;
 import no.digipost.signature.client.core.Sender;
 import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.direct.*;
@@ -15,33 +11,27 @@ import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.security.*;
-import java.security.Signature;
-import java.security.cert.CertificateException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
-import static no.motif.Strings.bytes;
 
 public class GenerateAsice {
 
 
     private CreateASiCE createASiCE;
-    private Manifest manifest;
-    private Signature signature;
     private ClientConfiguration clientConfiguration;
     private KeyStore keyStore;
     private KeyStoreConfig keyStoreConfig;
     private ManifestCreator manifestCreator = new CreateDirectManifest();
-    List<ASiCEAttachable> files = new ArrayList<>();
+    private File kontaktInfoClientTest;
 
-    GenerateAsice(){};
+    public GenerateAsice(){
+        ClassLoader classLoader = getClass().getClassLoader(); //Creates classLoader to load file
+        this.kontaktInfoClientTest = new File(classLoader.getResource("kontaktinfo-client-test.jks").getFile()); //Sets field kontaktInfoClientTest to file kontaktinfo-client-test.jks
+    }
 
     public void setupKeystoreConfig(){
         try {
             this.keyStore = KeyStore.getInstance("JKS");
-            this.keyStore.load(new FileInputStream("C:\\Users\\camp-eul\\Documents\\GitHub\\dc16-signing\\src\\main\\resources\\kontaktinfo-client-test.jks"),"changeit".toCharArray());
-            this.keyStoreConfig = KeyStoreConfig.fromKeyStore(new FileInputStream("C:\\Users\\camp-eul\\Documents\\GitHub\\dc16-signing\\src\\main\\resources\\kontaktinfo-client-test.jks")
+            this.keyStore.load((new FileInputStream(this.kontaktInfoClientTest)),"changeit".toCharArray());
+            this.keyStoreConfig = KeyStoreConfig.fromKeyStore(new FileInputStream(this.kontaktInfoClientTest)
                     ,keyStore.aliases().nextElement(),"changeit","changeit");
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,8 +48,9 @@ public class GenerateAsice {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        return null;
     }
+
     public DocumentBundle createAsice() throws KeyStoreException, NoSuchAlgorithmException,NoSuchProviderException, FileNotFoundException, IOException,java.security.cert.CertificateException {
 
 
@@ -101,9 +92,5 @@ public class GenerateAsice {
         generateAsice.createAsice();
 
     }
-
-
-
-
 
 }
