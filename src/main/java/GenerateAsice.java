@@ -61,12 +61,21 @@ public class GenerateAsice {
         }
     }
 
+    /**
+     * Returns a DirectDocument from a given pdf
+     * @param pdfPath Path to pdf
+
+     */
     public DirectDocument pdfToDocument(String pdfPath) throws IOException {
         try (FileInputStream inputStream = new FileInputStream(pdfPath)) {
             return DirectDocument.builder("Subject", "document.pdf", ByteStreams.toByteArray(inputStream)).build();
         }
     }
 
+    /**
+     * Creates an asice package. Uses current keystore and a hardcoded document.
+     * @return
+     */
     public DocumentBundle createAsice() throws KeyStoreException, NoSuchAlgorithmException,NoSuchProviderException, FileNotFoundException, IOException,java.security.cert.CertificateException {
 
 
@@ -122,10 +131,8 @@ public class GenerateAsice {
 
         CreateRequest createRequest = new CreateRequest();
         SignatureJob signatureJob = generateAsice.getSignatureJob();
-        //createRequest.configure(generateAsice.getDirectClient());
-       // createRequest.sendRequest(signatureJob);
-
         KeyStoreConfig keyStoreConfig = generateAsice.getKeyStoreConfig();
+
         SendHTTPRequest sendHTTPRequest = new SendHTTPRequest();
         sendHTTPRequest.sendRequest(signatureJob, keyStoreConfig);
 
