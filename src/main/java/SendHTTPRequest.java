@@ -1,3 +1,4 @@
+import no.digipost.signature.client.Certificates;
 import no.digipost.signature.client.ClientConfiguration;
 import no.digipost.signature.client.ServiceUri;
 import no.digipost.signature.client.core.Sender;
@@ -28,27 +29,31 @@ public class SendHTTPRequest {
 
     }
 
-    public void sendRequest(SignatureJob signatureJob, KeyStoreConfig keyStoreConfig) throws IOException {
-            HttpClient httpClient = HttpClients.createDefault();
 
-            HttpEntity entity = MultipartEntityBuilder
-                    .create()
-                    .addBinaryBody("upload_file", new File("C:\\Users\\camp-mlo\\Documents\\GitHub\\dc16-signing\\20160701121759923-asice.zip"), ContentType.create("application/octet-stream"), "C:\\Users\\camp-mlo\\Documents\\GitHub\\dc16-signing\\20160701121759923-asice.zip")
-                    .build();
+        /**
+         *     Sends a request to difi_test based on a signaturejob and a keyconfig.
+         */
+        public boolean sendRequest(SignatureJob signatureJob, KeyStoreConfig keyStoreConfig) {
 
-            HttpPost httpPost = new HttpPost(ServiceUri.DIFI_TEST.toString());
-            httpPost.setEntity(entity);
-            //HttpResponse response = httpClient.execute(httpPost);
-            //HttpEntity result = response.getEntity();
-
+            //Both the serviceUri and the truststore are taken from the api library signature-api-client-java
             client = ClientConfiguration.builder(keyStoreConfig)
                     .serviceUri(ServiceUri.DIFI_TEST)
-                    .globalSender(new Sender("123456789"))
+                    .trustStore(Certificates.TEST)
+                    .globalSender(new Sender("991825827"))
                     .build();
 
             DirectClient directClient = new DirectClient(client);
 
             DirectJobResponse directJobResponse = directClient.create((DirectJob)signatureJob);
+
+            //Test statements
+            System.out.println(directJobResponse.getRedirectUrl().toString());
+            System.out.println(directJobResponse.getStatusUrl().toString());
+            if(directJobResponse != null){
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
