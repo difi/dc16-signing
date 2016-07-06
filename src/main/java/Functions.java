@@ -120,7 +120,7 @@ public class Functions {
     }
 
     //Returnes the URL which can be used to check if the whole process went well
-    @RequestMapping("/returnCOnfirmationURL")
+    @RequestMapping("/returnConfirmationURL")
     public URL returnConfirmationURL(){
         return this.confirmationURL;
     }
