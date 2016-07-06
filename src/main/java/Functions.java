@@ -37,8 +37,10 @@ public class Functions {
 
     //If we had a user who clicked "start signing", a jobRequestURL would be posted in the back-end to start the signing process
     @RequestMapping("/")
-    public void postJobRequestURL(){
-
+    public File postJobRequestURL(){
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("documents//static//index.html").getFile());
+        return file;
     }
 
 
@@ -71,10 +73,11 @@ public class Functions {
         return status;
     }
 
-    @RequestMapping("/onRejection?")
+    @RequestMapping("/onRejection")
     public String whenUserRejects(@RequestParam("status_query_token") String token){
         String status = sendHTTPRequest.checkStatus();
         return status;
+        //Returnerer statusChange.toString()
     }
 
     //In order to get to the sign-in portal, such as BankID, the user needs a redirect-url and a valid token. This method checks if the token is valid
