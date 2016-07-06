@@ -103,13 +103,16 @@ public class GenerateAsice {
         return this.signatureJob;
     }
 
+    /**
+     * Makes a new client from an existing configuration.
+     */
     public DirectClient getDirectClient(){
         DirectClient directClient = new DirectClient(this.clientConfiguration);
         return directClient;
     }
 
     /**
-     * Dumps a zip file of the document bundle to disk.
+     * Dumps a zip file of the document bundle to disk. Only for testing purposes, not used for anything.
      * @param documentBundle
      * @param signatureJob
      * @throws IOException
@@ -122,21 +125,20 @@ public class GenerateAsice {
 
     }
 
-
+    /**
+     * Main method for testing without using spring boot.
+     * @param args
+     */
     public static void main(String[] args) throws KeyStoreException, java.security.cert.CertificateException, NoSuchAlgorithmException, NoSuchProviderException, IOException {
         GenerateAsice generateAsice = new GenerateAsice();
         generateAsice.setupKeystoreConfig();
-
         generateAsice.createAsice();
-
-        CreateRequest createRequest = new CreateRequest();
         SignatureJob signatureJob = generateAsice.getSignatureJob();
         KeyStoreConfig keyStoreConfig = generateAsice.getKeyStoreConfig();
-
         SendHTTPRequest sendHTTPRequest = new SendHTTPRequest();
         sendHTTPRequest.sendRequest(signatureJob, keyStoreConfig);
 
-        //Ta tak i redirec-url, sett det i Spring
+        //Ta tak i redirect-url, sett det i Spring
     }
 
 }
