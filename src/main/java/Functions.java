@@ -1,13 +1,27 @@
+import no.digipost.signature.client.core.SignatureJob;
+import no.digipost.signature.client.direct.DirectJobStatusResponse;
+import no.digipost.signature.client.security.KeyStoreConfig;
 import org.hibernate.validator.constraints.URL;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
+import java.io.IOException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.cert.CertificateException;
 
 /**
  * This class is a sceleton for the signin-flow.
  *
  */
-
+@RestController
+@EnableAutoConfiguration
 
 public class Functions {
 
@@ -19,10 +33,48 @@ public class Functions {
     private File completionDocument; //Stores the signed document
     private URL confirmationURL; //called in the very end to check if the whole signing process went as planned
 
+    private SendHTTPRequest sendHTTPRequest;
+
     //If we had a user who clicked "start signing", a jobRequestURL would be posted in the back-end to start the signing process
     @RequestMapping("/")
     public void postJobRequestURL(){
 
+    }
+
+
+    @RequestMapping("/asice")
+    public ModelAndView makeAsice() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
+        GenerateAsice generateAsice = new GenerateAsice();
+        generateAsice.setupKeystoreConfig();
+        generateAsice.createAsice();
+
+        SignatureJob signatureJob = generateAsice.getSignatureJob();
+        KeyStoreConfig keyStoreConfig = generateAsice.getKeyStoreConfig();
+
+        this.sendHTTPRequest = new SendHTTPRequest();
+        sendHTTPRequest.sendRequest(signatureJob,keyStoreConfig);
+
+
+        return new ModelAndView("redirect:" + sendHTTPRequest.getRedirectUrl());
+
+
+    }
+
+    @RequestMapping("/onCompletion")
+    public void whenSigningComplete(){
+
+    }
+
+    @RequestMapping("/onError")
+    public String whenSigningFails(){
+        String status = sendHTTPRequest.checkStatus();
+        return status;
+    }
+
+    @RequestMapping("/onRejection?")
+    public String whenUserRejects(@RequestParam("status_query_token") String token){
+        String status = sendHTTPRequest.checkStatus();
+        return status;
     }
 
     //In order to get to the sign-in portal, such as BankID, the user needs a redirect-url and a valid token. This method checks if the token is valid
@@ -69,6 +121,10 @@ public class Functions {
     @RequestMapping("/returnCOnfirmationURL")
     public URL returnConfirmationURL(){
         return this.confirmationURL;
+    }
+
+    public static void main(String[] args) throws Exception {
+        SpringApplication.run(Functions.class, args);
     }
 
 }

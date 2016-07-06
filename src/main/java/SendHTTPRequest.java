@@ -6,6 +6,7 @@ import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.direct.DirectClient;
 import no.digipost.signature.client.direct.DirectJob;
 import no.digipost.signature.client.direct.DirectJobResponse;
+import no.digipost.signature.client.direct.DirectJobStatusResponse;
 import no.digipost.signature.client.security.KeyStoreConfig;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -24,12 +25,25 @@ import java.io.IOException;
 public class SendHTTPRequest {
     private File filePath;
     private ClientConfiguration client;
-
+    private String redirectUrl;
+    private String statusUrl;
+    private DirectJobResponse directJobResponse;
+    private DirectClient directClient;
     public SendHTTPRequest() throws IOException {
 
     }
+        public String checkStatus(){
+            String statusUrl = directJobResponse.getStatusUrl().toString();
+            DirectJobStatusResponse statusChange = directClient.getStatusChange();
+            System.out.println(statusChange.toString());
+            System.out.println(statusChange.getpAdESUrl());
+            System.out.println(statusChange.getxAdESUrl());
+            return statusChange.toString();
+        }
 
-
+        public String getRedirectUrl(){
+            return this.redirectUrl;
+        }
         /**
          *     Sends a request to difi_test based on a signaturejob and a keyconfig.
          */
@@ -42,13 +56,18 @@ public class SendHTTPRequest {
                     .globalSender(new Sender("991825827"))
                     .build();
 
-            DirectClient directClient = new DirectClient(client);
+            this.directClient = new DirectClient(client);
 
-            DirectJobResponse directJobResponse = directClient.create((DirectJob)signatureJob);
+            this.directJobResponse = directClient.create((DirectJob)signatureJob);
+
+            this.redirectUrl = directJobResponse.getRedirectUrl().toString();
+            this.statusUrl = directJobResponse.getStatusUrl().toString();
 
             //Test statements
             System.out.println(directJobResponse.getRedirectUrl().toString());
             System.out.println(directJobResponse.getStatusUrl().toString());
+
+
             if(directJobResponse != null){
                 return true;
             } else {

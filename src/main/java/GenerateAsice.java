@@ -88,7 +88,7 @@ public class GenerateAsice {
 
         DirectSigner signer = DirectSigner.builder("12345678910").build();
         DirectDocument document = pdfToDocument(getPDFPath);
-        this.signatureJob = new DirectJob.Builder(signer,document,"http://sender.org/onCompletion","http://sender.org/onRejection","http://sender.org/onError").build();
+        this.signatureJob = new DirectJob.Builder(signer,document,"http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError").build();
 
         DocumentBundle asice = createASiCE.createASiCE(signatureJob);
        // dumper(asice,signatureJob);
@@ -136,6 +136,7 @@ public class GenerateAsice {
         SendHTTPRequest sendHTTPRequest = new SendHTTPRequest();
         sendHTTPRequest.sendRequest(signatureJob, keyStoreConfig);
 
+        //Ta tak i redirec-url, sett det i Spring
     }
 
 }
