@@ -4,6 +4,7 @@ import no.digipost.signature.client.security.KeyStoreConfig;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +23,8 @@ import java.security.cert.CertificateException;
  */
 @RestController
 @EnableAutoConfiguration
+@Controller
+
 
 public class Functions {
 
@@ -37,10 +40,8 @@ public class Functions {
 
     //If we had a user who clicked "start signing", a jobRequestURL would be posted in the back-end to start the signing process
     @RequestMapping("/")
-    public File postJobRequestURL(){
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("documents//static//index.html").getFile());
-        return file;
+    public String getHomePage(){
+        return "index";
     }
 
 
