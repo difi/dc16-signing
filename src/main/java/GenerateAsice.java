@@ -27,7 +27,7 @@ public class GenerateAsice {
     public GenerateAsice(){
         ClassLoader classLoader = getClass().getClassLoader(); //Creates classLoader to load file
         this.kontaktInfoClientTest = new File(classLoader.getResource("kontaktinfo-client-test.jks").getFile()); //Sets field kontaktInfoClientTest to file kontaktinfo-client-test.jks
-        this.dokumentTilSignering = new File(classLoader.getResource("Dokument til signering.pdf").getFile());
+        this.dokumentTilSignering = new File(classLoader.getResource("Documents//Dokument til signering 3.pdf").getFile());
 
     }
 
@@ -91,7 +91,7 @@ public class GenerateAsice {
         this.signatureJob = new DirectJob.Builder(signer,document,"http://sender.org/onCompletion","http://sender.org/onRejection","http://sender.org/onError").build();
 
         DocumentBundle asice = createASiCE.createASiCE(signatureJob);
-        dumper(asice,signatureJob);
+       // dumper(asice,signatureJob);
 
         return asice;
     }
