@@ -32,6 +32,11 @@ public class SendHTTPRequest {
     public SendHTTPRequest() throws IOException {
 
     }
+
+    /**
+     * Check the status of a job. Currently just prints out information regarding the job.
+     * @return
+     */
         public String checkStatus(){
             String statusUrl = directJobResponse.getStatusUrl().toString();
             DirectJobStatusResponse statusChange = directClient.getStatusChange();
@@ -46,10 +51,11 @@ public class SendHTTPRequest {
         }
         /**
          *     Sends a request to difi_test based on a signaturejob and a keyconfig.
+         *     Returns false if no response was received, true otherwise.
          */
         public boolean sendRequest(SignatureJob signatureJob, KeyStoreConfig keyStoreConfig) {
 
-            //Both the serviceUri and the truststore are taken from the api library signature-api-client-java
+            //Both the serviceUri and the truststore are constants taken from the api library signature-api-client-java
             client = ClientConfiguration.builder(keyStoreConfig)
                     .serviceUri(ServiceUri.DIFI_TEST)
                     .trustStore(Certificates.TEST)
@@ -57,16 +63,9 @@ public class SendHTTPRequest {
                     .build();
 
             this.directClient = new DirectClient(client);
-
             this.directJobResponse = directClient.create((DirectJob)signatureJob);
-
             this.redirectUrl = directJobResponse.getRedirectUrl().toString();
             this.statusUrl = directJobResponse.getStatusUrl().toString();
-
-            //Test statements
-            System.out.println(directJobResponse.getRedirectUrl().toString());
-            System.out.println(directJobResponse.getStatusUrl().toString());
-
 
             if(directJobResponse != null){
                 return true;
