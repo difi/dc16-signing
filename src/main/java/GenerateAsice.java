@@ -3,6 +3,7 @@ import no.digipost.signature.client.ClientConfiguration;
 import no.digipost.signature.client.asice.*;
 import no.digipost.signature.client.asice.manifest.CreateDirectManifest;
 import no.digipost.signature.client.asice.manifest.ManifestCreator;
+import no.digipost.signature.client.core.Document;
 import no.digipost.signature.client.core.Sender;
 import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.direct.*;
@@ -11,7 +12,10 @@ import no.digipost.signature.client.security.KeyStoreConfig;
 import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.security.*;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 
 public class GenerateAsice {
 
@@ -23,11 +27,26 @@ public class GenerateAsice {
     private File kontaktInfoClientTest;
     private SignatureJob signatureJob;
     private File dokumentTilSignering;
+    private Document documentToBeSigned;
+    private String relativeDocumentPath ="Documents//Dokument til signering 3.pdf";
 
     public GenerateAsice(){
-        ClassLoader classLoader = getClass().getClassLoader(); //Creates classLoader to load file
-        this.kontaktInfoClientTest = new File(classLoader.getResource("kontaktinfo-client-test.jks").getFile()); //Sets field kontaktInfoClientTest to file kontaktinfo-client-test.jks
-        this.dokumentTilSignering = new File(classLoader.getResource("Documents//Dokument til signering 3.pdf").getFile());
+        //Creates classLoader to load file
+        ClassLoader classLoader = getClass().getClassLoader();
+        //Sets field kontaktInfoClientTest to file kontaktinfo-client-test.jks
+        kontaktInfoClientTest = new File(classLoader.getResource("kontaktinfo-client-test.jks").getFile());
+        //Sets the document for signing //TODO: Set through a config file?
+        dokumentTilSignering = new File(classLoader.getResource(relativeDocumentPath).getFile());
+
+    }
+
+    public GenerateAsice(String relativeDocumentPath){
+        //Creates classLoader to load file
+        ClassLoader classLoader = getClass().getClassLoader();
+        //Sets field kontaktInfoClientTest to file kontaktinfo-client-test.jks
+        kontaktInfoClientTest = new File(classLoader.getResource("kontaktinfo-client-test.jks").getFile());
+        //Sets the document for signing //TODO: Set through a config file?
+        dokumentTilSignering = new File(classLoader.getResource(relativeDocumentPath).getFile());
 
     }
 
@@ -35,8 +54,8 @@ public class GenerateAsice {
      *
      * @return StringBuilder-object which is used to find the path to "dokumentTilSignering"
      */
-    public StringBuilder setAbsolutePathToPDF(){
-        StringBuilder stringBuilder = new StringBuilder(this.dokumentTilSignering.getAbsolutePath());
+    public StringBuilder setAbsolutePathToPDF(File dokumentTilSignering){
+        StringBuilder stringBuilder = new StringBuilder(dokumentTilSignering.getAbsolutePath());
 
         for(int i=0; i < stringBuilder.length(); i++){
             if(stringBuilder.charAt(i) == '%'){
@@ -51,9 +70,9 @@ public class GenerateAsice {
      */
     public void setupKeystoreConfig(){
         try {
-            this.keyStore = KeyStore.getInstance("JKS");
-            this.keyStore.load((new FileInputStream(this.kontaktInfoClientTest)),"changeit".toCharArray());
-            this.keyStoreConfig = KeyStoreConfig.fromKeyStore(new FileInputStream(this.kontaktInfoClientTest)
+            keyStore = KeyStore.getInstance("JKS");
+            keyStore.load((new FileInputStream(kontaktInfoClientTest)),"changeit".toCharArray());
+            keyStoreConfig = KeyStoreConfig.fromKeyStore(new FileInputStream(kontaktInfoClientTest)
                     ,keyStore.aliases().nextElement(),"changeit","changeit");
 
         } catch (Exception e) {
@@ -76,25 +95,34 @@ public class GenerateAsice {
      * Creates an asice package. Uses current keystore and a hardcoded document.
      * @return
      */
-    public DocumentBundle createAsice() throws KeyStoreException, NoSuchAlgorithmException,NoSuchProviderException, FileNotFoundException, IOException,java.security.cert.CertificateException {
+    public DocumentBundle createAsice(String signerId, String[] exitUrls) throws KeyStoreException, NoSuchAlgorithmException,NoSuchProviderException, FileNotFoundException, IOException,java.security.cert.CertificateException {
 
-
-        this.clientConfiguration = ClientConfiguration.builder(keyStoreConfig)
+        //Creates a client configuration
+        clientConfiguration = ClientConfiguration.builder(keyStoreConfig)
                 .globalSender(new Sender("123456789"))
                 .build();
 
-        String getPDFPath = this.setAbsolutePathToPDF().toString();
-        this.createASiCE = new CreateASiCE(manifestCreator,clientConfiguration);
+        String PDFPath = this.setAbsolutePathToPDF(dokumentTilSignering).toString();
 
-        DirectSigner signer = DirectSigner.builder("17079493538").build();
-        DirectDocument document = pdfToDocument(getPDFPath);
-        this.signatureJob = new DirectJob.Builder(signer,document,"http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError").build();
+        //Initializes an asic creator with the configuration and the standard manifestCreator.
+        createASiCE = new CreateASiCE(manifestCreator,clientConfiguration);
 
+        //
+        DirectSigner signer = createDirectSigner(signerId);
+        DirectDocument document = pdfToDocument(PDFPath);
+        signatureJob = createSignatureJob(signer,document,exitUrls);
         DocumentBundle asice = createASiCE.createASiCE(signatureJob);
-       // dumper(asice,signatureJob);
-
         return asice;
     }
+
+    public DirectSigner createDirectSigner(String signerId){
+        return DirectSigner.builder(signerId).build();
+    }
+
+    public SignatureJob createSignatureJob(DirectSigner signer, DirectDocument document, String[] exitUrls){
+        return new DirectJob.Builder(signer,document,exitUrls[0],exitUrls[1],exitUrls[2]).build();
+    }
+
     public KeyStoreConfig getKeyStoreConfig(){
         return this.keyStoreConfig;
     }
@@ -103,42 +131,15 @@ public class GenerateAsice {
         return this.signatureJob;
     }
 
+    public Document getDocument(){
+
+    }
+
     /**
-     * Makes a new client from an existing configuration.
+     * Makes a new client from an existing configuration and returns it.
      */
     public DirectClient getDirectClient(){
-        DirectClient directClient = new DirectClient(this.clientConfiguration);
         return directClient;
-    }
-
-    /**
-     * Dumps a zip file of the document bundle to disk. Only for testing purposes, not used for anything.
-     * @param documentBundle
-     * @param signatureJob
-     * @throws IOException
-     */
-    public void dumper(DocumentBundle documentBundle, SignatureJob signatureJob) throws IOException {
-        Path path = FileSystems.getDefault().getPath("","");
-        DumpDocumentBundleToDisk dumper = new DumpDocumentBundleToDisk(path);
-        InputStream asiceInputStream = documentBundle.getInputStream();
-        dumper.process(signatureJob,asiceInputStream);
-
-    }
-
-    /**
-     * Main method for testing without using spring boot.
-     * @param args
-     */
-    public static void main(String[] args) throws KeyStoreException, java.security.cert.CertificateException, NoSuchAlgorithmException, NoSuchProviderException, IOException {
-        GenerateAsice generateAsice = new GenerateAsice();
-        generateAsice.setupKeystoreConfig();
-        generateAsice.createAsice();
-        SignatureJob signatureJob = generateAsice.getSignatureJob();
-        KeyStoreConfig keyStoreConfig = generateAsice.getKeyStoreConfig();
-        SendHTTPRequest sendHTTPRequest = new SendHTTPRequest();
-        sendHTTPRequest.sendRequest(signatureJob, keyStoreConfig);
-
-        //Ta tak i redirect-url, sett det i Spring
     }
 
 }

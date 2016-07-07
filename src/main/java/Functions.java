@@ -75,8 +75,9 @@ public class Functions {
      * as a query parameter. TODO: Find out what else it should do.
      */
     @RequestMapping("/onCompletion")
-    public void whenSigningComplete(){
-
+    public String whenSigningComplete(){
+        String status = sendHTTPRequest.checkStatus();
+        return status;
     }
 
     @RequestMapping("/onError")
