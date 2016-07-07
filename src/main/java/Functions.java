@@ -39,10 +39,10 @@ public class Functions {
     private SendHTTPRequest sendHTTPRequest;
 
     //If we had a user who clicked "start signing", a jobRequestURL would be posted in the back-end to start the signing process
-    @RequestMapping("/")
-    public String getHomePage(){
-        return "index";
-    }
+    //@RequestMapping("/")
+    //public String getHomePage(){
+    //    return "index";
+    //}
 
 
     @RequestMapping("/asice")
