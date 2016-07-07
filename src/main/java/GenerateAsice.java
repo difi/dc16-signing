@@ -86,7 +86,7 @@ public class GenerateAsice {
         String getPDFPath = this.setAbsolutePathToPDF().toString();
         this.createASiCE = new CreateASiCE(manifestCreator,clientConfiguration);
 
-        DirectSigner signer = DirectSigner.builder("12345678910").build();
+        DirectSigner signer = DirectSigner.builder("17079493538").build();
         DirectDocument document = pdfToDocument(getPDFPath);
         this.signatureJob = new DirectJob.Builder(signer,document,"http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError").build();
 
