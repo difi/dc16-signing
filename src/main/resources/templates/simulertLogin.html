@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title> [SIMULERT] Login </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<style>
+    tr, th {
+        padding:15px;
+        }
+
+</style>
+<body>
+<h1> Login via ID-porten for å starte signeringen!</h1>
+    <form method="post" action="https://www.difi.no/">
+        <button type="button" value="[SIMULERT] Logg inn i ID-porten" id="login" onclick="logIn()"> [SIMULERT] Logg inn i ID-porten  </button>
+
+     <div id="display" style="display:none;">
+         <p id="message"> </p>
+         <input type="submit" value="Gå til signering">   </input>
+     </div>
+</form>
+</body>
+<script>
+    var login = document.getElementById("login");
+    function logIn(){
+        login.parentNode.removeChild(login);
+
+        var message = document.getElementById("message");
+        message.innerHTML = "Du er nå logget inn og kan fortsette signeringen";
+
+        document.getElementById("display").style.display = "block";
+        }
+</script>
+</html>
