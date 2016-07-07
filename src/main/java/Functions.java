@@ -28,6 +28,7 @@ import java.security.cert.CertificateException;
 
 public class Functions {
 
+    //TODO: Decide which of these are stored here or just in the sendHTTPRequest object.
     private URL redirectURL; //Redirects the user to a sign-in portal, for example "BankID"
     private URL completionURL; //This URL is given to the user if everything goes "well" with the sign-in. Redirects the user back to our website
     private URL rejectionURL; //given to the user if he/she chooses to stop the signing process
@@ -44,7 +45,13 @@ public class Functions {
     //    return "index";
     //}
 
-
+    /**
+     * This is the mapping for starting the process. It should probably have a parameter designating the correct document by ID
+     * from the database.
+     * @return ModelAndView - A model and a view.
+     * @throws IOException
+     *
+     */
     @RequestMapping("/asice")
     public ModelAndView makeAsice() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
         GenerateAsice generateAsice = new GenerateAsice();
@@ -63,6 +70,10 @@ public class Functions {
 
     }
 
+    /**
+     * The user is redirected to one of these three from the signing portal. The function should get the token
+     * as a query parameter. TODO: Find out what else it should do.
+     */
     @RequestMapping("/onCompletion")
     public void whenSigningComplete(){
 
@@ -86,17 +97,8 @@ public class Functions {
         return false;
     }
 
-    //If the token is valid, the user gets a redirect-URL which takes him/her to the sign-in-portal (such as BankID)
-    @RequestMapping("/getRedirectURL")
-    public URL getRedirectURL(){
-        if(checkToken()){
-            return this.redirectURL;
-        }
-        else throw new IllegalStateException("Missing token");
-    }
-
     //Exists in the library, is used to check if the signing process was sucessfull, or if the user rejected it, or if an error occured (see completion-, rejection-, and errorURL)
-    public String signingStatus(){ //Fimmes i biblioteket
+    public String signingStatus(){ //Finnes i biblioteket
         return null;
     }
 
@@ -122,7 +124,7 @@ public class Functions {
     }
 
     //Returnes the URL which can be used to check if the whole process went well
-    @RequestMapping("/returnCOnfirmationURL")
+    @RequestMapping("/returnConfirmationURL")
     public URL returnConfirmationURL(){
         return this.confirmationURL;
     }
