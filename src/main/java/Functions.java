@@ -4,6 +4,7 @@ import no.digipost.signature.client.security.KeyStoreConfig;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +23,8 @@ import java.security.cert.CertificateException;
  */
 @RestController
 @EnableAutoConfiguration
+@Controller
+
 
 public class Functions {
 
@@ -37,10 +40,10 @@ public class Functions {
     private SendHTTPRequest sendHTTPRequest;
 
     //If we had a user who clicked "start signing", a jobRequestURL would be posted in the back-end to start the signing process
-    @RequestMapping("/")
-    public void postJobRequestURL(){
-
-    }
+    //@RequestMapping("/")
+    //public String getHomePage(){
+    //    return "index";
+    //}
 
     /**
      * This is the mapping for starting the process. It should probably have a parameter designating the correct document by ID
@@ -82,10 +85,11 @@ public class Functions {
         return status;
     }
 
-    @RequestMapping("/onRejection?")
+    @RequestMapping("/onRejection")
     public String whenUserRejects(@RequestParam("status_query_token") String token){
         String status = sendHTTPRequest.checkStatus();
         return status;
+        //Returnerer statusChange.toString()
     }
 
     //In order to get to the sign-in portal, such as BankID, the user needs a redirect-url and a valid token. This method checks if the token is valid
