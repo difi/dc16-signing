@@ -42,16 +42,6 @@ public class SigningServiceConnector {
             return directJobStatus.toString();
         }
 
-        public XAdESReference getXades() {
-            directJobStatusResponse = directClient.getStatusChange();
-            return directJobStatusResponse.getxAdESUrl();
-        }
-
-        public PAdESReference getPades(){
-            directJobStatusResponse = directClient.getStatusChange();
-            return directJobStatusResponse.getpAdESUrl();
-        }
-
         public String getRedirectUrl(){
             return this.redirectUrl;
         }
@@ -74,8 +64,8 @@ public class SigningServiceConnector {
             directClient = new DirectClient(client);
             directJobResponse = directClient.create((DirectJob)signatureJob);
 
-            redirectUrl = directJobResponse.getRedirectUrl().toString();
-            statusUrl = directJobResponse.getStatusUrl().toString();
+            redirectUrl = directJobResponse.getRedirectUrl();
+            statusUrl = directJobResponse.getStatusUrl();
 
             if(directJobResponse != null){
                 return true;

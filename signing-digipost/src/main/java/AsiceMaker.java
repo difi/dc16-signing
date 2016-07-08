@@ -49,68 +49,23 @@ public class AsiceMaker {
     }
 
     /**
-     *
-     * @return StringBuilder-object which is used to find the path to "dokumentTilSignering"
-     */
-    public StringBuilder setAbsolutePathToPDF(File dokumentTilSignering){
-        StringBuilder stringBuilder = new StringBuilder(dokumentTilSignering.getAbsolutePath());
-
-        for(int i=0; i < stringBuilder.length(); i++){
-            if(stringBuilder.charAt(i) == '%'){
-                stringBuilder.replace(i, i+3, " ");
-            }
-        }
-        return stringBuilder;
-    }
-
-    /**
-     * Setups the keystore and keystoreconfig
-     */
-    public void setupKeystoreConfig(){
-        try {
-            keyStore = KeyStore.getInstance("JKS");
-            keyStore.load((new FileInputStream(kontaktInfoClientTest)),"changeit".toCharArray());
-            keyStoreConfig = KeyStoreConfig.fromKeyStore(new FileInputStream(kontaktInfoClientTest)
-                    ,keyStore.aliases().nextElement(),"changeit","changeit");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Returns a DirectDocument from a given pdf
-     * @param pdfPath Path to pdf
-
-     */
-    public DirectDocument pdfToDocument(String pdfPath) throws IOException {
-        try (FileInputStream inputStream = new FileInputStream(pdfPath)) {
-            return DirectDocument.builder("Subject", "document.pdf", ByteStreams.toByteArray(inputStream)).build();
-        }
-    }
-
-    /**
      * Creates an asice package. Uses current keystore and a hardcoded document.
      * @return
      */
-    public DocumentBundle createAsice(String signerId, String sender, String[] exitUrls) throws KeyStoreException, NoSuchAlgorithmException,NoSuchProviderException, FileNotFoundException, IOException,java.security.cert.CertificateException {
+    public DocumentBundle createAsice(String signerId, String sender, String[] exitUrls, ClientConfiguration clientConfiguration) throws KeyStoreException, NoSuchAlgorithmException,NoSuchProviderException, IOException,java.security.cert.CertificateException {
 
-        //Creates a client configuration
-        clientConfiguration = ClientConfiguration.builder(keyStoreConfig)
-                .globalSender(new Sender(sender))
-                .build();
 
-        String PDFPath = this.setAbsolutePathToPDF(dokumentTilSignering).toString();
+
+        String PDFPath = DocumentHandler.setAbsolutePathToPDF(dokumentTilSignering).toString();
 
         //Initializes an asic creator with the configuration and the standard manifestCreator.
         createASiCE = new CreateASiCE(manifestCreator,clientConfiguration);
 
         //
         DirectSigner signer = createDirectSigner(signerId);
-        DirectDocument document = pdfToDocument(PDFPath);
+        DirectDocument document = DocumentHandler.pdfToDocument(PDFPath);
         signatureJob = createSignatureJob(signer,document,exitUrls);
-        DocumentBundle asice = createASiCE.createASiCE(signatureJob);
-        return asice;
+        return createASiCE.createASiCE(signatureJob);
     }
 
     public DirectSigner createDirectSigner(String signerId){
