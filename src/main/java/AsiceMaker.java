@@ -10,8 +10,6 @@ import no.digipost.signature.client.direct.*;
 import no.digipost.signature.client.security.KeyStoreConfig;
 
 import java.io.*;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;

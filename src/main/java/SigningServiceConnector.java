@@ -7,13 +7,6 @@ import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.core.XAdESReference;
 import no.digipost.signature.client.direct.*;
 import no.digipost.signature.client.security.KeyStoreConfig;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.HttpClients;
 
 import java.io.File;
 import java.io.IOException;
