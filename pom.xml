@@ -11,8 +11,8 @@
     <modules>
         <module>signing-spring</module>
         <module>signing-digipost</module>
-        <module>signing-boot</module>
         <module>signing-database</module>
+
     </modules>
 
     <properties>

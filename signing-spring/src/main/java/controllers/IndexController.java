@@ -1,3 +1,8 @@
+package controllers;
+
+/**
+ * Class description: Makes the html-document "index.html" appear on localhost:8080
+ */
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
@@ -10,9 +15,5 @@ public class IndexController {
     @RequestMapping("/")
     public String getHomePage(){
         return "index";
-    }
-
-    public static void main(String[] args) throws Exception {
-        SpringApplication.run(IndexController.class, args);
     }
 }
