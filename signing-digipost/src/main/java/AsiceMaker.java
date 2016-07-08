@@ -1,16 +1,11 @@
-import com.google.common.io.ByteStreams;
 import no.digipost.signature.client.ClientConfiguration;
 import no.digipost.signature.client.asice.*;
 import no.digipost.signature.client.asice.manifest.CreateDirectManifest;
 import no.digipost.signature.client.asice.manifest.ManifestCreator;
-import no.digipost.signature.client.core.Document;
-import no.digipost.signature.client.core.Sender;
 import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.direct.*;
-import no.digipost.signature.client.security.KeyStoreConfig;
 
 import java.io.*;
-import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -18,14 +13,10 @@ import java.security.NoSuchProviderException;
 public class AsiceMaker {
 
     private CreateASiCE createASiCE;
-    private ClientConfiguration clientConfiguration;
-    private KeyStore keyStore;
-    private KeyStoreConfig keyStoreConfig;
     private ManifestCreator manifestCreator = new CreateDirectManifest();
-    private File kontaktInfoClientTest;
     private SignatureJob signatureJob;
     private File dokumentTilSignering;
-    private Document documentToBeSigned;
+    private File kontaktInfoClientTest;
     private String relativeDocumentPath ="Documents//Dokument til signering 3.pdf";
 
     public AsiceMaker(){
@@ -53,15 +44,10 @@ public class AsiceMaker {
      * @return
      */
     public DocumentBundle createAsice(String signerId, String sender, String[] exitUrls, ClientConfiguration clientConfiguration) throws KeyStoreException, NoSuchAlgorithmException,NoSuchProviderException, IOException,java.security.cert.CertificateException {
-
-
-
         String PDFPath = DocumentHandler.setAbsolutePathToPDF(dokumentTilSignering).toString();
-
         //Initializes an asic creator with the configuration and the standard manifestCreator.
         createASiCE = new CreateASiCE(manifestCreator,clientConfiguration);
 
-        //
         DirectSigner signer = createDirectSigner(signerId);
         DirectDocument document = DocumentHandler.pdfToDocument(PDFPath);
         signatureJob = createSignatureJob(signer,document,exitUrls);
@@ -76,9 +62,6 @@ public class AsiceMaker {
         return new DirectJob.Builder(signer,document,exitUrls[0],exitUrls[1],exitUrls[2]).build();
     }
 
-    public KeyStoreConfig getKeyStoreConfig(){
-        return this.keyStoreConfig;
-    }
 
     public SignatureJob getSignatureJob(){
         return this.signatureJob;
