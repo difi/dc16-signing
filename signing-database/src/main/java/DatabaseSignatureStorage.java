@@ -39,11 +39,13 @@ public class DatabaseSignatureStorage {
         db.insertSignature(status1, signer1, sender1, document1);
         db.insertSignature(status2, signer2, sender2, document2);
         try {
-            db.selectQuery();
+            db.printDB();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         logger.debug("TESTLOGGER");
+
+        db.getSignature(sender1);
 
     }
 }

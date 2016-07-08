@@ -1,0 +1,6 @@
+07-08 14:44:46 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "SIGNATURESWHERE" not found; SQL statement:
+SELECT (id, status, signer, document)FROM SIGNATURESWHERE sender LIKE '123456789'; [42102-140]
+07-08 14:45:37 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "SIGNATURES" not found; SQL statement:
+SELECT (id, status, signer, document)FROM SIGNATURES WHERE sender LIKE '123456789'; [42102-140]

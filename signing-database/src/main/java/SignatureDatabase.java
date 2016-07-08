@@ -8,7 +8,7 @@ import java.sql.*;
 public class SignatureDatabase {
     private final String JDBC_DRIVER = "org.h2.Driver";
     //private final String DB_URL = "jdbc:h2:file:C:/Users/camp-eul/Documents/GitHub/dc16-signing/signing-database/src/main/resources/signature";
-    private final String DB_URL = "jdbc:h2:file:src/main/resource/signature";
+    private final String DB_URL = "jdbc:h2:file:src/main/java/resource/signature";
 
     private final String USER = "SA";
     private final String PASS = "";
@@ -53,7 +53,7 @@ public class SignatureDatabase {
         } System.out.println("DB: Table created");
     }
 
-    public void selectQuery() throws SQLException {
+    public void printDB() throws SQLException {
         String query = "SELECT * FROM SIGNATURE";
         resultSet= statement.executeQuery(query);
         metaData = resultSet.getMetaData();
@@ -68,19 +68,36 @@ public class SignatureDatabase {
         }
     }
 
+    public void getSignature(String sender) {
+        String query = String.format("SELECT (id, status, signer, document)" +
+                        "FROM SIGNATURE " +
+                        "WHERE sender LIKE '%s';", sender);
+        try {
+            resultSet = statement.executeQuery(query);
+            metaData = resultSet.getMetaData();
+            String value = resultSet.getString(1);
+            System.out.println(resultSet);
+        } catch (SQLException e) {
+            System.err.println("SQLException caught in SignatureDatabase.getSignature()" + e);
+            e.printStackTrace();
+        } System.out.println("DB: Select query: " + query);
+
+
+
+        }
+
     public void insertSignature(String status, String signer, String sender, String document){
         //uuid = UUID.randomUUID().toString();
         String query = String.format("INSERT INTO SIGNATURE (status, signer, sender, document) " +
                 "VALUES ('%s','%s','%s','%s');", status, signer, sender, document);
 
-        System.out.println("DB: Insert signature query: " + query);
         try {
             statement.executeUpdate(query);
             System.out.println("DB: Signature inserted into the database ");
         } catch (SQLException e){
             System.err.println("SQLException caught in SignatureDatabase.insertSignature(): " + e);
             e.printStackTrace();
-        }
+        }   System.out.println("DB: Insert signature query: " + query);
     }
 
 
