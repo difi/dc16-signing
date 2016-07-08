@@ -1,22 +1,11 @@
 package database;
 
-import org.apache.catalina.Server;
 import org.slf4j.LoggerFactory;
 
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.logging.Logger;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * Created by camp-mlo on 07.07.2016.
@@ -39,20 +28,23 @@ public class DatabaseSignatureStorage {
 
     private static HashMap<String, String> defaultData;
 
-    // private Map<String, >
-
-    private static String generateDatabaseKey(String a, String b) {
-        String uuid = UUID.randomUUID().toString();
-        db.insertSomething("name", "id");
-        return null;
-    }
-
-
     public static void main(String[] args) {
         db.createTable();
 
-        // Creating test entries
-        db.insertSomething("name", "id");
+        // Creating test-signatur 1
+        String status1 = "Ikke signert";
+        String sender1 = "123456789";
+        String signer1 = "17079493538";
+        String document1 = "Dokument til signering.pdf";
+
+        // Creating test-signatur 2
+        String status2 = "Ikke signert";
+        String sender2 = "987654321";
+        String signer2 = "111111111111";
+        String document2 = "Dokument til signering.pdf";
+
+        db.insertSignature(status1, signer1, sender1, document1);
+        db.insertSignature(status2, signer2, sender2, document2);
         try {
             db.selectQuery();
         } catch (SQLException e) {

@@ -2,6 +2,7 @@ package database;
 
 
 import com.sun.prism.shader.Solid_TextureRGB_AlphaTest_Loader;
+import com.sun.xml.internal.ws.api.pipe.ServerTubeAssemblerContext;
 import org.apache.catalina.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,8 @@ public class SignatureDatabase {
     ResultSet resultSet;
     ResultSetMetaData metaData;
 
+    public String uuid;
+
     public SignatureDatabase(){
         try {
             Class.forName(JDBC_DRIVER);
@@ -43,8 +46,14 @@ public class SignatureDatabase {
 
     public void createTable(){
         try {
-            statement.execute("CREATE TABLE IF NOT EXISTS SIGNATURE(ID INT PRIMARY KEY, NAME VARCHAR(30), STATUS VARCHAR(30), SIGNER VARCHAR(30), SENDER VARCHAR(30), DOCUMENT VARCHAR(30))\n");
-           //statement.execute("CREATE UNIQUE INDEX IF NOT EXISTS \"cookie_uuid_uindex \" ON PUBLIC.signature (uuid);");
+            statement.execute("DROP TABLE SIGNATURE ");
+            statement.execute("CREATE TABLE SIGNATURE " +
+                    "(id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT," +
+                    "status VARCHAR(30)," +
+                    "signer VARCHAR(30), " +
+                    "sender VARCHAR(30)," +
+                    "document VARCHAR(30)," +
+                    "PRIMARY KEY (`id`));" );
         } catch (SQLException e) {
             System.err.println("SQLException caught in SignatureDatabase.createTable()" + e);
             e.printStackTrace();
@@ -66,17 +75,20 @@ public class SignatureDatabase {
         }
     }
 
-    public void insertSomething(String name, String id){
-        String query = String.format("INSERT INTO SIGNATURE \n" +
-                    "VALUES(9, 'jobb1', 'ikke signert', ' doc1', 'per', 'kari')");
+    public void insertSignature(String status, String signer, String sender, String document){
+        //uuid = UUID.randomUUID().toString();
+        String query = String.format("INSERT INTO SIGNATURE (status, signer, sender, document) " +
+                "VALUES ('%s','%s','%s','%s');", status, signer, sender, document);
 
         System.out.println("DB: Insert signature query: " + query);
         try {
             statement.executeUpdate(query);
-            System.out.println("DB: Signature inserted into the database with uuid ");
+            System.out.println("DB: Signature inserted into the database ");
         } catch (SQLException e){
-            System.err.println("SQLException caught in SignatureDatabase.insertSomething(): " + e);
+            System.err.println("SQLException caught in SignatureDatabase.insertSignature(): " + e);
             e.printStackTrace();
         }
     }
+
+
 }
