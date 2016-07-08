@@ -135,11 +135,4 @@ public class GenerateAsice {
 
     }
 
-    /**
-     * Makes a new client from an existing configuration and returns it.
-     */
-    public DirectClient getDirectClient(){
-        return directClient;
-    }
-
 }

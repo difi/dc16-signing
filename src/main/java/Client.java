@@ -18,7 +18,7 @@ public class Client {
     }
 
     public DirectClient getDirectClient(){
-        if(directClient != null{
+        if(directClient != null){
             return directClient;
         } else {
             directClient = new DirectClient(this.clientConfiguration);
@@ -36,7 +36,9 @@ public class Client {
 
     }
 
-    public void getXades()
+    public void getXades(){
+
+    }
 
 
 }
