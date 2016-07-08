@@ -6,7 +6,11 @@
 
     <groupId>no.difi.idporten.signing</groupId>
     <artifactId>signing</artifactId>
+    <packaging>pom</packaging>
     <version>0.1.0-SNAPSHOT</version>
+    <modules>
+        <module>signing-spring</module>
+    </modules>
 
     <properties>
         <java.version>1.8</java.version>
