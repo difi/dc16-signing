@@ -22,11 +22,11 @@ public class AsiceTest {
 
 
 
-        GenerateAsice generateAsice = new GenerateAsice();
-        generateAsice.setupKeystoreConfig();
-        generateAsice.createAsice("1707949358",exitUrls,);
-        SignatureJob signatureJob = generateAsice.getSignatureJob();
-        KeyStoreConfig keyStoreConfig = generateAsice.getKeyStoreConfig();
+        AsiceMaker asiceMaker = new AsiceMaker();
+        asiceMaker.setupKeystoreConfig();
+        asiceMaker.createAsice("1707949358","123456789",exitUrls);
+        SignatureJob signatureJob = asiceMaker.getSignatureJob();
+        KeyStoreConfig keyStoreConfig = asiceMaker.getKeyStoreConfig();
         SendHTTPRequest sendHTTPRequest = new SendHTTPRequest();
         sendHTTPRequest.sendRequest(signatureJob, keyStoreConfig);
 

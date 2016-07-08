@@ -15,7 +15,7 @@ public class AsiceDumper {
      * @param signatureJob
      * @throws IOException
      */
-    public void dumper(DocumentBundle documentBundle, SignatureJob signatureJob) throws IOException {
+    public static void dumper(DocumentBundle documentBundle, SignatureJob signatureJob) throws IOException {
         Path path = FileSystems.getDefault().getPath("","");
         DumpDocumentBundleToDisk dumper = new DumpDocumentBundleToDisk(path);
         InputStream asiceInputStream = documentBundle.getInputStream();

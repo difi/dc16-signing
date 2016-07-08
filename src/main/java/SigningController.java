@@ -1,5 +1,5 @@
+import no.digipost.signature.client.asice.DocumentBundle;
 import no.digipost.signature.client.core.SignatureJob;
-import no.digipost.signature.client.direct.DirectJobStatusResponse;
 import no.digipost.signature.client.security.KeyStoreConfig;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.boot.SpringApplication;
@@ -26,9 +26,9 @@ import java.security.cert.CertificateException;
 @Controller
 
 
-public class Functions {
+public class SigningController {
 
-    //TODO: Decide which of these are stored here or just in the sendHTTPRequest object.
+    //TODO: Decide which of these are stored here or just in the signingServiceConnector object.
     private URL redirectURL; //Redirects the user to a sign-in portal, for example "BankID"
     private URL completionURL; //This URL is given to the user if everything goes "well" with the sign-in. Redirects the user back to our website
     private URL rejectionURL; //given to the user if he/she chooses to stop the signing process
@@ -36,14 +36,10 @@ public class Functions {
     private URL statusURL; //can be called to give a "status" after the signing process. Status contains useful information, such as the signed documents
     private File completionDocument; //Stores the signed document
     private URL confirmationURL; //called in the very end to check if the whole signing process went as planned
-
-    private SendHTTPRequest sendHTTPRequest;
-
-    //If we had a user who clicked "start signing", a jobRequestURL would be posted in the back-end to start the signing process
-    //@RequestMapping("/")
-    //public String getHomePage(){
-    //    return "index";
-    //}
+    private String[] exitUrls = {
+            "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
+    };
+    private SigningServiceConnector signingServiceConnector;
 
     /**
      * This is the mapping for starting the process. It should probably have a parameter designating the correct document by ID
@@ -54,19 +50,18 @@ public class Functions {
      */
     @RequestMapping("/asice")
     public ModelAndView makeAsice() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
-        GenerateAsice generateAsice = new GenerateAsice();
-        generateAsice.setupKeystoreConfig();
-        generateAsice.createAsice();
+        AsiceMaker asiceMaker = new AsiceMaker();
+        asiceMaker.setupKeystoreConfig();
+        asiceMaker.createAsice("1707949358","123456789",exitUrls);
 
-        SignatureJob signatureJob = generateAsice.getSignatureJob();
-        KeyStoreConfig keyStoreConfig = generateAsice.getKeyStoreConfig();
+        SignatureJob signatureJob = asiceMaker.getSignatureJob();
+        KeyStoreConfig keyStoreConfig = asiceMaker.getKeyStoreConfig();
 
-        this.sendHTTPRequest = new SendHTTPRequest();
-        sendHTTPRequest.sendRequest(signatureJob,keyStoreConfig);
+        this.signingServiceConnector = new SigningServiceConnector();
+        signingServiceConnector.sendRequest(signatureJob,keyStoreConfig);
 
 
-        return new ModelAndView("redirect:" + sendHTTPRequest.getRedirectUrl());
-
+        return new ModelAndView("redirect:" + signingServiceConnector.getRedirectUrl());
 
     }
 
@@ -76,19 +71,19 @@ public class Functions {
      */
     @RequestMapping("/onCompletion")
     public String whenSigningComplete(){
-        String status = sendHTTPRequest.checkStatus();
+        String status = signingServiceConnector.checkStatus();
         return status;
     }
 
     @RequestMapping("/onError")
     public String whenSigningFails(){
-        String status = sendHTTPRequest.checkStatus();
+        String status = signingServiceConnector.checkStatus();
         return status;
     }
 
     @RequestMapping("/onRejection")
     public String whenUserRejects(@RequestParam("status_query_token") String token){
-        String status = sendHTTPRequest.checkStatus();
+        String status = signingServiceConnector.checkStatus();
         return status;
         //Returnerer statusChange.toString()
     }
@@ -131,7 +126,7 @@ public class Functions {
     }
 
     public static void main(String[] args) throws Exception {
-        SpringApplication.run(Functions.class, args);
+        SpringApplication.run(SigningController.class, args);
     }
 
 }

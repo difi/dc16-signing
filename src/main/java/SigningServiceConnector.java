@@ -1,12 +1,11 @@
 import no.digipost.signature.client.Certificates;
 import no.digipost.signature.client.ClientConfiguration;
 import no.digipost.signature.client.ServiceUri;
+import no.digipost.signature.client.core.PAdESReference;
 import no.digipost.signature.client.core.Sender;
 import no.digipost.signature.client.core.SignatureJob;
-import no.digipost.signature.client.direct.DirectClient;
-import no.digipost.signature.client.direct.DirectJob;
-import no.digipost.signature.client.direct.DirectJobResponse;
-import no.digipost.signature.client.direct.DirectJobStatusResponse;
+import no.digipost.signature.client.core.XAdESReference;
+import no.digipost.signature.client.direct.*;
 import no.digipost.signature.client.security.KeyStoreConfig;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -22,14 +21,18 @@ import java.io.IOException;
 /**
  * Created by camp-mlo on 01.07.2016.
  */
-public class SendHTTPRequest {
+public class SigningServiceConnector {
     private File filePath;
     private ClientConfiguration client;
     private String redirectUrl;
     private String statusUrl;
+
+    //Response and client objects
     private DirectJobResponse directJobResponse;
     private DirectClient directClient;
-    public SendHTTPRequest() throws IOException {
+    private DirectJobStatusResponse directJobStatusResponse;
+
+    public SigningServiceConnector() throws IOException {
 
     }
 
@@ -39,15 +42,28 @@ public class SendHTTPRequest {
      */
         public String checkStatus(){
             String statusUrl = directJobResponse.getStatusUrl().toString();
-            DirectJobStatusResponse statusChange = directClient.getStatusChange();
-            System.out.println(statusChange.toString());
-            System.out.println(statusChange.getpAdESUrl());
-            System.out.println(statusChange.getxAdESUrl());
-            return statusChange.toString();
+            directJobStatusResponse = directClient.getStatusChange();
+            System.out.println(directJobStatusResponse.toString());
+            DirectJobStatus directJobStatus = directJobStatusResponse.getStatus();
+            System.out.println(directJobStatus.toString());
+            return directJobStatus.toString();
+        }
+
+        public XAdESReference getXades() {
+            directJobStatusResponse = directClient.getStatusChange();
+            return directJobStatusResponse.getxAdESUrl();
+        }
+
+        public PAdESReference getPades(){
+            directJobStatusResponse = directClient.getStatusChange();
+            return directJobStatusResponse.getpAdESUrl();
         }
 
         public String getRedirectUrl(){
             return this.redirectUrl;
+        }
+
+        public String getStatusUrl() { return this.statusUrl;
         }
         /**
          *     Sends a request to difi_test based on a signaturejob and a keyconfig.
@@ -62,10 +78,11 @@ public class SendHTTPRequest {
                     .globalSender(new Sender("991825827"))
                     .build();
 
-            this.directClient = new DirectClient(client);
-            this.directJobResponse = directClient.create((DirectJob)signatureJob);
-            this.redirectUrl = directJobResponse.getRedirectUrl().toString();
-            this.statusUrl = directJobResponse.getStatusUrl().toString();
+            directClient = new DirectClient(client);
+            directJobResponse = directClient.create((DirectJob)signatureJob);
+
+            redirectUrl = directJobResponse.getRedirectUrl().toString();
+            statusUrl = directJobResponse.getStatusUrl().toString();
 
             if(directJobResponse != null){
                 return true;

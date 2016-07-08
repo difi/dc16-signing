@@ -17,7 +17,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 
-public class GenerateAsice {
+public class AsiceMaker {
 
     private CreateASiCE createASiCE;
     private ClientConfiguration clientConfiguration;
@@ -30,7 +30,7 @@ public class GenerateAsice {
     private Document documentToBeSigned;
     private String relativeDocumentPath ="Documents//Dokument til signering 3.pdf";
 
-    public GenerateAsice(){
+    public AsiceMaker(){
         //Creates classLoader to load file
         ClassLoader classLoader = getClass().getClassLoader();
         //Sets field kontaktInfoClientTest to file kontaktinfo-client-test.jks
@@ -40,7 +40,7 @@ public class GenerateAsice {
 
     }
 
-    public GenerateAsice(String relativeDocumentPath){
+    public AsiceMaker(String relativeDocumentPath){
         //Creates classLoader to load file
         ClassLoader classLoader = getClass().getClassLoader();
         //Sets field kontaktInfoClientTest to file kontaktinfo-client-test.jks
@@ -95,11 +95,11 @@ public class GenerateAsice {
      * Creates an asice package. Uses current keystore and a hardcoded document.
      * @return
      */
-    public DocumentBundle createAsice(String signerId, String[] exitUrls) throws KeyStoreException, NoSuchAlgorithmException,NoSuchProviderException, FileNotFoundException, IOException,java.security.cert.CertificateException {
+    public DocumentBundle createAsice(String signerId, String sender, String[] exitUrls) throws KeyStoreException, NoSuchAlgorithmException,NoSuchProviderException, FileNotFoundException, IOException,java.security.cert.CertificateException {
 
         //Creates a client configuration
         clientConfiguration = ClientConfiguration.builder(keyStoreConfig)
-                .globalSender(new Sender("123456789"))
+                .globalSender(new Sender(sender))
                 .build();
 
         String PDFPath = this.setAbsolutePathToPDF(dokumentTilSignering).toString();
@@ -131,8 +131,5 @@ public class GenerateAsice {
         return this.signatureJob;
     }
 
-    public Document getDocument(){
-
-    }
 
 }
