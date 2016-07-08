@@ -1,10 +1,8 @@
 import no.digipost.signature.client.Certificates;
 import no.digipost.signature.client.ClientConfiguration;
 import no.digipost.signature.client.ServiceUri;
-import no.digipost.signature.client.core.PAdESReference;
 import no.digipost.signature.client.core.Sender;
 import no.digipost.signature.client.core.SignatureJob;
-import no.digipost.signature.client.core.XAdESReference;
 import no.digipost.signature.client.direct.*;
 import no.digipost.signature.client.security.KeyStoreConfig;
 
@@ -12,10 +10,9 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by camp-mlo on 01.07.2016.
+ * Class responsible for contacting the signing service.
  */
 public class SigningServiceConnector {
-    private File filePath;
     private ClientConfiguration client;
     private String redirectUrl;
     private String statusUrl;
@@ -42,16 +39,6 @@ public class SigningServiceConnector {
             return directJobStatus.toString();
         }
 
-        public XAdESReference getXades() {
-            directJobStatusResponse = directClient.getStatusChange();
-            return directJobStatusResponse.getxAdESUrl();
-        }
-
-        public PAdESReference getPades(){
-            directJobStatusResponse = directClient.getStatusChange();
-            return directJobStatusResponse.getpAdESUrl();
-        }
-
         public String getRedirectUrl(){
             return this.redirectUrl;
         }
@@ -74,8 +61,8 @@ public class SigningServiceConnector {
             directClient = new DirectClient(client);
             directJobResponse = directClient.create((DirectJob)signatureJob);
 
-            redirectUrl = directJobResponse.getRedirectUrl().toString();
-            statusUrl = directJobResponse.getStatusUrl().toString();
+            redirectUrl = directJobResponse.getRedirectUrl();
+            statusUrl = directJobResponse.getStatusUrl();
 
             if(directJobResponse != null){
                 return true;
