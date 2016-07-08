@@ -2,6 +2,7 @@ package database;
 
 
 import com.sun.prism.shader.Solid_TextureRGB_AlphaTest_Loader;
+import com.sun.xml.internal.ws.api.pipe.ServerTubeAssemblerContext;
 import org.apache.catalina.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
  */
 public class SignatureDatabase {
     private final String JDBC_DRIVER = "org.h2.Driver";
-    private final String DB_URL = "jdbc:h2:mem:signature";
+    private final String DB_URL = "jdbc:h2:file:/Users/camp-mlo/Documents/GitHub/dc16-signing/src/main/java/database/signature";
     private final String USER = "SA";
     private final String PASS = "";
 
@@ -27,12 +28,16 @@ public class SignatureDatabase {
     Connection connection;
     Statement statement;
     ResultSet resultSet;
+    ResultSetMetaData metaData;
+
+    public String uuid;
 
     public SignatureDatabase(){
         try {
             Class.forName(JDBC_DRIVER);
             connection = DriverManager.getConnection(DB_URL, USER, PASS);
             statement = connection.createStatement();
+
         } catch (SQLException | ClassNotFoundException e){
             System.err.println("Exception caught in SignatureDatabas.SignatureDatabase(): " + e);
             e.printStackTrace();
@@ -41,28 +46,49 @@ public class SignatureDatabase {
 
     public void createTable(){
         try {
-            statement.execute("CREATE TABLE SIGNATURE(ID INT PRIMARY KEY,\n" +
-                    "   NAME VARCHAR(255));");
-           //statement.execute("CREATE UNIQUE INDEX IF NOT EXISTS \"cookie_uuid_uindex \" ON PUBLIC.signature (uuid);");
+            statement.execute("DROP TABLE SIGNATURE ");
+            statement.execute("CREATE TABLE SIGNATURE " +
+                    "(id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT," +
+                    "status VARCHAR(30)," +
+                    "signer VARCHAR(30), " +
+                    "sender VARCHAR(30)," +
+                    "document VARCHAR(30)," +
+                    "PRIMARY KEY (`id`));" );
         } catch (SQLException e) {
             System.err.println("SQLException caught in SignatureDatabase.createTable()" + e);
             e.printStackTrace();
         } System.out.println("DB: Table created");
     }
 
-    public void insertSomething(String name, String id){
-        long presentTimeInMillisec = new Date().getTime(); // lastUpdated
-            String query = String.format("INSERT INTO " +
-                    "SIGNATURE (name, id) " +
-                        "VALUES ('name1', '1')");
+    public void selectQuery() throws SQLException {
+        String query = "SELECT * FROM SIGNATURE";
+        resultSet= statement.executeQuery(query);
+        metaData = resultSet.getMetaData();
+        int columnsNumber = metaData.getColumnCount();
+        System.out.println("\n -----SIGNATURE DATABASE:---- \n");
+
+        while (resultSet.next()) {
+            for(int i = 1 ; i <= columnsNumber; i++){
+                System.out.print(resultSet.getString(i) + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public void insertSignature(String status, String signer, String sender, String document){
+        //uuid = UUID.randomUUID().toString();
+        String query = String.format("INSERT INTO SIGNATURE (status, signer, sender, document) " +
+                "VALUES ('%s','%s','%s','%s');", status, signer, sender, document);
 
         System.out.println("DB: Insert signature query: " + query);
         try {
             statement.executeUpdate(query);
-            System.out.println("DB: Signature inserted into the database with uuid ");
+            System.out.println("DB: Signature inserted into the database ");
         } catch (SQLException e){
-            System.err.println("SQLException caught in SignatureDatabase.insertSomething(): " + e);
+            System.err.println("SQLException caught in SignatureDatabase.insertSignature(): " + e);
             e.printStackTrace();
         }
     }
+
+
 }
