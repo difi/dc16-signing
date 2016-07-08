@@ -1,7 +1,6 @@
 import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.security.KeyStoreConfig;
 
-import java.io.File;
 import java.io.IOException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -27,8 +26,8 @@ public class AsiceTest {
         asiceMaker.createAsice("1707949358","123456789",exitUrls);
         SignatureJob signatureJob = asiceMaker.getSignatureJob();
         KeyStoreConfig keyStoreConfig = asiceMaker.getKeyStoreConfig();
-        SendHTTPRequest sendHTTPRequest = new SendHTTPRequest();
-        sendHTTPRequest.sendRequest(signatureJob, keyStoreConfig);
+        SigningServiceConnector signingServiceConnector = new SigningServiceConnector();
+        signingServiceConnector.sendRequest(signatureJob, keyStoreConfig);
 
         //Ta tak i redirect-url, sett det i Spring
     }
