@@ -1,6 +1,8 @@
+import no.digipost.signature.client.asice.DocumentBundle;
 import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.security.KeyStoreConfig;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -21,11 +23,17 @@ public class AsiceTest {
 
         SetupClientConfig clientConfig = new SetupClientConfig();
         clientConfig.setupClientConfiguration("123456789");
-        clientConfig.setupKeystoreConfig();
+
+        File kontaktInfo = new File("kontaktinfo-client-test.jks");
+
+        clientConfig.setupKeystoreConfig(kontaktInfo);
+
         AsiceMaker asiceMaker = new AsiceMaker();
-        asiceMaker.createAsice("1707949358","123456789",exitUrls);
+
+        DocumentBundle preparedAsic = asiceMaker.createAsice("1707949358","123456789",exitUrls, clientConfig.getClientConfiguration());
+
         SignatureJob signatureJob = asiceMaker.getSignatureJob();
-        KeyStoreConfig keyStoreConfig = asiceMaker.getKeyStoreConfig();
+        KeyStoreConfig keyStoreConfig = clientConfig.getKeyStoreConfig();
         SigningServiceConnector signingServiceConnector = new SigningServiceConnector();
         signingServiceConnector.sendRequest(signatureJob, keyStoreConfig);
 
