@@ -49,7 +49,7 @@ public class SetupClientConfig {
     }
 
     public ClientConfiguration getClientConfiguration() {
-        return clientConfiguration;
+        return this.clientConfiguration;
     }
 
     public void setClientConfiguration(ClientConfiguration clientConfiguration) {

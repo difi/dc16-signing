@@ -50,11 +50,15 @@ public class SigningController {
     @RequestMapping("/asice")
     public ModelAndView makeAsice() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
         AsiceMaker asiceMaker = new AsiceMaker();
-        asiceMaker.setupKeystoreConfig();
-        asiceMaker.createAsice("17079493538","123456789",exitUrls);
+        SetupClientConfig clientConfig = new SetupClientConfig();
+
+        clientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
+        clientConfig.setupClientConfiguration("991825827");
+
+        asiceMaker.createAsice("17079493538","123456789",exitUrls,clientConfig.getClientConfiguration());
 
         SignatureJob signatureJob = asiceMaker.getSignatureJob();
-        KeyStoreConfig keyStoreConfig = asiceMaker.getKeyStoreConfig();
+        KeyStoreConfig keyStoreConfig = clientConfig.getKeyStoreConfig();
 
         this.signingServiceConnector = new SigningServiceConnector();
         signingServiceConnector.sendRequest(signatureJob,keyStoreConfig);

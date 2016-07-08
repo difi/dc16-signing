@@ -21,16 +21,16 @@ public class AsiceTest {
                 "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
         };
 
-        SetupClientConfig clientConfig = new SetupClientConfig();
-        clientConfig.setupClientConfiguration("123456789");
 
-        File kontaktInfo = new File("kontaktinfo-client-test.jks");
 
-        clientConfig.setupKeystoreConfig(kontaktInfo);
+
 
         AsiceMaker asiceMaker = new AsiceMaker();
+        SetupClientConfig clientConfig = new SetupClientConfig();
+        clientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
+        clientConfig.setupClientConfiguration("123456789");
 
-        DocumentBundle preparedAsic = asiceMaker.createAsice("1707949358","123456789",exitUrls, clientConfig.getClientConfiguration());
+        DocumentBundle preparedAsic = asiceMaker.createAsice("17079493538","123456789",exitUrls, clientConfig.getClientConfiguration());
 
         SignatureJob signatureJob = asiceMaker.getSignatureJob();
         KeyStoreConfig keyStoreConfig = clientConfig.getKeyStoreConfig();

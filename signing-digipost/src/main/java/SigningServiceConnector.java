@@ -1,10 +1,8 @@
 import no.digipost.signature.client.Certificates;
 import no.digipost.signature.client.ClientConfiguration;
 import no.digipost.signature.client.ServiceUri;
-import no.digipost.signature.client.core.PAdESReference;
 import no.digipost.signature.client.core.Sender;
 import no.digipost.signature.client.core.SignatureJob;
-import no.digipost.signature.client.core.XAdESReference;
 import no.digipost.signature.client.direct.*;
 import no.digipost.signature.client.security.KeyStoreConfig;
 

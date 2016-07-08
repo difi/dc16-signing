@@ -17,9 +17,9 @@ public class AsiceMaker {
     private SignatureJob signatureJob;
     private File dokumentTilSignering;
     private File kontaktInfoClientTest;
-    private String relativeDocumentPath ="Documents//Dokument til signering 3.pdf";
+    private String relativeDocumentPath = "Documents//Dokument til signering 3.pdf";
 
-    public AsiceMaker(){
+    public AsiceMaker() {
         //Creates classLoader to load file
         ClassLoader classLoader = getClass().getClassLoader();
         //Sets field kontaktInfoClientTest to file kontaktinfo-client-test.jks
@@ -29,7 +29,7 @@ public class AsiceMaker {
 
     }
 
-    public AsiceMaker(String relativeDocumentPath){
+    public AsiceMaker(String relativeDocumentPath) {
         //Creates classLoader to load file
         ClassLoader classLoader = getClass().getClassLoader();
         //Sets field kontaktInfoClientTest to file kontaktinfo-client-test.jks
@@ -41,31 +41,34 @@ public class AsiceMaker {
 
     /**
      * Creates an asice package. Uses current keystore and a hardcoded document.
+     *
      * @return
      */
-    public DocumentBundle createAsice(String signerId, String sender, String[] exitUrls, ClientConfiguration clientConfiguration) throws KeyStoreException, NoSuchAlgorithmException,NoSuchProviderException, IOException,java.security.cert.CertificateException {
+    public DocumentBundle createAsice(String signerId, String sender, String[] exitUrls, ClientConfiguration clientConfiguration) throws KeyStoreException, NoSuchAlgorithmException, NoSuchProviderException, IOException, java.security.cert.CertificateException {
         String PDFPath = DocumentHandler.setAbsolutePathToPDF(dokumentTilSignering).toString();
-        //Initializes an asic creator with the configuration and the standard manifestCreator.
-        createASiCE = new CreateASiCE(manifestCreator,clientConfiguration);
-
+        createASiCE = new CreateASiCE(manifestCreator, clientConfiguration);
         DirectSigner signer = createDirectSigner(signerId);
         DirectDocument document = DocumentHandler.pdfToDocument(PDFPath);
-        signatureJob = createSignatureJob(signer,document,exitUrls);
+        signatureJob = createSignatureJob(signer, document, exitUrls);
+
+        DocumentBundle asice = createASiCE.createASiCE(signatureJob);
         return createASiCE.createASiCE(signatureJob);
     }
 
-    public DirectSigner createDirectSigner(String signerId){
+    public DirectSigner createDirectSigner(String signerId) {
         return DirectSigner.builder(signerId).build();
     }
 
-    public SignatureJob createSignatureJob(DirectSigner signer, DirectDocument document, String[] exitUrls){
-        return new DirectJob.Builder(signer,document,exitUrls[0],exitUrls[1],exitUrls[2]).build();
+    public SignatureJob createSignatureJob(DirectSigner signer, DirectDocument document, String[] exitUrls) {
+        return new DirectJob.Builder(signer, document, exitUrls[0], exitUrls[1], exitUrls[2]).build();
     }
 
+    public File getContactInfo() {
+        return kontaktInfoClientTest;
+    }
 
-    public SignatureJob getSignatureJob(){
+    public SignatureJob getSignatureJob() {
         return this.signatureJob;
     }
-
 
 }
