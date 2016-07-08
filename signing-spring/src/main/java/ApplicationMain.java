@@ -2,7 +2,7 @@ import controllers.IndexController;
 import org.springframework.boot.SpringApplication;
 
 /**
- * Created by camp-nto on 08.07.2016.
+ * Class description: Starts Spring Boot-application. Runs controllers
  */
 public class ApplicationMain {
 

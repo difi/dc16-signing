@@ -24,13 +24,12 @@ import java.security.cert.CertificateException;
 public class DigipostSpringConnector {
 
     //TODO: Decide which of these are stored here or just in the signingServiceConnector object.
-    private URL redirectURL; //Redirects the user to a sign-in portal, for example "BankID"
-    private URL completionURL; //This URL is given to the user if everything goes "well" with the sign-in. Redirects the user back to our website
-    private URL rejectionURL; //given to the user if he/she chooses to stop the signing process
-    private URL errorURL; //given to the user if an error occurs during the signing process
-    private URL statusURL; //can be called to give a "status" after the signing process. Status contains useful information, such as the signed documents
-    private File completionDocument; //Stores the signed document
-    private URL confirmationURL; //called in the very end to check if the whole signing process went as planned
+    private URL completionURL; //Can not remove
+
+
+
+
+
     private String[] exitUrls = {
             "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
     };
@@ -94,7 +93,7 @@ public class DigipostSpringConnector {
     }
 
     //Returnes one of the three URLS (completion, rejection, and errorURL) based on how the signing (aka the "job") went
-    @RequestMapping("/getJobStatus")
+    @RequestMapping("/getJobStatus") //Can not remove
     public URL getJobStatus(){
         //Based on signingStatus
         return this.completionURL;
@@ -102,22 +101,5 @@ public class DigipostSpringConnector {
         //or return this.errorURL
     }
 
-    //Returns statusURL to get data about the signing, when the signing is over
-    @RequestMapping("/getStatusURL")
-    public URL getStatusURL(){
-        return this.statusURL;
-    }
-
-    //Returnes the signed document
-    @RequestMapping("/getCompletionDocument")
-    public File getCompletionDocument(){
-        return this.completionDocument;
-    }
-
-    //Returnes the URL which can be used to check if the whole process went well
-    @RequestMapping("/returnConfirmationURL")
-    public URL returnConfirmationURL(){
-        return this.confirmationURL;
-    }
 
 }

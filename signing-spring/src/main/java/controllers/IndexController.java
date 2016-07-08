@@ -1,7 +1,7 @@
 package controllers;
 
 /**
- * Controller: Making the html-document "index.html" appear on localhost:8080
+ * Class description: Makes the html-document "index.html" appear on localhost:8080
  */
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
