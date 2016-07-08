@@ -1,15 +1,8 @@
-package database;
-
 import org.slf4j.LoggerFactory;
-
 
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.UUID;
 
-/**
- * Created by camp-mlo on 07.07.2016.
- */
 public class DatabaseSignatureStorage {
 
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(DatabaseSignatureStorage.class);

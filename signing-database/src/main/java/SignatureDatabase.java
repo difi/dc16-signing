@@ -1,25 +1,15 @@
-package database;
-
-
-import com.sun.prism.shader.Solid_TextureRGB_AlphaTest_Loader;
-import com.sun.xml.internal.ws.api.pipe.ServerTubeAssemblerContext;
 import org.apache.catalina.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.io.File;
 import java.sql.*;
-import java.util.*;
-import java.util.Date;
-import java.util.stream.Collectors;
 
-/**
- * Created by camp-mlo on 07.07.2016.
- */
 public class SignatureDatabase {
     private final String JDBC_DRIVER = "org.h2.Driver";
-    private final String DB_URL = "jdbc:h2:file:/Users/camp-mlo/Documents/GitHub/dc16-signing/src/main/java/database/signature";
+    //private final String DB_URL = "jdbc:h2:file:C:/Users/camp-eul/Documents/GitHub/dc16-signing/signing-database/src/main/resources/signature";
+    private final String DB_URL = "jdbc:h2:file:src/main/resource/signature";
+
     private final String USER = "SA";
     private final String PASS = "";
 
@@ -34,6 +24,9 @@ public class SignatureDatabase {
 
     public SignatureDatabase(){
         try {
+            ClassLoader classLoader = getClass().getClassLoader();
+            //dokumentTilSignering = new File(classLoader.getResource(relativeDocumentPath).getFile());
+
             Class.forName(JDBC_DRIVER);
             connection = DriverManager.getConnection(DB_URL, USER, PASS);
             statement = connection.createStatement();
@@ -46,7 +39,7 @@ public class SignatureDatabase {
 
     public void createTable(){
         try {
-            statement.execute("DROP TABLE SIGNATURE ");
+            statement.execute("DROP TABLE IF EXISTS SIGNATURE ");
             statement.execute("CREATE TABLE SIGNATURE " +
                     "(id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT," +
                     "status VARCHAR(30)," +
