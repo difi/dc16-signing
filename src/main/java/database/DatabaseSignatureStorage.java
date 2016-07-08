@@ -53,6 +53,11 @@ public class DatabaseSignatureStorage {
 
         // Creating test entries
         db.insertSomething("name", "id");
+        try {
+            db.selectQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         logger.debug("TESTLOGGER");
 
     }
