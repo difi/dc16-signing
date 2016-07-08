@@ -42,7 +42,7 @@ public class SigningController {
 
     /**
      * This is the mapping for starting the process. It should probably have a parameter designating the correct document by ID
-     * from the database.
+     * from the SignatureDatabase.
      * @return ModelAndView - A model and a view.
      * @throws IOException
      *
