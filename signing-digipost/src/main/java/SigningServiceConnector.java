@@ -9,9 +9,6 @@ import no.digipost.signature.client.security.KeyStoreConfig;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * Created by camp-mlo on 01.07.2016.
- */
 public class SigningServiceConnector {
     private File filePath;
     private ClientConfiguration client;
