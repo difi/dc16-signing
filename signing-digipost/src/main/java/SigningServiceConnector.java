@@ -9,8 +9,10 @@ import no.digipost.signature.client.security.KeyStoreConfig;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Class responsible for contacting the signing service.
+ */
 public class SigningServiceConnector {
-    private File filePath;
     private ClientConfiguration client;
     private String redirectUrl;
     private String statusUrl;

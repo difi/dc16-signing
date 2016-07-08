@@ -51,7 +51,6 @@ public class AsiceMaker {
         DirectDocument document = DocumentHandler.pdfToDocument(PDFPath);
         signatureJob = createSignatureJob(signer, document, exitUrls);
 
-        DocumentBundle asice = createASiCE.createASiCE(signatureJob);
         return createASiCE.createASiCE(signatureJob);
     }
 
