@@ -5,10 +5,6 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-/**
- * Created by camp-nto on 07.07.2016.
- */
-
 @EnableAutoConfiguration
 @Controller
 public class IndexController {
