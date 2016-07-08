@@ -1,48 +1,59 @@
 package database;
 
+import org.apache.catalina.Server;
+import org.slf4j.LoggerFactory;
+
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.logging.Logger;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  * Created by camp-mlo on 07.07.2016.
  */
 public class DatabaseSignatureStorage {
 
+    private static org.slf4j.Logger logger = LoggerFactory.getLogger(DatabaseSignatureStorage.class);
+
     private static final int MINUTE =60*1000;
     private int initialValidPeriod = 30;
     private int expandSessionPeriod = 30;
     private int maxValidPeriod = 120;
+    private  static SignatureDatabase db = new SignatureDatabase();
 
-    private static DBsetup dbInstance = new DBsetup();
+    private static DatabaseSignatureStorage ourInstance = new DatabaseSignatureStorage();
 
-    public static DBsetup getDbInstance(){
-        return dbInstance;
+    public static DatabaseSignatureStorage getDbInstance(){
+        return ourInstance;
     }
 
     private static HashMap<String, String> defaultData;
 
     // private Map<String, >
 
-    private static String generateDatabaseKey(String a, String b){
+    private static String generateDatabaseKey(String a, String b) {
         String uuid = UUID.randomUUID().toString();
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.reset();
-            md.update(uuid.getBytes());
-            md.update(a.getBytes());
-            md.update(b.getBytes());
-            byte[] array = md.digest();
-            StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < array.length; i++) {
-                sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1, 3));
-            }
-            return sb.toString();
-        } catch (NoSuchAlgorithmException exc) {
-            exc.printStackTrace();
-        }
+        db.insertSomething("name", "id");
         return null;
     }
 
-    private DBsetup(){
-        defaultData = new HashMap<String, String>();
-        defaultData.put("id", "123");
-    }
 
+    public static void main(String[] args) {
+        db.createTable();
+
+        // Creating test entries
+        db.insertSomething("name", "id");
+        logger.debug("TESTLOGGER");
+
+    }
 }

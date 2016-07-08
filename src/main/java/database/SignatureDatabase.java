@@ -10,6 +10,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.*;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 /**
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
  */
 public class SignatureDatabase {
     private final String JDBC_DRIVER = "org.h2.Driver";
-    private final String DB_URL = "jdbc:h2:mem:cookie";
+    private final String DB_URL = "jdbc:h2:mem:signature";
     private final String USER = "SA";
     private final String PASS = "";
 
@@ -40,16 +41,28 @@ public class SignatureDatabase {
 
     public void createTable(){
         try {
-            statement.execute("CREATE TABLE IF NOT EXISTS PUBLIC.signaturejob" +
-            "(" +
-                "uuid VARCHAR(36) PRIMARY KEY NOT NULL, " +
-                "name VARCHAR(30) NOT NULL" +
-                "id VARCHAR(30) NOT NULL" +
-                ");");
-           //statement.execute("CREATE UNIQUE INDEX IF NOT EXISTS \" "ON PUBLIC.")
+            statement.execute("CREATE TABLE SIGNATURE(ID INT PRIMARY KEY,\n" +
+                    "   NAME VARCHAR(255));");
+           //statement.execute("CREATE UNIQUE INDEX IF NOT EXISTS \"cookie_uuid_uindex \" ON PUBLIC.signature (uuid);");
         } catch (SQLException e) {
             System.err.println("SQLException caught in SignatureDatabase.createTable()" + e);
             e.printStackTrace();
         } System.out.println("DB: Table created");
+    }
+
+    public void insertSomething(String name, String id){
+        long presentTimeInMillisec = new Date().getTime(); // lastUpdated
+            String query = String.format("INSERT INTO " +
+                    "SIGNATURE (name, id) " +
+                        "VALUES ('name1', '1')");
+
+        System.out.println("DB: Insert signature query: " + query);
+        try {
+            statement.executeUpdate(query);
+            System.out.println("DB: Signature inserted into the database with uuid ");
+        } catch (SQLException e){
+            System.err.println("SQLException caught in SignatureDatabase.insertSomething(): " + e);
+            e.printStackTrace();
+        }
     }
 }
