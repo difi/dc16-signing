@@ -1,12 +1,12 @@
 import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.security.KeyStoreConfig;
 import org.hibernate.validator.constraints.URL;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
 
 import java.io.*;
 import java.security.KeyStoreException;
@@ -14,9 +14,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
 
-/**
- * Created by camp-nto on 08.07.2016.
- */
 
 @EnableAutoConfiguration
 @RestController
@@ -26,11 +23,7 @@ public class DigipostSpringConnector {
     private URL completionURL; //Can not remove
     private String statusQueryToken;
     private StatusReader statusReader;
-
-
-
-
-
+    private SignedDocumentFetcher signedDocumentFetcher;
     private String[] exitUrls = {
             "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
     };
@@ -43,6 +36,8 @@ public class DigipostSpringConnector {
      * @throws IOException
      *
      */
+
+
     @RequestMapping("/asice")
     public ModelAndView makeAsice() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
         AsiceMaker asiceMaker = new AsiceMaker();
@@ -112,38 +107,15 @@ public class DigipostSpringConnector {
 
     @RequestMapping("/getPades")
     public String getPades() throws IOException{
-        if (this.statusReader.getStatusResponse().is(this.statusReader.getStatusResponse().getStatus().SIGNED)) {
-                InputStream pAdESStream = signingServiceConnector.getDirectClient().getPAdES(this.statusReader.getStatusResponse().getpAdESUrl());
-                byte[] buffer = new byte[pAdESStream.available()];
-                pAdESStream.read(buffer);
-
-                File targetFile = new File(System.getProperty("user.dir") + "targetFile2.pdf");
-                OutputStream outStream = new FileOutputStream(targetFile);
-                outStream.write(buffer);
-                this.statusReader.confirmProcessedSignatureJob();
-
-                return "fetched pade";
-            }
-            else return "failed";
-            // status was either REJECTED or FAILED, XAdES and PAdES are not available.
+        this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient(),this.statusReader);
+        return signedDocumentFetcher.getPades();
+        // status was either REJECTED or FAILED, XAdES and PAdES are not available.
         }
 
     @RequestMapping("/getXades")
     public String getXades() throws IOException{
-        if (this.statusReader.getStatusResponse().is(this.statusReader.getStatusResponse().getStatus().SIGNED)) {
-            InputStream xAdESStream = signingServiceConnector.getDirectClient().getXAdES(this.statusReader.getStatusResponse().getxAdESUrl());
-            System.out.println(this.statusReader.getStatusResponse().getxAdESUrl().getxAdESUrl());
-            byte[] buffer = new byte[xAdESStream.available()];
-            xAdESStream.read(buffer);
-
-            File targetFile = new File(System.getProperty("user.dir") + "targetFile.xml");
-            OutputStream outStream = new FileOutputStream(targetFile);
-            outStream.write(buffer);
-            this.statusReader.confirmProcessedSignatureJob();
-
-            return "fetched xade";
-        }
-        else return "failed";
+        this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient(),this.statusReader);
+        return signedDocumentFetcher.getXades();
         // status was either REJECTED or FAILED, XAdES and PAdES are not available.
     }
 
