@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -25,6 +24,8 @@ public class DigipostSpringConnector {
 
     //TODO: Decide which of these are stored here or just in the signingServiceConnector object.
     private URL completionURL; //Can not remove
+    private String statusQueryToken;
+    private StatusReader statusReader;
 
 
 
@@ -68,23 +69,84 @@ public class DigipostSpringConnector {
      * as a query parameter. TODO: Find out what else it should do.
      */
     @RequestMapping("/onCompletion")
-    public String whenSigningComplete(){
-        String status = signingServiceConnector.checkStatus();
-        return status;
+    public String whenSigningComplete(@RequestParam("status_query_token") String token){
+        this.statusQueryToken = token;
+        this.statusReader = new StatusReader(signingServiceConnector.getDirectClient(), signingServiceConnector.getDirectJobResponse(), this.statusQueryToken);
+        return statusReader.getStatus();
+
     }
 
     @RequestMapping("/onError")
-    public String whenSigningFails(){
-        String status = signingServiceConnector.checkStatus();
-        return status;
+    public String whenSigningFails(@RequestParam("status_query_token") String token){
+        this.statusQueryToken = token;
+        this.statusReader = new StatusReader(signingServiceConnector.getDirectClient(), signingServiceConnector.getDirectJobResponse(), this.statusQueryToken);
+        return statusReader.getStatus();
+
     }
 
     @RequestMapping("/onRejection")
     public String whenUserRejects(@RequestParam("status_query_token") String token){
-        String status = signingServiceConnector.checkStatus();
-        return status;
+        //String status = signingServiceConnector.checkStatus();
+        this.statusQueryToken = token;
+        this.statusReader = new StatusReader(signingServiceConnector.getDirectClient(), signingServiceConnector.getDirectJobResponse(), this.statusQueryToken);
+        return statusReader.getStatus();
         //Returnerer statusChange.toString()
     }
+
+    @RequestMapping("/getDocument")
+    public String getSignedDocument(@RequestParam("document_type") String document_type){
+        if (this.statusReader.getStatusResponse().is(this.statusReader.getStatusResponse().getStatus().SIGNED)) {
+            if(document_type == "xades") {
+                InputStream xAdESStream = signingServiceConnector.getDirectClient().getXAdES(this.statusReader.getStatusResponse().getxAdESUrl());
+                return "fetched xade";
+            } else if(document_type == "pades") {
+                InputStream pAdESStream = signingServiceConnector.getDirectClient().getPAdES(this.statusReader.getStatusResponse().getpAdESUrl());
+                return "fetched pade";
+            }
+            else return "failed";
+        } else {
+            return "failed2";
+            // status was either REJECTED or FAILED, XAdES and PAdES are not available.
+        }
+    }
+
+    @RequestMapping("/getPades")
+    public String getPades() throws IOException{
+        if (this.statusReader.getStatusResponse().is(this.statusReader.getStatusResponse().getStatus().SIGNED)) {
+                InputStream pAdESStream = signingServiceConnector.getDirectClient().getPAdES(this.statusReader.getStatusResponse().getpAdESUrl());
+                byte[] buffer = new byte[pAdESStream.available()];
+                pAdESStream.read(buffer);
+
+                File targetFile = new File(System.getProperty("user.dir") + "targetFile2.pdf");
+                OutputStream outStream = new FileOutputStream(targetFile);
+                outStream.write(buffer);
+                this.statusReader.confirmProcessedSignatureJob();
+
+                return "fetched pade";
+            }
+            else return "failed";
+            // status was either REJECTED or FAILED, XAdES and PAdES are not available.
+        }
+
+    @RequestMapping("/getXades")
+    public String getXades() throws IOException{
+        if (this.statusReader.getStatusResponse().is(this.statusReader.getStatusResponse().getStatus().SIGNED)) {
+            InputStream xAdESStream = signingServiceConnector.getDirectClient().getXAdES(this.statusReader.getStatusResponse().getxAdESUrl());
+            System.out.println(this.statusReader.getStatusResponse().getxAdESUrl().getxAdESUrl());
+            byte[] buffer = new byte[xAdESStream.available()];
+            xAdESStream.read(buffer);
+
+            File targetFile = new File(System.getProperty("user.dir") + "targetFile.xml");
+            OutputStream outStream = new FileOutputStream(targetFile);
+            outStream.write(buffer);
+            this.statusReader.confirmProcessedSignatureJob();
+
+            return "fetched xade";
+        }
+        else return "failed";
+        // status was either REJECTED or FAILED, XAdES and PAdES are not available.
+    }
+
 
     //In order to get to the sign-in portal, such as BankID, the user needs a redirect-url and a valid token. This method checks if the token is valid
     public boolean checkToken(){

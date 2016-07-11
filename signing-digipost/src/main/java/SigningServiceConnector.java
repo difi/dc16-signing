@@ -70,5 +70,13 @@ public class SigningServiceConnector {
                 return false;
             }
         }
+
+    public DirectClient getDirectClient(){
+        return this.directClient;
+    }
+
+    public DirectJobResponse getDirectJobResponse(){
+        return this.directJobResponse;
+    }
     }
 
