@@ -34,14 +34,6 @@ public class SigningServiceConnector {
      * Check the status of a job. Currently just prints out information regarding the job.
      * @return
      */
-        public String checkStatus(){
-            String statusUrl = directJobResponse.getStatusUrl().toString();
-            directJobStatusResponse = directClient.getStatusChange();
-            System.out.println(directJobStatusResponse.toString());
-            DirectJobStatus directJobStatus = directJobStatusResponse.getStatus();
-            System.out.println(directJobStatus.toString());
-            return directJobStatus.toString();
-        }
 
         public String getRedirectUrl(){
             return this.redirectUrl;
