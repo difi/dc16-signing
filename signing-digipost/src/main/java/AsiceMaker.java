@@ -8,17 +8,18 @@ import no.digipost.signature.client.portal.PortalDocument;
 import no.digipost.signature.client.portal.PortalJob;
 import no.digipost.signature.client.portal.PortalSigner;
 
-import javax.sound.sampled.Port;
 import java.io.*;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.util.List;
 
 public class AsiceMaker {
 
     private CreateASiCE createASiCE;
     private ManifestCreator manifestCreator = new CreateDirectManifest();
     private SignatureJob signatureJob;
+    private PortalJob portalJob;
     private File dokumentTilSignering;
     private File kontaktInfoClientTest;
     private String relativeDocumentPath = "Documents//Dokument til signering 3.pdf";
@@ -48,14 +49,25 @@ public class AsiceMaker {
      *
      * @return
      */
-    public DocumentBundle createAsice(String signerId, String sender, String[] exitUrls, ClientConfiguration clientConfiguration) throws KeyStoreException, NoSuchAlgorithmException, NoSuchProviderException, IOException, java.security.cert.CertificateException {
+    public DocumentBundle createAsice(String signerId, String ss, String[] exitUrls, ClientConfiguration clientConfiguration) throws KeyStoreException, NoSuchAlgorithmException, NoSuchProviderException, IOException, java.security.cert.CertificateException {
         String PDFPath = DocumentHandler.setAbsolutePathToPDF(dokumentTilSignering).toString();
         createASiCE = new CreateASiCE(manifestCreator, clientConfiguration);
         DirectSigner signer = createDirectSigner(signerId);
-        DirectDocument document = DocumentHandler.pdfToDocument(PDFPath);
-        signatureJob = createSignatureJob(signer, document, exitUrls);
+        DirectDocument document = DocumentHandler.pdfToDirectDocument(PDFPath);
+        this.signatureJob = createSignatureJob(signer, document, exitUrls);
 
         return createASiCE.createASiCE(signatureJob);
+    }
+
+    public DocumentBundle createPortalAsice(List<PortalSigner> signers, String[] exitUrls, ClientConfiguration clientConfiguration) throws IOException{
+        String PDFPath = DocumentHandler.setAbsolutePathToPDF(dokumentTilSignering).toString();
+        createASiCE = new CreateASiCE(manifestCreator, clientConfiguration);
+        PortalDocument document = DocumentHandler.pdfToPortalDocument(PDFPath);
+        this.portalJob = createSignatureJobPortal(signers,document,exitUrls);
+
+        return null;
+        //return createASiCE.createASiCE(this.portalJob);
+
     }
 
 
@@ -68,8 +80,9 @@ public class AsiceMaker {
         return new DirectJob.Builder(signer, document, exitUrls[0], exitUrls[1], exitUrls[2]).build();
     }
 
-    public PortalJob createSignatureJobPortal(PortalSigner signers, PortalDocument document, String[] exitUrls) {
-        return PortalJob.builder(document, signers).build();
+    public PortalJob createSignatureJobPortal(List<PortalSigner> signers, PortalDocument document, String[] exitUrls) {
+        System.out.println(PortalJob.builder(document,signers).build().toString());
+        return PortalJob.builder(document,signers).build();
     }
 
     public File getContactInfo() {
@@ -79,5 +92,7 @@ public class AsiceMaker {
     public SignatureJob getSignatureJob() {
         return this.signatureJob;
     }
+
+    public PortalJob getPortalJob() { return this.portalJob;}
 
 }

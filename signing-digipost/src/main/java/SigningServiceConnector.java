@@ -20,12 +20,13 @@ public class SigningServiceConnector {
     private ClientConfiguration client;
     private String redirectUrl;
     private String statusUrl;
-
+    private String cancellationUrl;
     //Response and client objects
     private DirectJobResponse directJobResponse;
     private DirectClient directClient;
     private DirectJobStatusResponse directJobStatusResponse;
 
+    private PortalClient portalClient;
     public SigningServiceConnector() throws IOException {
 
     }
@@ -67,15 +68,25 @@ public class SigningServiceConnector {
             }
         }
 
-    public void sendPortalRequest(PortalJob portalJob, KeyStoreConfig keyStoreConfig){
+    public boolean sendPortalRequest(PortalJob portalJob, KeyStoreConfig keyStoreConfig){
         client = ClientConfiguration.builder(keyStoreConfig)
             .serviceUri(ServiceUri.DIFI_TEST)
             .trustStore(Certificates.TEST)
             .globalSender(new Sender("991825827"))
             .build();
-        PortalClient portalClient =  new PortalClient(client);
+        portalClient =  new PortalClient(client);
 
         PortalJobResponse portalJobResponse = portalClient.create(portalJob);
+
+        this.cancellationUrl = portalJobResponse.getCancellationUrl().toString();
+
+        if(portalJobResponse != null){
+            return true;
+        } else {
+            return false;
+        }
+
+
     }
 
     public DirectClient getDirectClient(){
@@ -85,5 +96,8 @@ public class SigningServiceConnector {
     public DirectJobResponse getDirectJobResponse(){
         return this.directJobResponse;
     }
+
+    public PortalClient getPortalClient() { return this.portalClient;}
     }
+
 

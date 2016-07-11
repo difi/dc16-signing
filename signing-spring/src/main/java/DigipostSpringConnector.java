@@ -1,4 +1,7 @@
 import no.digipost.signature.client.core.SignatureJob;
+import no.digipost.signature.client.portal.Notifications;
+import no.digipost.signature.client.portal.PortalJob;
+import no.digipost.signature.client.portal.PortalSigner;
 import no.digipost.signature.client.security.KeyStoreConfig;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -13,6 +16,9 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 
 @EnableAutoConfiguration
@@ -37,7 +43,38 @@ public class DigipostSpringConnector {
      *
      */
 
+    @RequestMapping("/portal")
+    public void startPortalJob() throws IOException{
+        AsiceMaker asiceMaker = new AsiceMaker();
+        SetupClientConfig clientConfig = new SetupClientConfig();
 
+        clientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
+        clientConfig.setupClientConfiguration("991825827");
+        List<PortalSigner> portalSigners = new ArrayList<>();
+        portalSigners.add( PortalSigner.builder("17079493538",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
+        portalSigners.add( PortalSigner.builder("17079493457",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
+        portalSigners.add( PortalSigner.builder("17079493295",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
+
+        asiceMaker.createPortalAsice(portalSigners,exitUrls,clientConfig.getClientConfiguration());
+
+        PortalJob portalJob = asiceMaker.getPortalJob();
+        KeyStoreConfig keyStoreConfig = clientConfig.getKeyStoreConfig();
+        if(this.signingServiceConnector != null){
+            signingServiceConnector.sendPortalRequest(portalJob,keyStoreConfig);
+        } else {
+            signingServiceConnector = new SigningServiceConnector();
+            signingServiceConnector.sendPortalRequest(portalJob,keyStoreConfig);
+
+        }
+
+    }
+
+    @RequestMapping("/poll")
+    public String poll(){
+        PortalJobPoller poller = new PortalJobPoller(signingServiceConnector.getPortalClient());
+        String status = poller.poll();
+        return status;
+    }
     @RequestMapping("/asice")
     public ModelAndView makeAsice() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
         AsiceMaker asiceMaker = new AsiceMaker();
