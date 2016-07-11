@@ -4,7 +4,11 @@ import no.digipost.signature.client.asice.manifest.CreateDirectManifest;
 import no.digipost.signature.client.asice.manifest.ManifestCreator;
 import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.direct.*;
+import no.digipost.signature.client.portal.PortalDocument;
+import no.digipost.signature.client.portal.PortalJob;
+import no.digipost.signature.client.portal.PortalSigner;
 
+import javax.sound.sampled.Port;
 import java.io.*;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -60,6 +64,10 @@ public class AsiceMaker {
 
     public SignatureJob createSignatureJob(DirectSigner signer, DirectDocument document, String[] exitUrls) {
         return new DirectJob.Builder(signer, document, exitUrls[0], exitUrls[1], exitUrls[2]).build();
+    }
+
+    public PortalJob createSignatureJobPortal(PortalSigner signers, PortalDocument document, String[] exitUrls) {
+        return PortalJob.builder(document, signers).build();
     }
 
     public File getContactInfo() {

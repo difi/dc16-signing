@@ -4,6 +4,10 @@ import no.digipost.signature.client.ServiceUri;
 import no.digipost.signature.client.core.Sender;
 import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.direct.*;
+import no.digipost.signature.client.portal.PortalClient;
+import no.digipost.signature.client.portal.PortalDocument;
+import no.digipost.signature.client.portal.PortalJob;
+import no.digipost.signature.client.portal.PortalJobResponse;
 import no.digipost.signature.client.security.KeyStoreConfig;
 
 import java.io.File;
@@ -70,6 +74,17 @@ public class SigningServiceConnector {
                 return false;
             }
         }
+
+    public void sendPortalRequest(PortalJob portalJob, KeyStoreConfig keyStoreConfig){
+        client = ClientConfiguration.builder(keyStoreConfig)
+            .serviceUri(ServiceUri.DIFI_TEST)
+            .trustStore(Certificates.TEST)
+            .globalSender(new Sender("991825827"))
+            .build();
+        PortalClient portalClient =  new PortalClient(client);
+
+        PortalJobResponse portalJobResponse = portalClient.create(portalJob);
+    }
 
     public DirectClient getDirectClient(){
         return this.directClient;
