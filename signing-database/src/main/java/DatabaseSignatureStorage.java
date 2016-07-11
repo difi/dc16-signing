@@ -1,24 +1,19 @@
+import org.apache.catalina.LifecycleState;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 
 public class DatabaseSignatureStorage {
 
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(DatabaseSignatureStorage.class);
 
-    private static final int MINUTE =60*1000;
-    private int initialValidPeriod = 30;
-    private int expandSessionPeriod = 30;
-    private int maxValidPeriod = 120;
     private  static SignatureDatabase db = new SignatureDatabase();
-
     private static DatabaseSignatureStorage ourInstance = new DatabaseSignatureStorage();
-
     public static DatabaseSignatureStorage getDbInstance(){
         return ourInstance;
     }
-
     private static HashMap<String, String> defaultData;
 
     public static void main(String[] args) {
@@ -36,14 +31,29 @@ public class DatabaseSignatureStorage {
         String signer2 = "111111111111";
         String document2 = "Dokument til signering.pdf";
 
+        // Inserting sender1 and sender2 data into database and printing
         db.insertSignature(status1, signer1, sender1, document1);
         db.insertSignature(status2, signer2, sender2, document2);
         try {
-            db.selectQuery();
+            db.printDB();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        logger.debug("TESTLOGGER");
+
+        // Retriving a signature job using sender as key
+        String signaturejob = db.getSignatureJob(sender1);
+        System.out.print("DB-data: Signaturejob: " + signaturejob + "\n\n");
+
+        // Retriving a signer id using sender as key
+        String signer = db.getSigner(sender1);
+        System.out.println( "DB-data: Signer: " + signer + "\n\n");
+
+        // Update signature status to Signert
+        db.updateValue(sender1, "status", "Signert");
+
+
+        System.out.println("\n \n __________________________________________________________________________________\n");
+        logger.debug("TESTLOGGER \n");
 
     }
 }
