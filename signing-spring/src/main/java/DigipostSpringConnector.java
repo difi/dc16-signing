@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -113,14 +111,36 @@ public class DigipostSpringConnector {
     }
 
     @RequestMapping("/getPades")
-    public String getPades(){
+    public String getPades() throws IOException{
         if (this.statusReader.getStatusResponse().is(this.statusReader.getStatusResponse().getStatus().SIGNED)) {
                 InputStream pAdESStream = signingServiceConnector.getDirectClient().getPAdES(this.statusReader.getStatusResponse().getpAdESUrl());
+                byte[] buffer = new byte[pAdESStream.available()];
+                pAdESStream.read(buffer);
+
+                File targetFile = new File(System.getProperty("user.dir") + "targetFile2.pdf");
+                OutputStream outStream = new FileOutputStream(targetFile);
+                outStream.write(buffer);
                 return "fetched pade";
             }
             else return "failed";
             // status was either REJECTED or FAILED, XAdES and PAdES are not available.
         }
+
+    @RequestMapping("/getXades")
+    public String getXades() throws IOException{
+        if (this.statusReader.getStatusResponse().is(this.statusReader.getStatusResponse().getStatus().SIGNED)) {
+            InputStream xAdESStream = signingServiceConnector.getDirectClient().getXAdES(this.statusReader.getStatusResponse().getxAdESUrl());
+            byte[] buffer = new byte[xAdESStream.available()];
+            xAdESStream.read(buffer);
+
+            File targetFile = new File(System.getProperty("user.dir") + "targetFile.xml");
+            OutputStream outStream = new FileOutputStream(targetFile);
+            outStream.write(buffer);
+            return "fetched xade";
+        }
+        else return "failed";
+        // status was either REJECTED or FAILED, XAdES and PAdES are not available.
+    }
 
 
     //In order to get to the sign-in portal, such as BankID, the user needs a redirect-url and a valid token. This method checks if the token is valid
