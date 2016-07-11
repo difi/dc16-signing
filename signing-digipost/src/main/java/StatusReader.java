@@ -15,10 +15,16 @@ public class StatusReader {
         this.token = token;
     }
 
-    public void getStatus(){
-        statusResponse = client.getStatus(StatusReference.of(jobResponse).withStatusQueryToken(token));
-        statusResponse.getStatus();
+    public String getStatus(){
+        this.statusResponse = client.getStatus(StatusReference.of(jobResponse).withStatusQueryToken(token));
+        return statusResponse.getStatus().toString();
     }
+
+    public DirectJobStatusResponse getStatusResponse(){
+        return this.statusResponse;
+    }
+
+
 
 
 }

@@ -10,4 +10,7 @@ public class ApplicationMain {
         Object[] sources = {DigipostSpringConnector.class, controllers.IndexController.class};
         SpringApplication.run(sources, args);
     }
+
+    //DirectSignatureJobResponse.getStatusURL
+    //Bruk bibliotek, send status-url og query-token
 }

@@ -37,6 +37,6 @@ public class AsiceTest {
         SigningServiceConnector signingServiceConnector = new SigningServiceConnector();
         signingServiceConnector.sendRequest(signatureJob, keyStoreConfig);
 
-        //Ta tak i redirect-url, sett det i Spring
+        //StatusReader statusReader = new StatusReader(signingServiceConnector.getDirectClient(), signingServiceConnector.getDirectJobResponse(),  )
     }
 }
