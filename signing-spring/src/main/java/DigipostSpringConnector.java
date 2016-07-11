@@ -120,6 +120,8 @@ public class DigipostSpringConnector {
                 File targetFile = new File(System.getProperty("user.dir") + "targetFile2.pdf");
                 OutputStream outStream = new FileOutputStream(targetFile);
                 outStream.write(buffer);
+                this.statusReader.confirmProcessedSignatureJob();
+
                 return "fetched pade";
             }
             else return "failed";
@@ -130,12 +132,15 @@ public class DigipostSpringConnector {
     public String getXades() throws IOException{
         if (this.statusReader.getStatusResponse().is(this.statusReader.getStatusResponse().getStatus().SIGNED)) {
             InputStream xAdESStream = signingServiceConnector.getDirectClient().getXAdES(this.statusReader.getStatusResponse().getxAdESUrl());
+            System.out.println(this.statusReader.getStatusResponse().getxAdESUrl().getxAdESUrl());
             byte[] buffer = new byte[xAdESStream.available()];
             xAdESStream.read(buffer);
 
             File targetFile = new File(System.getProperty("user.dir") + "targetFile.xml");
             OutputStream outStream = new FileOutputStream(targetFile);
             outStream.write(buffer);
+            this.statusReader.confirmProcessedSignatureJob();
+
             return "fetched xade";
         }
         else return "failed";

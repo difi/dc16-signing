@@ -20,6 +20,10 @@ public class StatusReader {
         return statusResponse.getStatus().toString();
     }
 
+    public void confirmProcessedSignatureJob(){
+        this.client.confirm(statusResponse);
+    }
+
     public DirectJobStatusResponse getStatusResponse(){
         return this.statusResponse;
     }
