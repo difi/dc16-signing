@@ -10,9 +10,7 @@ import java.util.List;
 
 public class SignatureDatabase {
     private final String JDBC_DRIVER = "org.h2.Driver";
-    //private final String DB_URL = "jdbc:h2:file:C:/Users/camp-eul/Documents/GitHub/dc16-signing/signing-database/src/main/resources/signature";
-    private final String DB_URL = "jdbc:h2:file:src/main/java/resource/signature";
-
+    private final String DB_URL = "jdbc:h2:file:signing-database/src/main/resources/signature";
     private final String USER = "SA";
     private final String PASS = "";
 
@@ -64,14 +62,11 @@ public class SignatureDatabase {
 
     /**
      * This method inserts a signature job into the database.
-     * @param status the signingstatus of each document. Signed / Not Signed
-     * @param signer the pid of the person that is supposed to signe document
-     * @param sender the org.number of the person/organisation who is sending the document to signing
-     * @param document the document, actual file or path/id??
+     * @param signatureJob
      */
-    public void insertSignature(String status, String signer, String sender, String document){
+    public void insertSignature(SignatureJobModel signatureJob){
         String query = String.format("INSERT INTO SIGNATURE (status, signer, sender, document) " +
-                "VALUES ('%s','%s','%s','%s');", status, signer, sender, document);
+                "VALUES ('%s','%s','%s','%s');", signatureJob.getStatus(), signatureJob.getSigner(), signatureJob.getSender(), "document");
 
         try {
             statement.executeUpdate(query);
@@ -104,13 +99,13 @@ public class SignatureDatabase {
 
     /**
      *This method gets a signature job, using the sender as a key.
-     * @param sender the id of the sender, needed to get the whole signature job from table
+     * @param signatureJob
      * @return String signaturejob  with the whole signature job
      */
-    public String getSignatureJob(String sender) {
+    public String getSignatureJob(SignatureJobModel signatureJob) {
         String query = String.format("SELECT (id, status, signer, sender, document)" +
                         "FROM SIGNATURE " +
-                        "WHERE sender LIKE '%s';", sender);
+                        "WHERE sender LIKE '%s';", signatureJob.getSender());
 
         String signaturejob = "";
         System.out.println("DB: Select query: " + query);
@@ -156,18 +151,18 @@ public class SignatureDatabase {
         return null;
     }
 
-    public void updateValue(String sender, String column, String value){
+    public void updateStatus(SignatureJobModel signatureJob, String value){
         String update = String.format("UPDATE SIGNATURE " +
-                "SET %s = '%s' " +
-                "WHERE sender = '%s' ;", column, value, sender);
-        System.out.println("DB: Update query: Signaturejob with sender = " + sender + " has updated '" + column + "' to " + value);
+                "SET status = '%s' " +
+                "WHERE sender = '%s' ;", value, signatureJob.getSender());
+        System.out.println("DB: Update query: Signaturejob with sender = " + signatureJob.getSender() + " has updated 'status' to " + value);
+        signatureJob.updateStatus(value);
         try {
             statement.executeUpdate(update);
-            //metaData = resultSet.getMetaData();
         }catch (SQLException e) {
-            System.err.println("SQLException caught in SignatureDatabase.updateValue()" + e);
+            System.err.println("SQLException caught in SignatureDatabase.updateStatus()" + e);
         }
 
     }
 
-    }
+}
