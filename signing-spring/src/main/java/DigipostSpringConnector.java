@@ -34,8 +34,10 @@ public class DigipostSpringConnector {
             "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
     };
     private SigningServiceConnector signingServiceConnector;
+    public DatabaseSignatureStorage storage = new DatabaseSignatureStorage();
+    public SignatureJobModel s;
 
-    public static SignatureDatabase db = new SignatureDatabase();
+
     /**
      * This is the mapping for starting the process. It should probably have a parameter designating the correct document by ID
      * from the SignatureDatabase.
@@ -47,8 +49,7 @@ public class DigipostSpringConnector {
 
     @RequestMapping("/asice")
     public ModelAndView makeAsice() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
-        DatabaseSignatureStorage storage = new DatabaseSignatureStorage();
-        SignatureJobModel s = storage.createDatabase();
+        s = storage.createDatabase();
 
         AsiceMaker asiceMaker = new AsiceMaker();
         SetupClientConfig clientConfig = new SetupClientConfig();
@@ -77,6 +78,7 @@ public class DigipostSpringConnector {
     public String whenSigningComplete(@RequestParam("status_query_token") String token){
         this.statusQueryToken = token;
         this.statusReader = new StatusReader(signingServiceConnector.getDirectClient(), signingServiceConnector.getDirectJobResponse(), this.statusQueryToken);
+        storage.updateStatus(s, statusReader.getStatus());
         return statusReader.getStatus();
 
     }
@@ -85,6 +87,7 @@ public class DigipostSpringConnector {
     public String whenSigningFails(@RequestParam("status_query_token") String token){
         this.statusQueryToken = token;
         this.statusReader = new StatusReader(signingServiceConnector.getDirectClient(), signingServiceConnector.getDirectJobResponse(), this.statusQueryToken);
+        storage.updateStatus(s, statusReader.getStatus());
         return statusReader.getStatus();
 
     }
@@ -94,6 +97,7 @@ public class DigipostSpringConnector {
         //String status = signingServiceConnector.checkStatus();
         this.statusQueryToken = token;
         this.statusReader = new StatusReader(signingServiceConnector.getDirectClient(), signingServiceConnector.getDirectJobResponse(), this.statusQueryToken);
+        storage.updateStatus(s, statusReader.getStatus());
         return statusReader.getStatus();
         //Returnerer statusChange.toString()
     }

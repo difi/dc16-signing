@@ -9,16 +9,17 @@ public class DatabaseSignatureStorage {
 
     private  static SignatureDatabase db = new SignatureDatabase();
 
-    private static DatabaseSignatureStorage ourInstance = new DatabaseSignatureStorage();
-    public static DatabaseSignatureStorage getDbInstance(){
-        return ourInstance;
+    public DatabaseSignatureStorage(){
+        db.createTable();
     }
-    private static HashMap<String, String> defaultData;
 
     public SignatureJobModel createDatabase(){
-        db.createTable();
         SignatureJobModel signatureJobModel = new SignatureJobModel("Ikke signert", "123456789", "17079493538");
         db.insertSignature(signatureJobModel);
         return signatureJobModel;
+    }
+
+    public void updateStatus(SignatureJobModel signatureJobModel, String status){
+        db.updateStatus(signatureJobModel, status);
     }
 }
