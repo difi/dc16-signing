@@ -2,21 +2,20 @@ import no.digipost.signature.client.asice.signature.Signature;
 import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.security.KeyStoreConfig;
 import org.hibernate.validator.constraints.URL;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.File;
-import java.io.IOException;
+
+import java.io.*;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
 import java.sql.SQLException;
+
 
 /**
  * This class is a sceleton for the signing-flow.
@@ -24,19 +23,13 @@ import java.sql.SQLException;
  */
 @RestController
 @EnableAutoConfiguration
-@Controller
-
-
-public class SigningController {
+public class DigipostSpringConnector {
 
     //TODO: Decide which of these are stored here or just in the signingServiceConnector object.
-    private URL redirectURL; //Redirects the user to a sign-in portal, for example "BankID"
-    private URL completionURL; //This URL is given to the user if everything goes "well" with the sign-in. Redirects the user back to our website
-    private URL rejectionURL; //given to the user if he/she chooses to stop the signing process
-    private URL errorURL; //given to the user if an error occurs during the signing process
-    private URL statusURL; //can be called to give a "status" after the signing process. Status contains useful information, such as the signed documents
-    private File completionDocument; //Stores the signed document
-    private URL confirmationURL; //called in the very end to check if the whole signing process went as planned
+    private URL completionURL; //Can not remove
+    private String statusQueryToken;
+    private StatusReader statusReader;
+    private SignedDocumentFetcher signedDocumentFetcher;
     private String[] exitUrls = {
             "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
     };
@@ -50,6 +43,8 @@ public class SigningController {
      * @throws IOException
      *
      */
+
+
     @RequestMapping("/asice")
     public ModelAndView makeAsice() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
         DatabaseSignatureStorage storage = new DatabaseSignatureStorage();
@@ -79,23 +74,61 @@ public class SigningController {
      * as a query parameter. TODO: Find out what else it should do.
      */
     @RequestMapping("/onCompletion")
-    public String whenSigningComplete(){
-        String status = signingServiceConnector.checkStatus();
-        return status;
+    public String whenSigningComplete(@RequestParam("status_query_token") String token){
+        this.statusQueryToken = token;
+        this.statusReader = new StatusReader(signingServiceConnector.getDirectClient(), signingServiceConnector.getDirectJobResponse(), this.statusQueryToken);
+        return statusReader.getStatus();
+
     }
 
     @RequestMapping("/onError")
-    public String whenSigningFails(){
-        String status = signingServiceConnector.checkStatus();
-        return status;
+    public String whenSigningFails(@RequestParam("status_query_token") String token){
+        this.statusQueryToken = token;
+        this.statusReader = new StatusReader(signingServiceConnector.getDirectClient(), signingServiceConnector.getDirectJobResponse(), this.statusQueryToken);
+        return statusReader.getStatus();
+
     }
 
     @RequestMapping("/onRejection")
     public String whenUserRejects(@RequestParam("status_query_token") String token){
-        String status = signingServiceConnector.checkStatus();
-        return status;
+        //String status = signingServiceConnector.checkStatus();
+        this.statusQueryToken = token;
+        this.statusReader = new StatusReader(signingServiceConnector.getDirectClient(), signingServiceConnector.getDirectJobResponse(), this.statusQueryToken);
+        return statusReader.getStatus();
         //Returnerer statusChange.toString()
     }
+
+    @RequestMapping("/getDocument")
+    public String getSignedDocument(@RequestParam("document_type") String document_type){
+        if (this.statusReader.getStatusResponse().is(this.statusReader.getStatusResponse().getStatus().SIGNED)) {
+            if(document_type == "xades") {
+                InputStream xAdESStream = signingServiceConnector.getDirectClient().getXAdES(this.statusReader.getStatusResponse().getxAdESUrl());
+                return "fetched xade";
+            } else if(document_type == "pades") {
+                InputStream pAdESStream = signingServiceConnector.getDirectClient().getPAdES(this.statusReader.getStatusResponse().getpAdESUrl());
+                return "fetched pade";
+            }
+            else return "failed";
+        } else {
+            return "failed2";
+            // status was either REJECTED or FAILED, XAdES and PAdES are not available.
+        }
+    }
+
+    @RequestMapping("/getPades")
+    public String getPades() throws IOException{
+        this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient(),this.statusReader);
+        return signedDocumentFetcher.getPades();
+        // status was either REJECTED or FAILED, XAdES and PAdES are not available.
+        }
+
+    @RequestMapping("/getXades")
+    public String getXades() throws IOException{
+        this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient(),this.statusReader);
+        return signedDocumentFetcher.getXades();
+        // status was either REJECTED or FAILED, XAdES and PAdES are not available.
+    }
+
 
     //In order to get to the sign-in portal, such as BankID, the user needs a redirect-url and a valid token. This method checks if the token is valid
     public boolean checkToken(){
@@ -108,7 +141,7 @@ public class SigningController {
     }
 
     //Returnes one of the three URLS (completion, rejection, and errorURL) based on how the signing (aka the "job") went
-    @RequestMapping("/getJobStatus")
+    @RequestMapping("/getJobStatus") //Can not remove
     public URL getJobStatus(){
         //Based on signingStatus
         return this.completionURL;
@@ -116,26 +149,5 @@ public class SigningController {
         //or return this.errorURL
     }
 
-    //Returns statusURL to get data about the signing, when the signing is over
-    @RequestMapping("/getStatusURL")
-    public URL getStatusURL(){
-        return this.statusURL;
-    }
-
-    //Returnes the signed document
-    @RequestMapping("/getCompletionDocument")
-    public File getCompletionDocument(){
-        return this.completionDocument;
-    }
-
-    //Returnes the URL which can be used to check if the whole process went well
-    @RequestMapping("/returnConfirmationURL")
-    public URL returnConfirmationURL(){
-        return this.confirmationURL;
-    }
-
-    public static void main(String[] args) throws Exception {
-        SpringApplication.run(SigningController.class, args);
-    }
 
 }
