@@ -1,21 +1,18 @@
 import no.digipost.signature.client.ClientConfiguration;
-import no.digipost.signature.client.asice.*;
+import no.digipost.signature.client.asice.CreateASiCE;
+import no.digipost.signature.client.asice.DocumentBundle;
 import no.digipost.signature.client.asice.manifest.CreateDirectManifest;
 import no.digipost.signature.client.asice.manifest.ManifestCreator;
 import no.digipost.signature.client.core.SignatureJob;
-import no.digipost.signature.client.direct.*;
 import no.digipost.signature.client.portal.PortalDocument;
 import no.digipost.signature.client.portal.PortalJob;
 import no.digipost.signature.client.portal.PortalSigner;
 
-import java.io.*;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
-public class AsiceMaker {
-
+public class PortalAsiceMaker {
     private CreateASiCE createASiCE;
     private ManifestCreator manifestCreator = new CreateDirectManifest();
     private SignatureJob signatureJob;
@@ -24,7 +21,9 @@ public class AsiceMaker {
     private File kontaktInfoClientTest;
     private String relativeDocumentPath = "Documents//Dokument til signering 3.pdf";
 
-    public AsiceMaker() {
+
+
+    public PortalAsiceMaker() {
         //Creates classLoader to load file
         ClassLoader classLoader = getClass().getClassLoader();
         //Sets field kontaktInfoClientTest to file kontaktinfo-client-test.jks
@@ -34,7 +33,7 @@ public class AsiceMaker {
 
     }
 
-    public AsiceMaker(String relativeDocumentPath) {
+    public PortalAsiceMaker(String relativeDocumentPath) {
         //Creates classLoader to load file
         ClassLoader classLoader = getClass().getClassLoader();
         //Sets field kontaktInfoClientTest to file kontaktinfo-client-test.jks
@@ -44,31 +43,22 @@ public class AsiceMaker {
 
     }
 
-    /**
-     * Creates an asice package. Uses current keystore and a hardcoded document.
-     *
-     * @return
-     */
-    public DocumentBundle createAsice(String signerId, String ss, String[] exitUrls, ClientConfiguration clientConfiguration) throws KeyStoreException, NoSuchAlgorithmException, NoSuchProviderException, IOException, java.security.cert.CertificateException {
+    public PortalJob createSignatureJobPortal(List<PortalSigner> signers, PortalDocument document, String[] exitUrls) {
+        System.out.println(PortalJob.builder(document,signers).build().toString());
+        return PortalJob.builder(document,signers).build();
+    }
+
+    public DocumentBundle createPortalAsice(List<PortalSigner> signers, String[] exitUrls, ClientConfiguration clientConfiguration) throws IOException {
         String PDFPath = DocumentHandler.setAbsolutePathToPDF(dokumentTilSignering).toString();
         createASiCE = new CreateASiCE(manifestCreator, clientConfiguration);
-        DirectSigner signer = createDirectSigner(signerId);
-        DirectDocument document = DocumentHandler.pdfToDirectDocument(PDFPath);
-        this.signatureJob = createSignatureJob(signer, document, exitUrls);
+        PortalDocument document = DocumentHandler.pdfToPortalDocument(PDFPath);
+        this.portalJob = createSignatureJobPortal(signers,document,exitUrls);
 
-        return createASiCE.createASiCE(signatureJob);
-    }
+        return null;
+        //return createASiCE.createASiCE(this.portalJob);
 
-    public DirectSigner createDirectSigner(String signerId) {
-        return DirectSigner.builder(signerId).build();
-    }
-
-    public SignatureJob createSignatureJob(DirectSigner signer, DirectDocument document, String[] exitUrls) {
-        return new DirectJob.Builder(signer, document, exitUrls[0], exitUrls[1], exitUrls[2]).build();
     }
 
     public File getContactInfo() {return kontaktInfoClientTest;}
-    public SignatureJob getSignatureJob() {return this.signatureJob;}
     public PortalJob getPortalJob() { return this.portalJob;}
-
 }

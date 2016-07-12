@@ -30,6 +30,8 @@ public class DigipostSpringConnector {
     private String statusQueryToken;
     private StatusReader statusReader;
     private SignedDocumentFetcher signedDocumentFetcher;
+    private PortalSignedDocumentFetcher portalSignedDocumentFetcher;
+    private PortalJobPoller poller;
     private String[] exitUrls = {
             "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
     };
@@ -42,22 +44,26 @@ public class DigipostSpringConnector {
      * @throws IOException
      *
      */
-
+    @RequestMapping ("/portalXades")
+    public String getPortalXades() throws IOException{
+        this.portalSignedDocumentFetcher = new PortalSignedDocumentFetcher(poller,signingServiceConnector.getPortalClient());
+        return portalSignedDocumentFetcher.getXades();
+    }
     @RequestMapping("/portal")
     public void startPortalJob() throws IOException{
-        AsiceMaker asiceMaker = new AsiceMaker();
-        SetupClientConfig clientConfig = new SetupClientConfig();
+        PortalAsiceMaker portalAsiceMaker = new PortalAsiceMaker();
+        SetupClientConfig clientConfig = new SetupClientConfig("Portal");
 
-        clientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
+        clientConfig.setupKeystoreConfig(portalAsiceMaker.getContactInfo());
         clientConfig.setupClientConfiguration("991825827");
         List<PortalSigner> portalSigners = new ArrayList<>();
         portalSigners.add( PortalSigner.builder("17079493538",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
         portalSigners.add( PortalSigner.builder("17079493457",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
         portalSigners.add( PortalSigner.builder("17079493295",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
 
-        asiceMaker.createPortalAsice(portalSigners,exitUrls,clientConfig.getClientConfiguration());
+        portalAsiceMaker.createPortalAsice(portalSigners,exitUrls,clientConfig.getClientConfiguration());
 
-        PortalJob portalJob = asiceMaker.getPortalJob();
+        PortalJob portalJob = portalAsiceMaker.getPortalJob();
         KeyStoreConfig keyStoreConfig = clientConfig.getKeyStoreConfig();
         if(this.signingServiceConnector != null){
             signingServiceConnector.sendPortalRequest(portalJob,keyStoreConfig);
@@ -71,14 +77,14 @@ public class DigipostSpringConnector {
 
     @RequestMapping("/poll")
     public String poll(){
-        PortalJobPoller poller = new PortalJobPoller(signingServiceConnector.getPortalClient());
+        this.poller = new PortalJobPoller(signingServiceConnector.getPortalClient());
         String status = poller.poll();
         return status;
     }
     @RequestMapping("/asice")
     public ModelAndView makeAsice() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
         AsiceMaker asiceMaker = new AsiceMaker();
-        SetupClientConfig clientConfig = new SetupClientConfig();
+        SetupClientConfig clientConfig = new SetupClientConfig("Direct");
 
         clientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
         clientConfig.setupClientConfiguration("991825827");
