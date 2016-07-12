@@ -15,9 +15,14 @@ public class PortalSignedDocumentFetcher {
         this.poller = poller;
         this.client = portalClient;
     }
-    public String getPades(){
+    public String getPades() throws IOException{
         if(poller.isPadesReady()){
             InputStream pAdESStream = client.getPAdES(poller.getStatusChange().getpAdESUrl());
+            byte[] buffer = new byte[pAdESStream.available()];
+            pAdESStream.read(buffer);
+            File targetFile = new File(System.getProperty("user.dir") + "pades.pdf");
+            OutputStream outStream = new FileOutputStream(targetFile);
+            outStream.write(buffer);
             return "pades retrieved";
         } else {
             return "pades not ready or failed";

@@ -56,6 +56,16 @@ public class DigipostSpringConnector {
         this.portalSignedDocumentFetcher = new PortalSignedDocumentFetcher(poller,signingServiceConnector.getPortalClient());
         return portalSignedDocumentFetcher.getXades();
     }
+
+    @RequestMapping ("/portalPades")
+    public String getPortalPades() throws IOException{
+        if(portalSignedDocumentFetcher != null){
+            return portalSignedDocumentFetcher.getPades();
+        } else {
+            this.portalSignedDocumentFetcher = new PortalSignedDocumentFetcher(poller,signingServiceConnector.getPortalClient());
+            return portalSignedDocumentFetcher.getPades();
+        }
+    }
     @RequestMapping("/portal")
     public void startPortalJob() throws IOException{
         PortalAsiceMaker portalAsiceMaker = new PortalAsiceMaker();
