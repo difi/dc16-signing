@@ -9,11 +9,10 @@ public class SignatureJobModel {
     public String sender;
     public String  signer;
 
-    public SignatureJobModel(SignatureDatabase db){
-        this.status = "Ikke signert";
-        this.sender = "123456789";
-        this.signer = "17079493538";
-        db.insertSignature(status, signer, sender, "doc");
+    public SignatureJobModel(String status, String sender, String signer){
+        this.status = status;
+        this.sender = sender;
+        this.signer = signer;
     }
 
     public int getId() {
@@ -32,8 +31,8 @@ public class SignatureJobModel {
         return status;
     }
 
-    public void updateStatus(SignatureDatabase db, String status){
-        db.updateValue(this.sender, "status", status);
+    public void updateStatus(String value){
+        this.status = value;
     }
 
 }
