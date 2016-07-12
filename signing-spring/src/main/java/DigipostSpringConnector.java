@@ -1,3 +1,4 @@
+import no.digipost.signature.client.asice.signature.Signature;
 import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.portal.Notifications;
 import no.digipost.signature.client.portal.PortalJob;
@@ -16,13 +17,20 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.sql.SQLException;
 
 
-@EnableAutoConfiguration
+
+/**
+ * This class is a sceleton for the signing-flow.
+ *
+ */
 @RestController
+@EnableAutoConfiguration
 public class DigipostSpringConnector {
 
     //TODO: Decide which of these are stored here or just in the signingServiceConnector object.
@@ -36,7 +44,6 @@ public class DigipostSpringConnector {
             "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
     };
     private SigningServiceConnector signingServiceConnector;
-
     /**
      * This is the mapping for starting the process. It should probably have a parameter designating the correct document by ID
      * from the SignatureDatabase.
@@ -83,13 +90,16 @@ public class DigipostSpringConnector {
     }
     @RequestMapping("/asice")
     public ModelAndView makeAsice() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
+        DatabaseSignatureStorage storage = new DatabaseSignatureStorage();
+        SignatureJobModel s = storage.createDatabase();
+
         AsiceMaker asiceMaker = new AsiceMaker();
         SetupClientConfig clientConfig = new SetupClientConfig("Direct");
 
         clientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
-        clientConfig.setupClientConfiguration("991825827");
+        clientConfig.setupClientConfiguration(s.getSender());
 
-        asiceMaker.createAsice("17079493538","123456789",exitUrls,clientConfig.getClientConfiguration());
+        asiceMaker.createAsice(s.getSigner(), s.getSender(),exitUrls,clientConfig.getClientConfiguration());
 
         SignatureJob signatureJob = asiceMaker.getSignatureJob();
         KeyStoreConfig keyStoreConfig = clientConfig.getKeyStoreConfig();
