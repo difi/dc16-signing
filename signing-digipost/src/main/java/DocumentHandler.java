@@ -15,6 +15,7 @@ public class DocumentHandler {
 
      */
     public static DirectDocument pdfToDocument(String pdfPath) throws IOException {
+        System.out.println(pdfPath);
         try (FileInputStream inputStream = new FileInputStream(pdfPath)) {
             return DirectDocument.builder("Subject", "document.pdf", ByteStreams.toByteArray(inputStream)).build();
         }
@@ -34,6 +35,7 @@ public class DocumentHandler {
         }
         return stringBuilder;
     }
+
 
 
 }
