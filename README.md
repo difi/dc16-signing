@@ -1,3 +1,7 @@
+<a href="https://codecov.io/gh/difi/dc16-signing">
+  <img src="https://codecov.io/gh/difi/dc16-signing/branch/master/graph/badge.svg" alt="Codecov" />
+</a>
+
 # DifiCamp 2016 Signing
 
 Oppgaven er å vise hvordan man kan ta i bruk Difi’s nye e-signeringsløsning i prosessen med å godta bruksvilkår, samt vise hvordan man kan journalføre avtalene i Difi’s sak/arkiv løsning.
