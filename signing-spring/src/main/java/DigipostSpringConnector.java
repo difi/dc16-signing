@@ -34,8 +34,6 @@ public class DigipostSpringConnector {
             "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
     };
     private SigningServiceConnector signingServiceConnector;
-
-    public static SignatureDatabase db = new SignatureDatabase();
     /**
      * This is the mapping for starting the process. It should probably have a parameter designating the correct document by ID
      * from the SignatureDatabase.

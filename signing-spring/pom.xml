@@ -22,6 +22,10 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>no.difi.idporten.signing</groupId>
+            <artifactId>signing-database</artifactId>
+        </dependency>
     </dependencies>
     <modelVersion>4.0.0</modelVersion>
 
