@@ -26,7 +26,7 @@ public class AsiceTest {
 
 
         AsiceMaker asiceMaker = new AsiceMaker();
-        SetupClientConfig clientConfig = new SetupClientConfig();
+        SetupClientConfig clientConfig = new SetupClientConfig("Direct");
         clientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
         clientConfig.setupClientConfiguration("123456789");
 

@@ -1,5 +1,6 @@
 import com.google.common.io.ByteStreams;
 import no.digipost.signature.client.direct.DirectDocument;
+import no.digipost.signature.client.portal.PortalDocument;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,12 +15,17 @@ public class DocumentHandler {
      * @param pdfPath Path to pdf
 
      */
-    public static DirectDocument pdfToDocument(String pdfPath) throws IOException {
+    public static DirectDocument pdfToDirectDocument(String pdfPath) throws IOException {
         try (FileInputStream inputStream = new FileInputStream(pdfPath)) {
             return DirectDocument.builder("Subject", "document.pdf", ByteStreams.toByteArray(inputStream)).build();
         }
     }
 
+    public static PortalDocument pdfToPortalDocument(String pdfPath) throws IOException {
+        try (FileInputStream inputStream = new FileInputStream(pdfPath)){
+            return PortalDocument.builder("Subject","document.pdf", ByteStreams.toByteArray(inputStream)).build();
+        }
+    }
     /**
      *
      * @return StringBuilder-object which is used to find the path to "dokumentTilSignering"

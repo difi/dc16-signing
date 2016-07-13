@@ -18,7 +18,7 @@ public class DocumentHandlerTest {
         File pathToFile = new File(classLoader.getResource("kontaktinfo-client-test.jks").getFile());
         String PDFPath = DocumentHandler.setAbsolutePathToPDF(pathToFile).toString();
 
-        DirectDocument directDocument = DocumentHandler.pdfToDocument(PDFPath);
+        DirectDocument directDocument = DocumentHandler.pdfToDirectDocument(PDFPath);
 
         Assert.assertEquals(directDocument.getTitle(), "Subject");
         Assert.assertEquals(directDocument.getFileName(), "document.pdf");
