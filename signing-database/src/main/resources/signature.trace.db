@@ -22,3 +22,36 @@ CREATE TABLE SIGNATURE (id int AUTO_INCREMENT PRIMARY KEY,status VARCHAR(30),sig
 07-13 08:30:49 jdbc[2]: SQLException
 org.h2.jdbc.JdbcSQLException: Table "SIGNATURE" already exists; SQL statement:
 CREATE TABLE SIGNATURE (id int AUTO_INCREMENT PRIMARY KEY,status VARCHAR(30),signer VARCHAR(30), sender VARCHAR(30),document VARCHAR(30)); [42101-140]
+07-13 10:05:49 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "SIGNATURE" already exists; SQL statement:
+CREATE TABLE SIGNATURE (id int AUTO_INCREMENT PRIMARY KEY,status VARCHAR(30),signer VARCHAR(30), sender VARCHAR(30),document VARCHAR(30)); [42101-140]
+07-13 10:09:33 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "SIGNATURE" already exists; SQL statement:
+CREATE TABLE SIGNATURE (id int AUTO_INCREMENT PRIMARY KEY,status VARCHAR(30),signer VARCHAR(30), sender VARCHAR(30),document VARCHAR(30)); [42101-140]
+07-13 10:12:36 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "SIGNATURE" already exists; SQL statement:
+CREATE TABLE SIGNATURE (id int AUTO_INCREMENT PRIMARY KEY,status VARCHAR(30),signer VARCHAR(30), sender VARCHAR(30),document VARCHAR(30)); [42101-140]
+07-13 10:14:41 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "SIGNATURE" already exists; SQL statement:
+CREATE TABLE SIGNATURE (id int AUTO_INCREMENT PRIMARY KEY,status VARCHAR(30),signer VARCHAR(30), sender VARCHAR(30),document VARCHAR(30)); [42101-140]
+07-13 10:24:10 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "SIGNATURE" already exists; SQL statement:
+CREATE TABLE SIGNATURE (id int AUTO_INCREMENT PRIMARY KEY,status VARCHAR(30),signer VARCHAR(30), sender VARCHAR(30),document VARCHAR(30)); [42101-140]
+07-13 10:29:03 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "SIGNATURE" already exists; SQL statement:
+CREATE TABLE SIGNATURE (id int AUTO_INCREMENT PRIMARY KEY,status VARCHAR(30),signer VARCHAR(30), sender VARCHAR(30),document VARCHAR(30)); [42101-140]
+07-13 10:58:32 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "SIGNATURE" already exists; SQL statement:
+CREATE TABLE SIGNATURE (id int AUTO_INCREMENT PRIMARY KEY,status VARCHAR(30),signer VARCHAR(30), sender VARCHAR(30),document VARCHAR(30)); [42101-140]
+07-13 11:02:39 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "SIGNATURE" already exists; SQL statement:
+CREATE TABLE SIGNATURE (id int AUTO_INCREMENT PRIMARY KEY,status VARCHAR(30),signer VARCHAR(30), sender VARCHAR(30),document VARCHAR(30)); [42101-140]
+07-13 11:53:38 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "SIGNATURE" already exists; SQL statement:
+CREATE TABLE SIGNATURE (id int AUTO_INCREMENT PRIMARY KEY,status VARCHAR(30),signer VARCHAR(30), sender VARCHAR(30),document VARCHAR(30)); [42101-140]
+07-13 12:01:26 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "SIGNATURE" already exists; SQL statement:
+CREATE TABLE SIGNATURE (id int AUTO_INCREMENT PRIMARY KEY,status VARCHAR(30),signer VARCHAR(30), sender VARCHAR(30),document VARCHAR(30)); [42101-140]
+07-13 12:16:18 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "SIGNATURE" already exists; SQL statement:
+CREATE TABLE SIGNATURE (id int AUTO_INCREMENT PRIMARY KEY,status VARCHAR(30),signer VARCHAR(30), sender VARCHAR(30),document VARCHAR(30)); [42101-140]
