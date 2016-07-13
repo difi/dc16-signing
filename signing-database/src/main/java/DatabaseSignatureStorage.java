@@ -13,10 +13,8 @@ public class DatabaseSignatureStorage {
         db.createTable();
     }
 
-    public SignatureJobModel createDatabase(){
-        SignatureJobModel signatureJobModel = new SignatureJobModel("Ikke signert", "123456789", "17079493538");
+    public void insertSignaturejobToDB(SignatureJobModel signatureJobModel){
         db.insertSignature(signatureJobModel);
-        return signatureJobModel;
     }
 
     public void updateStatus(SignatureJobModel signatureJobModel, String status){

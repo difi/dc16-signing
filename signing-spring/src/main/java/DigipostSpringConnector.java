@@ -1,4 +1,3 @@
-import no.digipost.signature.client.asice.signature.Signature;
 import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.security.KeyStoreConfig;
 import org.hibernate.validator.constraints.URL;
@@ -14,7 +13,6 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
-import java.sql.SQLException;
 
 
 /**
@@ -48,7 +46,8 @@ public class DigipostSpringConnector {
 
     @RequestMapping("/asice")
     public ModelAndView makeAsice() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
-        s = storage.createDatabase();
+        SignatureJobModel signatureJobModel = new SignatureJobModel("Ikke signert", "123456789", "17079493538");
+        storage.insertSignaturejobToDB(signatureJobModel);
 
         AsiceMaker asiceMaker = new AsiceMaker();
         SetupClientConfig clientConfig = new SetupClientConfig();
