@@ -135,13 +135,11 @@ public class SignatureDatabase {
         String query = String.format("SELECT (signer)" +
                 "FROM SIGNATURE " +
                 "WHERE sender LIKE '%s';", sender);
-
-        String signer = "";
         System.out.println("DB: Select query: " + query);
         try {
             resultSet = statement.executeQuery(query);
             metaData = resultSet.getMetaData();
-
+            String signer = null;
             while(resultSet.next())
                 signer = resultSet.getString(1);
             return signer;
