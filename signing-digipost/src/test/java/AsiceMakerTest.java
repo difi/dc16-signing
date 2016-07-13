@@ -18,6 +18,13 @@ public class AsiceMakerTest {
         Assert.assertNotNull(file);
     }
 
+    @Test
+    public void findsFileAtGivenPath(){
+        AsiceMaker asiceMaker = new AsiceMaker("Documents//Dokument til signering 5.pdf");
+        File file = asiceMaker.getDokumentTilSignering();
+        Assert.assertNotNull(file);
+    }
+
     /**
      * Checks that both the documentbundle and the signature job exist after calling createAsice.
      */
