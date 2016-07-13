@@ -40,10 +40,11 @@ public class DigipostSpringConnector {
     private SignedDocumentFetcher signedDocumentFetcher;
     private PortalSignedDocumentFetcher portalSignedDocumentFetcher;
     private PortalJobPoller poller;
+    private SigningServiceConnector signingServiceConnector;
+
     private String[] exitUrls = {
             "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
     };
-    private SigningServiceConnector signingServiceConnector;
     /**
      * This is the mapping for starting the process. It should probably have a parameter designating the correct document by ID
      * from the SignatureDatabase.
@@ -51,53 +52,7 @@ public class DigipostSpringConnector {
      * @throws IOException
      *
      */
-    @RequestMapping ("/portalXades")
-    public String getPortalXades() throws IOException{
-        this.portalSignedDocumentFetcher = new PortalSignedDocumentFetcher(poller,signingServiceConnector.getPortalClient());
-        return portalSignedDocumentFetcher.getXades();
-    }
 
-    @RequestMapping ("/portalPades")
-    public String getPortalPades() throws IOException{
-        if(portalSignedDocumentFetcher != null){
-            return portalSignedDocumentFetcher.getPades();
-        } else {
-            this.portalSignedDocumentFetcher = new PortalSignedDocumentFetcher(poller,signingServiceConnector.getPortalClient());
-            return portalSignedDocumentFetcher.getPades();
-        }
-    }
-    @RequestMapping("/portal")
-    public void startPortalJob() throws IOException{
-        PortalAsiceMaker portalAsiceMaker = new PortalAsiceMaker();
-        SetupClientConfig clientConfig = new SetupClientConfig("Portal");
-
-        clientConfig.setupKeystoreConfig(portalAsiceMaker.getContactInfo());
-        clientConfig.setupClientConfiguration("991825827");
-        List<PortalSigner> portalSigners = new ArrayList<>();
-        portalSigners.add( PortalSigner.builder("17079493538",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
-        portalSigners.add( PortalSigner.builder("17079493457",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
-        portalSigners.add( PortalSigner.builder("17079493295",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
-
-        portalAsiceMaker.createPortalAsice(portalSigners,exitUrls,clientConfig.getClientConfiguration());
-
-        PortalJob portalJob = portalAsiceMaker.getPortalJob();
-        KeyStoreConfig keyStoreConfig = clientConfig.getKeyStoreConfig();
-        if(this.signingServiceConnector != null){
-            signingServiceConnector.sendPortalRequest(portalJob,keyStoreConfig);
-        } else {
-            signingServiceConnector = new SigningServiceConnector();
-            signingServiceConnector.sendPortalRequest(portalJob,keyStoreConfig);
-
-        }
-
-    }
-
-    @RequestMapping("/poll")
-    public String poll(){
-        this.poller = new PortalJobPoller(signingServiceConnector.getPortalClient());
-        String status = poller.poll();
-        return status;
-    }
     @RequestMapping("/asice")
     public ModelAndView makeAsice() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
         DatabaseSignatureStorage storage = new DatabaseSignatureStorage();
@@ -170,15 +125,23 @@ public class DigipostSpringConnector {
 
     @RequestMapping("/getPades")
     public String getPades() throws IOException{
-        this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient(),this.statusReader);
-        return signedDocumentFetcher.getPades();
+        if(this.signedDocumentFetcher != null){
+            return signedDocumentFetcher.getPades();
+        } else {
+            this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient(),this.statusReader);
+            return signedDocumentFetcher.getPades();
+        }
         // status was either REJECTED or FAILED, XAdES and PAdES are not available.
         }
 
     @RequestMapping("/getXades")
     public String getXades() throws IOException{
-        this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient(),this.statusReader);
-        return signedDocumentFetcher.getXades();
+        if(this.signedDocumentFetcher != null){
+            return signedDocumentFetcher.getXades();
+        } else {
+            this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient(),this.statusReader);
+            return signedDocumentFetcher.getXades();
+        }
         // status was either REJECTED or FAILED, XAdES and PAdES are not available.
     }
 

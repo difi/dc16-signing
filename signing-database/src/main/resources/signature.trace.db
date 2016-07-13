@@ -16,3 +16,9 @@ CREATE TABLE SIGNATURE (id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,status 
 07-12 14:59:37 jdbc[2]: SQLException
 org.h2.jdbc.JdbcSQLException: Table "SIGNATURE" already exists; SQL statement:
 CREATE TABLE SIGNATURE (id int AUTO_INCREMENT PRIMARY KEY,status VARCHAR(30),signer VARCHAR(30), sender VARCHAR(30),document VARCHAR(30)); [42101-140]
+07-13 08:15:53 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "SIGNATURE" already exists; SQL statement:
+CREATE TABLE SIGNATURE (id int AUTO_INCREMENT PRIMARY KEY,status VARCHAR(30),signer VARCHAR(30), sender VARCHAR(30),document VARCHAR(30)); [42101-140]
+07-13 08:30:49 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "SIGNATURE" already exists; SQL statement:
+CREATE TABLE SIGNATURE (id int AUTO_INCREMENT PRIMARY KEY,status VARCHAR(30),signer VARCHAR(30), sender VARCHAR(30),document VARCHAR(30)); [42101-140]

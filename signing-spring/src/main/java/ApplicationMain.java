@@ -7,7 +7,7 @@ import org.springframework.boot.SpringApplication;
 public class ApplicationMain {
 
     public static void main(String[] args) throws Exception {
-        Object[] sources = {DigipostSpringConnector.class, controllers.IndexController.class};
+        Object[] sources = {DigipostSpringConnector.class, controllers.IndexController.class, PortalController.class};
         SpringApplication.run(sources, args);
     }
 
