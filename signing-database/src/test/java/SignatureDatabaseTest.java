@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
  */
 public class SignatureDatabaseTest {
     public SignatureDatabase db = new SignatureDatabase();
+    public SignatureJobModel signatureJobModel = new SignatureJobModel("Ikke signert", "987654321","11111111111");
 
 
     @Test
@@ -17,12 +18,18 @@ public class SignatureDatabaseTest {
 
     @Test
     public void insertingSignature() {
-        SignatureJobModel signatureJobModel = new SignatureJobModel("Ikke signert", "987654321","11111111111");
-        Assert.assertNotNull(signatureJobModel);
+       Assert.assertNotNull(signatureJobModel);
 
         db.insertSignature(signatureJobModel);
         Assert.assertEquals(db.getSignatureJob(signatureJobModel) , "(1, Ikke signert, 11111111111, 987654321, document)");
     }
+
+    @Test
+    public void updatingStatus() {
+        db.updateStatus(signatureJobModel, "Signert" );
+
+        Assert.assertEquals(db.getSignatureJob(signatureJobModel), "(1, Signert, 11111111111, 987654321, document)" );
+      }
 
 
 }
