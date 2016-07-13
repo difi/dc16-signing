@@ -44,18 +44,21 @@ public class PortalAsiceMaker {
     }
 
     public PortalJob createSignatureJobPortal(List<PortalSigner> signers, PortalDocument document, String[] exitUrls) {
-        System.out.println(PortalJob.builder(document,signers).build().toString());
         return PortalJob.builder(document,signers).build();
     }
 
+    /**
+     * Makes a portal document bundle. Instead of just one signer this function needs a list of signers.
+     * @param signers List of signers.
+     * @param exitUrls
+     * @param clientConfiguration
+     */
     public DocumentBundle createPortalAsice(List<PortalSigner> signers, String[] exitUrls, ClientConfiguration clientConfiguration) throws IOException {
         String PDFPath = DocumentHandler.setAbsolutePathToPDF(dokumentTilSignering).toString();
         createASiCE = new CreateASiCE(manifestCreator, clientConfiguration);
         PortalDocument document = DocumentHandler.pdfToPortalDocument(PDFPath);
         this.portalJob = createSignatureJobPortal(signers,document,exitUrls);
-
-        return null;
-        //return createASiCE.createASiCE(this.portalJob);
+        return createASiCE.createASiCE(this.portalJob);
 
     }
 

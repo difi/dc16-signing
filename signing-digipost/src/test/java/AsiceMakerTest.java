@@ -18,6 +18,9 @@ public class AsiceMakerTest {
         Assert.assertNotNull(file);
     }
 
+    /**
+     * Checks that both the documentbundle and the signature job exist after calling createAsice.
+     */
     @Test
     public void signatureJobExistsAfterCreatingAsic() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException {
         AsiceMaker asiceMaker = new AsiceMaker();

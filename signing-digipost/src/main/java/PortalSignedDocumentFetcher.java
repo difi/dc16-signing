@@ -15,6 +15,9 @@ public class PortalSignedDocumentFetcher {
         this.poller = poller;
         this.client = portalClient;
     }
+
+    //Uses poller to check if the pAdES is available, then reads it to a file. pAdES is only available
+    //if all signers have signed.
     public String getPades() throws IOException{
         if(poller.isPadesReady()){
             InputStream pAdESStream = client.getPAdES(poller.getStatusChange().getpAdESUrl());
@@ -23,12 +26,15 @@ public class PortalSignedDocumentFetcher {
             File targetFile = new File(System.getProperty("user.dir") + "pades.pdf");
             OutputStream outStream = new FileOutputStream(targetFile);
             outStream.write(buffer);
-            return "pades retrieved";
+            return "pAdES retrieved";
         } else {
-            return "pades not ready or failed";
+            return "pAdES not ready or failed";
         }
     }
 
+    //Writes all xAdES files. Uses poller to check if it can be retrieved.
+    // TODO: Asking for one specific signers xAdES file. Better outputs.
+    //There is one xAdES file for each signer.
     public String getXades() throws IOException {
         if (poller.isXadesReady()) {
             List<InputStream> inputStreams;
@@ -37,30 +43,19 @@ public class PortalSignedDocumentFetcher {
                     .map(Signature::getxAdESUrl)
                     .map(client::getXAdES)
                     .collect(Collectors.toList());
-
             if (!inputStreams.isEmpty()) {
-
                 for (InputStream inputStream : inputStreams) {
                     byte[] buffer = new byte[inputStream.available()];
                     inputStream.read(buffer);
                     File targetFile = new File(System.getProperty("user.dir") +inputStreams.indexOf(inputStream) +  "targetFile2.pdf");
                     OutputStream outStream = new FileOutputStream(targetFile);
                     outStream.write(buffer);
-
                 }
-
-                return "got xades files";
-
+                return "got xAdES files";
             } else {
-                return "no xades available";
+                return "no xAdES available";
             }
-
-
-
-
         }
         return "no xades available";
     }
-
-
 }
