@@ -38,7 +38,6 @@ public class PortalAsiceMakerTest {
         portalSigners.add( PortalSigner.builder("17079493538", Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
         portalSigners.add( PortalSigner.builder("17079493457",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
         portalSigners.add( PortalSigner.builder("17079493295",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
-
         DocumentBundle preparedAsic = portalAsiceMaker.createPortalAsice(portalSigners,exitUrls,clientConfig.getClientConfiguration());
         Assert.assertNotNull(portalAsiceMaker.getPortalJob());
         Assert.assertNotNull(preparedAsic);
