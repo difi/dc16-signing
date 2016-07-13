@@ -33,6 +33,7 @@ public class SignatureJobModel {
 
     public void updateStatus(String value){
         this.status = value;
+
     }
 
 }

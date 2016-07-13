@@ -11,11 +11,13 @@ public class PortalJobPoller {
 
     }
 
+    //Gets the PortalJobStatusChanged object, should only be called once. Polling exception lasts for several minutes if it is called twice.
     public String poll(){
         this.statusChange =  client.getStatusChange();
         return statusChange.getStatus().toString();
     }
 
+    //Checks whether a pades is available. For portals it is only available when all signers have signed.
     public boolean isPadesReady(){
         if(hasPolled() ){
             if(statusChange.isPAdESAvailable()){
@@ -28,6 +30,7 @@ public class PortalJobPoller {
         }
     }
 
+    //Xades can be requested as long as at least one of the signers have signed.
     public boolean isXadesReady(){
         if(hasPolled()){
             if(statusChange.getSignatures() != null){
@@ -39,6 +42,7 @@ public class PortalJobPoller {
         return false;
     }
 
+    //Avoiding hitting the polling exception by polling only once
     public boolean hasPolled(){
         if(this.statusChange != null){
             return true;
