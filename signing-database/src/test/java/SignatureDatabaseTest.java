@@ -26,8 +26,10 @@ public class SignatureDatabaseTest {
     @Test
     public void insertingSignature() {
         db.insertSignature(signatureJobModel);
-        Assert.assertEquals(db.getSignatureJob(signatureJobModel) , "(1, Ikke signert, 11111111111, 987654321, document)");
-
+        Assert.assertEquals(db.getSignatureJob(signatureJobModel), "(1, Ikke signert, 11111111111, 987654321, document)");
+    }
+    @Test
+    public void insertingSignatureFromStorage(){
         SignatureJobModel signatureJobModel2 = new SignatureJobModel("Ikke signert", "123456788",  "222222222222");
         storage.insertSignaturejobToDB(signatureJobModel2);
         Assert.assertEquals(db.getSignatureJob(signatureJobModel2), "(2, Ikke signert, 222222222222, 123456788, document)");
@@ -35,11 +37,14 @@ public class SignatureDatabaseTest {
 
     @Test
     public void updatingStatus() {
-        db.updateStatus(signatureJobModel, "Signert" );
-        Assert.assertEquals(db.getSignatureJob(signatureJobModel), "(1, Signert, 11111111111, 987654321, document)" );
+        db.updateStatus(signatureJobModel, "Signert");
+        Assert.assertEquals(db.getSignatureJob(signatureJobModel), "(1, Signert, 11111111111, 987654321, document)");
+    }
 
+    @Test
+    public void updatingStatusFromStorage(){
         SignatureJobModel signatureJobModel2 = new SignatureJobModel("Ikke signert", "123456788",  "222222222222");
-       db.updateStatus(signatureJobModel2, "Rejected");
+       storage.updateStatus(signatureJobModel2, "Rejected");
         Assert.assertEquals(db.getSignatureJob(signatureJobModel2), "(2, Rejected, 222222222222, 123456788, document)");
       }
 
