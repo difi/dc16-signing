@@ -10,12 +10,10 @@ import java.util.List;
 
 public class SignatureDatabase {
     private final String JDBC_DRIVER = "org.h2.Driver";
-    private final String DB_URL = "jdbc:h2:file:signing-database/src/main/resources/signature";
+    private final String DB_URL = "jdbc:h2:file:src/main/resources/signature";
     private final String USER = "SA";
     private final String PASS = "";
 
-    private static Logger logger = LoggerFactory.getLogger(SignatureDatabase.class);
-    Server server;
     Connection connection;
     Statement statement;
     ResultSet resultSet;
@@ -31,7 +29,7 @@ public class SignatureDatabase {
             statement = connection.createStatement();
 
         } catch (SQLException | ClassNotFoundException e){
-            System.err.println("Exception caught in SignatureDatabas.SignatureDatabase(): " + e);
+            System.err.println("Exception caught in SignatureDatabase.SignatureDatabase(): " + e);
             e.printStackTrace();
         }
     }
@@ -44,7 +42,7 @@ public class SignatureDatabase {
      * sender = the org.number of the person/organisation who is sending the document to signing
      * document = the document, actual file or path/id??
      */
-    public void createTable(){
+    public boolean createTable(){
         try {
             statement.execute("DROP TABLE IF EXISTS SIGNATURE ");
             statement.execute("CREATE TABLE SIGNATURE " +
@@ -53,11 +51,13 @@ public class SignatureDatabase {
                     "signer VARCHAR(30), " +
                     "sender VARCHAR(30)," +
                     "document VARCHAR(30));" );
-                   // "PRIMARY KEY (`id`));" );
+            System.out.println("DB: Table created");
+            return true;
         } catch (SQLException e) {
             System.err.println("SQLException caught in SignatureDatabase.createTable()" + e);
             e.printStackTrace();
-        } System.out.println("DB: Table created");
+            return false;
+        }
     }
 
     /**
@@ -83,7 +83,7 @@ public class SignatureDatabase {
      */
     public void printDB() throws SQLException {
         String query = "SELECT * FROM SIGNATURE";
-        resultSet= statement.executeQuery(query);
+        resultSet = statement.executeQuery(query);
         metaData = resultSet.getMetaData();
         int columnsNumber = metaData.getColumnCount();
         System.out.println("\n -----SIGNATURE DATABASE:---- \n");
@@ -133,13 +133,11 @@ public class SignatureDatabase {
         String query = String.format("SELECT (signer)" +
                 "FROM SIGNATURE " +
                 "WHERE sender LIKE '%s';", sender);
-
-        String signer = "";
         System.out.println("DB: Select query: " + query);
         try {
             resultSet = statement.executeQuery(query);
             metaData = resultSet.getMetaData();
-
+            String signer = null;
             while(resultSet.next())
                 signer = resultSet.getString(1);
             return signer;
