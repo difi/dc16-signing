@@ -12,7 +12,7 @@ public class DocumentHandlerTest {
 
 
     @Test
-    public void simple() throws IOException{
+    public void documentTitleAndNameCorrect() throws IOException{
 
         ClassLoader classLoader = getClass().getClassLoader();
         File pathToFile = new File(classLoader.getResource("kontaktinfo-client-test.jks").getFile());
@@ -24,4 +24,6 @@ public class DocumentHandlerTest {
         Assert.assertEquals(directDocument.getFileName(), "document.pdf");
 
     }
+
+
 }
