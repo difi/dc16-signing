@@ -20,13 +20,8 @@ public class AsiceTest {
         String[] exitUrls = {
                 "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
         };
-
-
-
-
-
         AsiceMaker asiceMaker = new AsiceMaker();
-        SetupClientConfig clientConfig = new SetupClientConfig();
+        SetupClientConfig clientConfig = new SetupClientConfig("Direct");
         clientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
         clientConfig.setupClientConfiguration("123456789");
 

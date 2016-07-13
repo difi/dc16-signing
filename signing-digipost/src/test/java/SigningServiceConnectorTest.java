@@ -15,16 +15,16 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
 
-/**
- * Created by camp-nto on 12.07.2016.
- */
+
 public class SigningServiceConnectorTest {
 
     @Test
     public void sendRequestReturnsTrue() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
 
         AsiceMaker asiceMaker = new AsiceMaker();
-        SetupClientConfig clientConfig = new SetupClientConfig();
+
+        SetupClientConfig clientConfig = new SetupClientConfig("Direct");
+
 
         clientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
         clientConfig.setupClientConfiguration("123456789");

@@ -4,6 +4,10 @@ import no.digipost.signature.client.ServiceUri;
 import no.digipost.signature.client.core.Sender;
 import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.direct.*;
+import no.digipost.signature.client.portal.PortalClient;
+import no.digipost.signature.client.portal.PortalDocument;
+import no.digipost.signature.client.portal.PortalJob;
+import no.digipost.signature.client.portal.PortalJobResponse;
 import no.digipost.signature.client.security.KeyStoreConfig;
 
 import java.io.File;
@@ -16,12 +20,13 @@ public class SigningServiceConnector {
     private ClientConfiguration client;
     private String redirectUrl;
     private String statusUrl;
-
+    private String cancellationUrl;
     //Response and client objects
     private DirectJobResponse directJobResponse;
     private DirectClient directClient;
     private DirectJobStatusResponse directJobStatusResponse;
 
+    private PortalClient portalClient;
     public SigningServiceConnector() throws IOException {
 
     }
@@ -65,7 +70,26 @@ public class SigningServiceConnector {
             }
         }
 
+    public boolean sendPortalRequest(PortalJob portalJob, KeyStoreConfig keyStoreConfig){
+        client = ClientConfiguration.builder(keyStoreConfig)
+            .serviceUri(ServiceUri.DIFI_TEST)
+            .trustStore(Certificates.TEST)
+            .globalSender(new Sender("991825827"))
+            .build();
+        portalClient =  new PortalClient(client);
 
+        PortalJobResponse portalJobResponse = portalClient.create(portalJob);
+
+        this.cancellationUrl = portalJobResponse.getCancellationUrl().toString();
+
+        if(portalJobResponse != null){
+            return true;
+        } else {
+            return false;
+        }
+
+
+    }
 
     public DirectClient getDirectClient(){
         return this.directClient;
@@ -74,5 +98,8 @@ public class SigningServiceConnector {
     public DirectJobResponse getDirectJobResponse(){
         return this.directJobResponse;
     }
+
+    public PortalClient getPortalClient() { return this.portalClient;}
     }
+
 

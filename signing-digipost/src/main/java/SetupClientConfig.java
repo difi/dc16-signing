@@ -10,6 +10,12 @@ public class SetupClientConfig {
     private KeyStore keyStore;
     private KeyStoreConfig keyStoreConfig;
     private ClientConfiguration clientConfiguration;
+    private String type;
+
+
+    SetupClientConfig(String type){
+        this.type = type;
+    }
     /**
      * Setups the keystore and keystoreconfig
      */
