@@ -14,8 +14,6 @@ public class SignatureDatabase {
     private final String USER = "SA";
     private final String PASS = "";
 
-    private static Logger logger = LoggerFactory.getLogger(SignatureDatabase.class);
-    Server server;
     Connection connection;
     Statement statement;
     ResultSet resultSet;
@@ -83,7 +81,7 @@ public class SignatureDatabase {
      * This method prints the table in the database.
      * @throws SQLException
      */
-    public void printDB() throws SQLException {
+   /* public void printDB() throws SQLException {
         String query = "SELECT * FROM SIGNATURE";
         resultSet = statement.executeQuery(query);
         metaData = resultSet.getMetaData();
@@ -97,7 +95,7 @@ public class SignatureDatabase {
             System.out.println();
         }
         System.out.println("\n --------------------------------- \n");
-    }
+    }*/
 
     /**
      *This method gets a signature job, using the sender as a key.

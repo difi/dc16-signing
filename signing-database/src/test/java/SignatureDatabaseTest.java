@@ -18,11 +18,15 @@ public class SignatureDatabaseTest {
         Assert.assertNotNull(db);
         Assert.assertNotNull(storage);
     }
-
     @Test
     public void creatingTable(){
         boolean tableCreated = db.createTable();
         Assert.assertTrue(tableCreated);
+    }
+
+    @Test
+    public void testConnection(){
+        Assert.assertEquals(db.connection.toString(), "conn0: url=jdbc:h2:file:src/main/resources/signature user=SA");
     }
 
     @Test
@@ -44,7 +48,6 @@ public class SignatureDatabaseTest {
 
     @Test
     public void updatingStatusFromStorage(){
-
         storage.updateStatus(signatureJobModel2, "Rejected");
         Assert.assertEquals(db.getSignatureJob(signatureJobModel2).substring(4), "Rejected, 222222222222, 123456788, document)");
     }
