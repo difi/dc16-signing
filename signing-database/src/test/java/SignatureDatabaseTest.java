@@ -24,8 +24,5 @@ public class SignatureDatabaseTest {
         Assert.assertEquals(db.getSignatureJob(signatureJobModel) , "(1, Ikke signert, 11111111111, 987654321, document)");
     }
 
-    @Test
-    public void
-
 
 }
