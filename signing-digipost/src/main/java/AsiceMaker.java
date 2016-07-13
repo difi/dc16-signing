@@ -70,5 +70,6 @@ public class AsiceMaker {
     public File getContactInfo() {return kontaktInfoClientTest;}
     public SignatureJob getSignatureJob() {return this.signatureJob;}
     public PortalJob getPortalJob() { return this.portalJob;}
+    public File getDokumentTilSignering(){ return dokumentTilSignering;}
 
 }
