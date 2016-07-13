@@ -44,7 +44,7 @@ public class SignatureDatabase {
      * sender = the org.number of the person/organisation who is sending the document to signing
      * document = the document, actual file or path/id??
      */
-    public void createTable(){
+    public boolean createTable(){
         try {
             statement.execute("DROP TABLE IF EXISTS SIGNATURE ");
             statement.execute("CREATE TABLE SIGNATURE " +
@@ -53,11 +53,13 @@ public class SignatureDatabase {
                     "signer VARCHAR(30), " +
                     "sender VARCHAR(30)," +
                     "document VARCHAR(30));" );
-                   // "PRIMARY KEY (`id`));" );
+            System.out.println("DB: Table created");
+            return true;
         } catch (SQLException e) {
             System.err.println("SQLException caught in SignatureDatabase.createTable()" + e);
             e.printStackTrace();
-        } System.out.println("DB: Table created");
+            return false;
+        }
     }
 
     /**
@@ -83,7 +85,7 @@ public class SignatureDatabase {
      */
     public void printDB() throws SQLException {
         String query = "SELECT * FROM SIGNATURE";
-        resultSet= statement.executeQuery(query);
+        resultSet = statement.executeQuery(query);
         metaData = resultSet.getMetaData();
         int columnsNumber = metaData.getColumnCount();
         System.out.println("\n -----SIGNATURE DATABASE:---- \n");

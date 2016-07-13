@@ -21,4 +21,8 @@ public class DatabaseSignatureStorage {
         db.insertSignature(signatureJobModel);
         return signatureJobModel;
     }
+
+    public void updateStatus(SignatureJobModel signatureJobModel, String status){
+        db.updateStatus(signatureJobModel, status);
+    }
 }
