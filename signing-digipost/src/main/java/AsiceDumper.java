@@ -11,15 +11,23 @@ public class AsiceDumper {
 
     /**
      * Dumps a zip file of the document bundle to disk. Only for testing purposes, not used for anything.
+     *
      * @param documentBundle
      * @param signatureJob
      * @throws IOException
      */
-    public static void dumper(DocumentBundle documentBundle, SignatureJob signatureJob) throws IOException {
-        Path path = FileSystems.getDefault().getPath("","");
+    public static boolean dumper(DocumentBundle documentBundle, SignatureJob signatureJob) {
+
+        Path path = FileSystems.getDefault().getPath("", "");
         DumpDocumentBundleToDisk dumper = new DumpDocumentBundleToDisk(path);
         InputStream asiceInputStream = documentBundle.getInputStream();
-        dumper.process(signatureJob,asiceInputStream);
+        try {
+            dumper.process(signatureJob, asiceInputStream);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
 
     }
 }
