@@ -8,9 +8,7 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 
-/**
- * Created by camp-nto on 12.07.2016.
- */
+
 public class SignedDocumentFetcherTest {
 
     //Still not working
