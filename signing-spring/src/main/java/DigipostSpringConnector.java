@@ -1,5 +1,8 @@
 import no.digipost.signature.client.asice.signature.Signature;
 import no.digipost.signature.client.core.SignatureJob;
+import no.digipost.signature.client.portal.Notifications;
+import no.digipost.signature.client.portal.PortalJob;
+import no.digipost.signature.client.portal.PortalSigner;
 import no.digipost.signature.client.security.KeyStoreConfig;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -14,7 +17,12 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.sql.SQLException;
+
 
 
 /**
@@ -30,10 +38,13 @@ public class DigipostSpringConnector {
     private String statusQueryToken;
     private StatusReader statusReader;
     private SignedDocumentFetcher signedDocumentFetcher;
+    private PortalSignedDocumentFetcher portalSignedDocumentFetcher;
+    private PortalJobPoller poller;
+    private SigningServiceConnector signingServiceConnector;
+
     private String[] exitUrls = {
             "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
     };
-    private SigningServiceConnector signingServiceConnector;
     /**
      * This is the mapping for starting the process. It should probably have a parameter designating the correct document by ID
      * from the SignatureDatabase.
@@ -42,14 +53,13 @@ public class DigipostSpringConnector {
      *
      */
 
-
     @RequestMapping("/asice")
     public ModelAndView makeAsice() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
         DatabaseSignatureStorage storage = new DatabaseSignatureStorage();
         SignatureJobModel s = storage.createDatabase();
 
         AsiceMaker asiceMaker = new AsiceMaker();
-        SetupClientConfig clientConfig = new SetupClientConfig();
+        SetupClientConfig clientConfig = new SetupClientConfig("Direct");
 
         clientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
         clientConfig.setupClientConfiguration(s.getSender());
@@ -115,15 +125,23 @@ public class DigipostSpringConnector {
 
     @RequestMapping("/getPades")
     public String getPades() throws IOException{
-        this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient(),this.statusReader);
-        return signedDocumentFetcher.getPades();
+        if(this.signedDocumentFetcher != null){
+            return signedDocumentFetcher.getPades();
+        } else {
+            this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient(),this.statusReader);
+            return signedDocumentFetcher.getPades();
+        }
         // status was either REJECTED or FAILED, XAdES and PAdES are not available.
         }
 
     @RequestMapping("/getXades")
     public String getXades() throws IOException{
-        this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient(),this.statusReader);
-        return signedDocumentFetcher.getXades();
+        if(this.signedDocumentFetcher != null){
+            return signedDocumentFetcher.getXades();
+        } else {
+            this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient(),this.statusReader);
+            return signedDocumentFetcher.getXades();
+        }
         // status was either REJECTED or FAILED, XAdES and PAdES are not available.
     }
 
