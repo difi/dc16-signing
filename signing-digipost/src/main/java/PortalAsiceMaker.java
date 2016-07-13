@@ -64,4 +64,5 @@ public class PortalAsiceMaker {
 
     public File getContactInfo() {return kontaktInfoClientTest;}
     public PortalJob getPortalJob() { return this.portalJob;}
+    public File getDokumentTilSignering(){ return dokumentTilSignering;}
 }

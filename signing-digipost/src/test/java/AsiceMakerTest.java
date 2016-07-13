@@ -25,8 +25,7 @@ public class AsiceMakerTest {
     public void signatureJobExistsAfterCreatingAsic() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException {
         AsiceMaker asiceMaker = new AsiceMaker();
         SetupClientConfig clientConfig = new SetupClientConfig("Direct");
-        clientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
-        clientConfig.setupClientConfiguration("123456789");
+        clientConfig.initialize(asiceMaker.getContactInfo(),"123456789");
         String[] exitUrls = {
                 "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
         };
