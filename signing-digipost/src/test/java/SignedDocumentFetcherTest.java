@@ -1,8 +1,5 @@
 import no.digipost.signature.client.core.SignatureJob;
-import no.digipost.signature.client.direct.DirectClient;
-import no.digipost.signature.client.direct.DirectJob;
-import no.digipost.signature.client.direct.DirectJobResponse;
-import no.digipost.signature.client.direct.DirectJobStatusResponse;
+import no.digipost.signature.client.direct.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -21,10 +18,14 @@ public class SignedDocumentFetcherTest {
     //    DirectClient client = new DirectClient(clientConfig.getClientConfiguration());
     //    AsiceMaker asiceMaker = new AsiceMaker();
     //    SignatureJob signatureJob = asiceMaker.getSignatureJob();
-    //    DirectJobResponse directJobResponse = client.create((DirectJob)signatureJob);
 
-    //    StatusReader statusReader = new StatusReader(client, directJobResponse, "token");
+    //    String statusQueryToken = "0A3BQ54C";
+    //    DirectJobResponse directJobResponse = client.create((DirectJob)signatureJob);
+    //    DirectJobStatusResponse directJobStatusResponse = client.getStatus(StatusReference.of(directJobResponse).withStatusQueryToken(statusQueryToken));
+
+    //    StatusReader statusReader = new StatusReader(client, directJobResponse, statusQueryToken);
     //    SignedDocumentFetcher signedDocumentFetcher = new SignedDocumentFetcher(client, statusReader);
+    //    Assert.assertEquals(signedDocumentFetcher.getPades(), "fetched pade");
 
     //}
 }

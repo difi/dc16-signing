@@ -33,12 +33,13 @@ public class DigipostSpringConnector {
     private PortalSignedDocumentFetcher portalSignedDocumentFetcher;
     private PortalJobPoller poller;
 
+    private SigningServiceConnector signingServiceConnector;
+
     private String[] exitUrls = {
             "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
     };
-    private SigningServiceConnector signingServiceConnector;
     public DatabaseSignatureStorage storage = new DatabaseSignatureStorage();
-    public SignatureJobModel s;
+    public SignatureJobModel s = new SignatureJobModel("Ikke signert", "123456789", "17079493538");
 
     /**
      * This is the mapping for starting the process. It should probably have a parameter designating the correct document by ID
@@ -50,8 +51,8 @@ public class DigipostSpringConnector {
 
     @RequestMapping("/asice")
     public ModelAndView makeAsice() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
-        SignatureJobModel signatureJobModel = new SignatureJobModel("Ikke signert", "123456789", "17079493538");
-        storage.insertSignaturejobToDB(signatureJobModel);
+
+        storage.insertSignaturejobToDB(s);
 
         AsiceMaker asiceMaker = new AsiceMaker();
         SetupClientConfig clientConfig = new SetupClientConfig("Direct");
