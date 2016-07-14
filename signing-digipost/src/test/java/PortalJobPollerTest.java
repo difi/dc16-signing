@@ -30,12 +30,13 @@ public class PortalJobPollerTest {
     @BeforeClass
     public static void setUp(){
         client = mock(PortalClient.class);
-
         statusChange = mock(PortalJobStatusChanged.class);
         secondStatusChange = mock(PortalJobStatusChanged.class);
         signature = mock(Signature.class);
         secondSignature = mock(Signature.class);
         //portalJobStatusInProgress = mock(PortalJobStatus.class);
+
+
         when(client.getStatusChange()).thenReturn(statusChange);
         when(statusChange.getStatus()).thenReturn(PortalJobStatus.IN_PROGRESS);
         when(statusChange.isPAdESAvailable()).thenReturn(false);
@@ -45,8 +46,6 @@ public class PortalJobPollerTest {
 
         List<Signature> signaturesList = new ArrayList<>();
         signaturesList.add(signature);
-
-
         List<Signature> secondSignaturesList = new ArrayList<>();
         signaturesList.add(secondSignature);
 
