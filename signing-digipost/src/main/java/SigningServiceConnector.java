@@ -12,6 +12,8 @@ import no.digipost.signature.client.security.KeyStoreConfig;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * Class responsible for contacting the signing service.
@@ -46,11 +48,11 @@ public class SigningServiceConnector {
          *     Sends a request to difi_test based on a signaturejob and a keyconfig.
          *     Returns false if no response was received, true otherwise.
          */
-        public boolean sendRequest(SignatureJob signatureJob, KeyStoreConfig keyStoreConfig) {
+        public boolean sendRequest(SignatureJob signatureJob, KeyStoreConfig keyStoreConfig) throws URISyntaxException {
 
             //Both the serviceUri and the truststore are constants taken from the api library signature-api-client-java
             client = ClientConfiguration.builder(keyStoreConfig)
-                    .serviceUri(ServiceUri.DIFI_TEST)
+                    .serviceUri(new URI("http://localhost:8082/"))
                     .trustStore(Certificates.TEST)
                     .globalSender(new Sender("991825827"))
                     .build();
@@ -70,9 +72,9 @@ public class SigningServiceConnector {
             }
         }
 
-    public boolean sendPortalRequest(PortalJob portalJob, KeyStoreConfig keyStoreConfig){
+    public boolean sendPortalRequest(PortalJob portalJob, KeyStoreConfig keyStoreConfig) throws URISyntaxException {
         client = ClientConfiguration.builder(keyStoreConfig)
-            .serviceUri(ServiceUri.DIFI_TEST)
+            .serviceUri(new URI("http://localhost:8082/"))
             .trustStore(Certificates.TEST)
             .globalSender(new Sender("991825827"))
             .build();
