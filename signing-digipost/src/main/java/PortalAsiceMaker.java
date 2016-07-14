@@ -58,10 +58,11 @@ public class PortalAsiceMaker {
         createASiCE = new CreateASiCE(manifestCreator, clientConfiguration);
         PortalDocument document = DocumentHandler.pdfToPortalDocument(PDFPath);
         this.portalJob = createSignatureJobPortal(signers,document,exitUrls);
-        return createASiCE.createASiCE(this.portalJob);
-
+        //return createASiCE.createASiCE(this.portalJob);
+        return null;
     }
 
     public File getContactInfo() {return kontaktInfoClientTest;}
     public PortalJob getPortalJob() { return this.portalJob;}
+    public File getDokumentTilSignering(){ return dokumentTilSignering;}
 }
