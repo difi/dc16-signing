@@ -32,7 +32,6 @@ public class DigipostSpringConnector {
     private SignedDocumentFetcher signedDocumentFetcher;
     private PortalSignedDocumentFetcher portalSignedDocumentFetcher;
     private PortalJobPoller poller;
-    private SigningServiceConnector signingServiceConnector;
 
     private String[] exitUrls = {
             "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
@@ -40,7 +39,7 @@ public class DigipostSpringConnector {
     private SigningServiceConnector signingServiceConnector;
     public DatabaseSignatureStorage storage = new DatabaseSignatureStorage();
     public SignatureJobModel s;
-r
+
     /**
      * This is the mapping for starting the process. It should probably have a parameter designating the correct document by ID
      * from the SignatureDatabase.
