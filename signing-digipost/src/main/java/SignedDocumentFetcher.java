@@ -28,19 +28,18 @@ public class SignedDocumentFetcher {
     }
 
     public String getPades() throws IOException{
-
-        if (this.statusReader.getStatusResponse().is(this.statusReader.getStatusResponse().getStatus().SIGNED)) {
+        //if (this.statusReader.getStatusResponse().is(this.statusReader.getStatusResponse().getStatus().SIGNED)) {
+            if(statusResponse.is(DirectJobStatus.SIGNED)){
 
             InputStream pAdESStream = client.getPAdES(this.statusReader.getStatusResponse().getpAdESUrl());
-
-            OutputStream outputStream = new FileOutputStream(System.getProperty("user.dir") + "pAdESTest.pdf");
+            OutputStream outputStream = new FileOutputStream(System.getProperty("user.dir") + "/pAdESTest.pdf");
             int read = 0;
 
             byte[] bytes = new byte[999999999];
             while ((read = pAdESStream.read(bytes)) != -1) {
                 outputStream.write(bytes, 0, read);
             }
-
+            System.out.println("fetched pade");
             return "fetched pade";
         }
         else return "failed";

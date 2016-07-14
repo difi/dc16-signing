@@ -28,14 +28,15 @@ public class SignedDocumentFetcherTest {
         client = mock(DirectClient.class);
         statusReader = mock(StatusReader.class);
         statusResponse = mock(DirectJobStatusResponse.class);
-        inputStream = new ByteArrayInputStream("....".getBytes());
+        inputStream = new FileInputStream(System.getProperty("user.dir") + "//pAdESTest2.pdf");
 
 
 
         when(client.getStatusChange()).thenReturn(statusResponse);
         when(statusReader.getStatusResponse()).thenReturn(statusResponse);
+        when(statusResponse.getStatus()).thenReturn(DirectJobStatus.SIGNED);
         when(client.getPAdES(statusReader.getStatusResponse().getpAdESUrl())).thenReturn(inputStream);
-
+        when(statusResponse.is(DirectJobStatus.SIGNED)).thenReturn(true);
 
     }
 
@@ -43,10 +44,9 @@ public class SignedDocumentFetcherTest {
     public void checkOutputStreamEqualsInputStream()throws IOException{
         SignedDocumentFetcher signedDocumentFetcher = new SignedDocumentFetcher(client,statusReader);
         signedDocumentFetcher.getPades();
-        System.out.println(System.getProperty("user.dir") + "/pAdESTest.pdf");
-        InputStream inputStreamTest = new FileInputStream(System.getProperty("user.dir") + "/pAdESTest.pdf");
+        InputStream inputStreamTest = new FileInputStream(System.getProperty("user.dir") + "//pAdESTest.pdf");
 
-        Assert.assertEquals(inputStream,inputStreamTest);
+        Assert.assertEquals(inputStream.read(),inputStreamTest.read());
     }
     //Still not working
     //@Test
