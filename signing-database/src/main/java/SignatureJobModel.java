@@ -15,10 +15,6 @@ public class SignatureJobModel {
         this.signer = signer;
     }
 
-    public int getId() {
-        return id;
-    }
-
     public String getSender() {
         return sender;
     }
