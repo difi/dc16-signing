@@ -62,8 +62,10 @@ public class SigningServiceConnector {
             statusUrl = directJobResponse.getStatusUrl();
 
             if(directJobResponse != null){
+                System.out.println("true");
                 return true;
             } else {
+                System.out.println("false");
                 return false;
             }
         }

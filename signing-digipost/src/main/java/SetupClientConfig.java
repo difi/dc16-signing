@@ -19,6 +19,10 @@ public class SetupClientConfig {
     /**
      * Setups the keystore and keystoreconfig
      */
+    public void initialize(File kontaktinfo, String sender){
+        setupKeystoreConfig(kontaktinfo);
+        setupClientConfiguration(sender);
+    }
     public void setupKeystoreConfig(File kontaktInfo){
         try {
             keyStore = KeyStore.getInstance("JKS");

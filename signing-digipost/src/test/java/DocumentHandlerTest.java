@@ -1,10 +1,7 @@
-/**
- * Created by camp-nto on 12.07.2016.
- */
+
 import no.digipost.signature.client.direct.DirectDocument;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -24,6 +21,5 @@ public class DocumentHandlerTest {
         Assert.assertEquals(directDocument.getFileName(), "document.pdf");
 
     }
-
 
 }
