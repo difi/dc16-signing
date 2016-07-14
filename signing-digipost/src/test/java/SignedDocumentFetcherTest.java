@@ -10,27 +10,44 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class SignedDocumentFetcherTest {
 
     @Mock private static DirectClient client;
     @Mock private static StatusReader statusReader;
     @Mock private static DirectJobStatusResponse statusResponse;
+    @Mock private static InputStream inputStream;
+
 
     @BeforeClass
-    public static void setUp(){
+    public static void setUp() throws IOException{
         client = mock(DirectClient.class);
         statusReader = mock(StatusReader.class);
         statusResponse = mock(DirectJobStatusResponse.class);
+        inputStream = new FileInputStream(System.getProperty("user.dir") + "//pAdESTest2.pdf");
+
 
 
         when(client.getStatusChange()).thenReturn(statusResponse);
         when(statusReader.getStatusResponse()).thenReturn(statusResponse);
-        when(client.getPAdES(statusReader.getStatusResponse().getpAdESUrl()));
+        when(statusResponse.getStatus()).thenReturn(DirectJobStatus.SIGNED);
+        when(client.getPAdES(statusReader.getStatusResponse().getpAdESUrl())).thenReturn(inputStream);
+        when(statusResponse.is(DirectJobStatus.SIGNED)).thenReturn(true);
 
     }
 
+    @Test
+    public void checkOutputStreamEqualsInputStream()throws IOException{
+        SignedDocumentFetcher signedDocumentFetcher = new SignedDocumentFetcher(client,statusReader);
+        signedDocumentFetcher.getPades();
+        InputStream inputStreamTest = new FileInputStream(System.getProperty("user.dir") + "//pAdESTest.pdf");
+
+        Assert.assertEquals(inputStream.read(),inputStreamTest.read());
+    }
     //Still not working
     //@Test
     //public void getPadesReturnesFetchedPade() throws IOException {
