@@ -1,4 +1,3 @@
-
 import no.digipost.signature.client.Certificates;
 import no.digipost.signature.client.ClientConfiguration;
 import no.digipost.signature.client.ServiceUri;
@@ -16,13 +15,16 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
 
+
 public class SigningServiceConnectorTest {
 
     @Test
     public void sendRequestReturnsTrue() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
 
         AsiceMaker asiceMaker = new AsiceMaker();
+
         SetupClientConfig clientConfig = new SetupClientConfig("Direct");
+
 
         clientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
         clientConfig.setupClientConfiguration("123456789");

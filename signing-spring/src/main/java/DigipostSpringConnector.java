@@ -32,7 +32,9 @@ public class DigipostSpringConnector {
     private SignedDocumentFetcher signedDocumentFetcher;
     private PortalSignedDocumentFetcher portalSignedDocumentFetcher;
     private PortalJobPoller poller;
+
     private SigningServiceConnector signingServiceConnector;
+
     private String[] exitUrls = {
             "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
     };

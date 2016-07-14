@@ -40,12 +40,6 @@ public class SignedDocumentFetcher {
             while ((read = pAdESStream.read(bytes)) != -1) {
                 outputStream.write(bytes, 0, read);
             }
-            //pAdESStream.read(buffer);
-
-            //File targetFile = new File(System.getProperty("user.dir") + "pAdES.pdf");
-            //OutputStream outStream = new FileOutputStream(targetFile);
-            //outStream.write(buffer);
-            //this.statusReader.confirmProcessedSignatureJob();
 
             return "fetched pade";
         }
