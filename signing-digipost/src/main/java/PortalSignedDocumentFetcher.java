@@ -56,7 +56,7 @@ public class PortalSignedDocumentFetcher {
                 for (InputStream inputStream : inputStreams) {
                     byte[] buffer = new byte[inputStream.available()];
                     inputStream.read(buffer);
-                    File targetFile = new File(System.getProperty("user.dir") +inputStreams.indexOf(inputStream) +  "targetFile2.pdf");
+                    File targetFile = new File(System.getProperty("user.dir") + inputStreams.indexOf(inputStream) +  "targetFile2.pdf");
                     OutputStream outStream = new FileOutputStream(targetFile);
                     outStream.write(buffer);
                 }
