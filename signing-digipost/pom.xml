@@ -12,6 +12,7 @@
 
 
     <artifactId>signing-digipost</artifactId>
+
     <dependencies>
         <dependency>
             <groupId>com.github.tomakehurst</groupId>

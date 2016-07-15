@@ -30,16 +30,19 @@ public class WireMockTestserver {
 
 
     @BeforeClass
-    public void setUp(){
+    public static void setUp(){
         httpClient = HttpClientBuilder.create().build();
+        String directUrl = "/%s/direct/signature-jobs";
+        String portalUrl = "/%s/portal/signature-jobs";
+
 
         configureFor(8082);
-        stubFor(get(urlMatching(BASEURL + directUrl))
+        stubFor(get(urlMatching(directUrl))
                 .willReturn(aResponse()
                         .withStatus(12345)
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(), "text/plain")
                         .withBody("")));
-        stubFor(get(urlPathMatching(BASEURL + portalUrl))
+        stubFor(get(urlPathMatching(portalUrl))
                 .willReturn(aResponse()
                         .withStatus(12345)
                         .withHeader("yolo", "lol")
@@ -51,6 +54,8 @@ public class WireMockTestserver {
     public static void main(String args[]){
         WireMockServer wireMockServer = new WireMockServer(WireMockConfiguration.options().port(8082));
         wireMockServer.start();
+        setUp();
+
         System.out.println("Server started");
 
         WireMock.configureFor(8082);

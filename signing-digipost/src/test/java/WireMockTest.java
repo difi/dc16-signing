@@ -11,6 +11,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.eclipse.jetty.http.HttpHeader;
+import org.junit.Before;
 import org.junit.Rule;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -31,12 +32,13 @@ public class WireMockTest {
             new WireMockRule(WireMockConfiguration.wireMockConfig().port(8082));
 
 
-    @BeforeClass
+    @Before
     public void setUp(){
       httpClient = HttpClientBuilder.create().build();
+        System.out.print("yolo");
 
       configureFor(8082);
-      stubFor(get(urlMatching(BASEURL + directUrl))
+      stubFor(get(urlMatching("/test"))
                 .willReturn(aResponse()
                     .withStatus(12345)
                     .withHeader(HttpHeader.CONTENT_TYPE.toString(), "text/plain")
