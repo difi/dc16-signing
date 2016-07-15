@@ -80,6 +80,7 @@ public class DigipostSpringConnector {
     public String whenSigningComplete(@RequestParam("status_query_token") String token){
         this.statusQueryToken = token;
         this.statusReader = new StatusReader(signingServiceConnector.getDirectClient(), signingServiceConnector.getDirectJobResponse(), this.statusQueryToken);
+        System.out.println("here");
         storage.updateStatus(s, statusReader.getStatus());
         return statusReader.getStatus();
 

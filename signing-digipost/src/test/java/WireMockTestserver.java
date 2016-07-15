@@ -41,6 +41,10 @@ public class WireMockTestserver {
         String directUrl = ".*/direct/signature-jobs";
         String portalUrl = ".*/portal/signature-jobs";
         String statusUrl = ".*/direct/signature-jobs/1/status";
+        String padesUrl = ".*/direct/signature-jobs/1/pades";
+        String xadesUrl = ".*/direct/signature-jobs/1/xades/1";
+        String confirmationUrl = ".*/direct/signature-jobs/1/complete";
+
         DirectJobResponse sampleJobResponse = getSampleSignatureJob();
         //XMLDirectSignatureJobResponse xmlSample = toJaxb();
         configureFor(8082);
@@ -59,7 +63,21 @@ public class WireMockTestserver {
         .willReturn(aResponse()
         .withStatus(200)
         .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
-        .withBodyFile("StatusResponse.xml")))
+        .withBodyFile("StatusResponse.xml")));
+
+        stubFor(get(urlPathMatching(padesUrl))
+        .willReturn(aResponse()
+                .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/pdf")
+        .withBodyFile("pAdES.pdf")));
+
+        stubFor(get(urlPathMatching(xadesUrl))
+                .willReturn(aResponse()
+                        .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
+                        .withBodyFile("xAdES.xml")));
+        
+
+
+
         ;}
 
     public static DirectJobResponse getSampleSignatureJob(){
