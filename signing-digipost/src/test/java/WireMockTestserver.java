@@ -32,17 +32,17 @@ public class WireMockTestserver {
     @BeforeClass
     public static void setUp(){
         httpClient = HttpClientBuilder.create().build();
-        String directUrl = "/%s/direct/signature-jobs";
-        String portalUrl = "/%s/portal/signature-jobs";
+        String directUrl = ".*/direct/signature-jobs";
+        String portalUrl = ".*/portal/signature-jobs";
 
 
         configureFor(8082);
-        stubFor(get(urlMatching(directUrl))
+        stubFor(post(urlMatching(directUrl))
                 .willReturn(aResponse()
                         .withStatus(12345)
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(), "text/plain")
                         .withBody("")));
-        stubFor(get(urlPathMatching(portalUrl))
+        stubFor(post(urlPathMatching(portalUrl))
                 .willReturn(aResponse()
                         .withStatus(12345)
                         .withHeader("yolo", "lol")
