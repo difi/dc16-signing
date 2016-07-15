@@ -47,37 +47,42 @@ public class DigipostSpringConnectorTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("Hello")))
                 .andExpect(content().contentType("text/plain;charset=ISO-8859-1"));
+        Assert.assertNotNull(mvc);
     }
 
     @Test
     public void testMakeAsice_checksStatus() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/asice"))
-                .andExpect(status().isFound())
-        ;
+                .andExpect(status().isFound());
+        Assert.assertNotNull(mvc);
     }
 
     @Test
     public void testWhenSigningComplete_checksStatus() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/onCompletion"))
                 .andExpect(status().isBadRequest());
+        Assert.assertNotNull(mvc);
     }
 
     @Test
     public void whenUserRejects_checksStatus() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/onRejection"))
                 .andExpect(status().isBadRequest());
+        Assert.assertNotNull(mvc);
     }
 
     @Test
     public void testwhenSigningFails_checksStatus() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/onError"))
                 .andExpect(status().isBadRequest());
+        Assert.assertNotNull(mvc);
     }
 
     @Test
     public void getSignedDocument_checksStatus() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/getDocument"))
                 .andExpect(status().isBadRequest());
+        Assert.assertNotNull(mvc);
     }
 
     //@Test
