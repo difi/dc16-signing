@@ -45,12 +45,13 @@ public class DigipostSpringConnectorTest {
 
     @Test
     public void getHello() throws Exception {
+        DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
         mvc.perform(MockMvcRequestBuilders.get("/test"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("Hello")))
                 .andExpect(content().contentType("text/plain;charset=ISO-8859-1"));
-        Assert.assertNotNull(mvc);
         Assert.assertNotNull(digipostSpringConnector.test());
+        Assert.assertEquals(digipostSpringConnector.test(), digipostSpringConnector.test());
 
     }
 
@@ -58,7 +59,6 @@ public class DigipostSpringConnectorTest {
     public void testMakeAsice_checksStatus() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/asice"))
                 .andExpect(status().isFound());
-        Assert.assertNotNull(mvc);
         Assert.assertNotNull(digipostSpringConnector.makeAsice());
     }
 
@@ -66,7 +66,6 @@ public class DigipostSpringConnectorTest {
     public void testWhenSigningComplete_checksStatus() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/onCompletion"))
                 .andExpect(status().isBadRequest());
-        Assert.assertNotNull(mvc);
         //Assert.assertNotNull(digipostSpringConnector.whenSigningComplete(@RequestParam("status_query_token")));
 
     }
@@ -91,6 +90,7 @@ public class DigipostSpringConnectorTest {
         mvc.perform(MockMvcRequestBuilders.get("/getDocument"))
                 .andExpect(status().isBadRequest());
         Assert.assertNotNull(mvc);
+        //Assert.assertNotNull(digipostSpringConnector.getSignedDocument("test"));
     }
 
     //@Test
