@@ -9,6 +9,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -35,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class DigipostSpringConnectorTest {
 
     private MockMvc mvc = MockMvcBuilders.standaloneSetup(new DigipostSpringConnector()).build();;
+    private DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
 
         //@Before
         //public void setup() throws Exception{
@@ -48,6 +50,8 @@ public class DigipostSpringConnectorTest {
                 .andExpect(content().string(equalTo("Hello")))
                 .andExpect(content().contentType("text/plain;charset=ISO-8859-1"));
         Assert.assertNotNull(mvc);
+        Assert.assertNotNull(digipostSpringConnector.test());
+
     }
 
     @Test
@@ -55,6 +59,7 @@ public class DigipostSpringConnectorTest {
         mvc.perform(MockMvcRequestBuilders.get("/asice"))
                 .andExpect(status().isFound());
         Assert.assertNotNull(mvc);
+        Assert.assertNotNull(digipostSpringConnector.makeAsice());
     }
 
     @Test
@@ -62,6 +67,8 @@ public class DigipostSpringConnectorTest {
         mvc.perform(MockMvcRequestBuilders.get("/onCompletion"))
                 .andExpect(status().isBadRequest());
         Assert.assertNotNull(mvc);
+        //Assert.assertNotNull(digipostSpringConnector.whenSigningComplete(@RequestParam("status_query_token")));
+
     }
 
     @Test
@@ -69,6 +76,7 @@ public class DigipostSpringConnectorTest {
         mvc.perform(MockMvcRequestBuilders.get("/onRejection"))
                 .andExpect(status().isBadRequest());
         Assert.assertNotNull(mvc);
+
     }
 
     @Test
