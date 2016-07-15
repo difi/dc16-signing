@@ -49,6 +49,11 @@ public class DigipostSpringConnector {
      *
      */
 
+    @RequestMapping("/test")
+    public String test(){
+        return "Hello";
+    }
+
     @RequestMapping("/asice")
     public ModelAndView makeAsice() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
 
