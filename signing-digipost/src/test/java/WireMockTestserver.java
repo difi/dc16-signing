@@ -2,13 +2,19 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import no.digipost.signature.api.xml.XMLDirectSignatureJobResponse;
+import no.digipost.signature.client.direct.DirectJobResponse;
 import no.digipost.signature.client.portal.PortalClient;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.codehaus.groovy.antlr.treewalker.PreOrderTraversal;
 import org.eclipse.jetty.http.HttpHeader;
 import org.junit.Rule;
+import org.springframework.http.HttpStatus;
 import org.testng.annotations.BeforeClass;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -34,20 +40,34 @@ public class WireMockTestserver {
         httpClient = HttpClientBuilder.create().build();
         String directUrl = ".*/direct/signature-jobs";
         String portalUrl = ".*/portal/signature-jobs";
-
-
+        String statusUrl = ".*/direct/signature-jobs/1/status";
+        DirectJobResponse sampleJobResponse = getSampleSignatureJob();
+        //XMLDirectSignatureJobResponse xmlSample = toJaxb();
         configureFor(8082);
         stubFor(post(urlMatching(directUrl))
                 .willReturn(aResponse()
-                        .withStatus(12345)
-                        .withHeader(HttpHeader.CONTENT_TYPE.toString(), "text/plain")
-                        .withBody("")));
+                        .withStatus(200)
+                        .withHeader(HttpHeader.CONTENT_TYPE.toString(), "application/xml")
+                        .withBodyFile("JobResponse.xml")));
         stubFor(post(urlPathMatching(portalUrl))
                 .willReturn(aResponse()
-                        .withStatus(12345)
-                        .withHeader("yolo", "lol")
-                        .withBody("HELLOOOOO - portal")));
+                        .withStatus(200)
+                        .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
+                        //.withBody(String.valueOf(new ByteArrayInputStream(new byte[]{0x03, 0x04})).getBytes())
+                        .withBodyFile("PortalJobResponse.xml")));
+        stubFor(get(urlPathMatching(statusUrl))
+        .willReturn(aResponse()
+        .withStatus(200)
+        .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
+        .withBodyFile("StatusResponse.xml")))
+        ;}
+
+    public static DirectJobResponse getSampleSignatureJob(){
+        return new DirectJobResponse(5, "redirect url", "status url");
     }
+
+
+
 
 
 
