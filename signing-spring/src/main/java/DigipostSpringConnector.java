@@ -131,10 +131,11 @@ public class DigipostSpringConnector {
     public String getPades() throws IOException{
         if(this.signedDocumentFetcher != null){
             return signedDocumentFetcher.getPades();
-        } else {
+        } else if (this.signingServiceConnector != null) {
             this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient(),this.statusReader);
             return signedDocumentFetcher.getPades();
         }
+        throw new IllegalStateException("SigningServiceConnector has not been initialized."); //Should maybe be removed 
         // status was either REJECTED or FAILED, XAdES and PAdES are not available.
         }
 

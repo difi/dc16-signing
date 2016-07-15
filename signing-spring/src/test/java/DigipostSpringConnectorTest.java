@@ -29,9 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Created by camp-nto on 14.07.2016.
  */
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = DigipostSpringConnector.class)
-@WebAppConfiguration
+
 
 public class DigipostSpringConnectorTest {
 
