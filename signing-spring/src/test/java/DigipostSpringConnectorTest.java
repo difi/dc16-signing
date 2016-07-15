@@ -54,7 +54,7 @@ public class DigipostSpringConnectorTest {
         Assert.assertEquals(digipostSpringConnector.test(), digipostSpringConnector.test());
 
     }
-    
+
     @Test
     public void testCoverageTest(){
         DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
