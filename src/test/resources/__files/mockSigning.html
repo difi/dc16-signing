@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> [mock] Signeringstjeneste </title>
+
+    <style>
+        a:link, a:visited {
+            color: white;
+        }
+        a:hover {
+            opacity: 0.9;
+        }
+        a:active {
+            opacity: 0.8;
+        }
+        .button {
+              font: bold 16px Arial;
+              text-decoration: none;
+              background-color: #33cc59;
+              color: #white;
+              padding: 30px;
+              border-style:solid;
+              border-width:4px;
+        }
+        div {
+            padding-bottom:30px;
+            padding-top:30px;
+        }
+    </style>
+
+<body>
+<h1> Simuler signering av dokukment her: </h1>
+
+<div>
+   <a class="button" href='localhost:8080/onCompletion?status_query_token=CompletionToken'> Signer </a>
+    <a class="button" href='localhost:8080/onError?status_query_token=ErrorToken'> Avbryt </a>
+    <a class="button" href='localhost:8080/onRejection?status_query_token=RejectionToken'> Error </a>
+</div>
+<div>
+    <button type="button" class="second"> Xades </button>
+    <button type="button" class="second"> Pades </button>
+    <button type="button" class="second"> Get status </button>
+</div>
+
+</body>
+<script>
+
+</script>
+</html>
