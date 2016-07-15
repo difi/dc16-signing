@@ -27,20 +27,23 @@
             padding-bottom:30px;
             padding-top:30px;
         }
+        #second a{
+            padding: 15px;
+        }
     </style>
 
 <body>
 <h1> Simuler signering av dokukment her: </h1>
 
 <div>
-   <a class="button" href='localhost:8080/onCompletion?status_query_token=CompletionToken'> Signer </a>
-    <a class="button" href='localhost:8080/onError?status_query_token=ErrorToken'> Avbryt </a>
-    <a class="button" href='localhost:8080/onRejection?status_query_token=RejectionToken'> Error </a>
+   <a class="button" href='http://localhost:8080/onCompletion?status_query_token=CompletionToken'> Signer </a>
+    <a class="button" href='http://localhost:8080/onError?status_query_token=ErrorToken'> Avbryt </a>
+    <a class="button" href='http://localhost:8080/onRejection?status_query_token=RejectionToken'> Error </a>
 </div>
-<div>
-    <button type="button" class="second"> Xades </button>
-    <button type="button" class="second"> Pades </button>
-    <button type="button" class="second"> Get status </button>
+<div id="second">
+    <a class="button" href='http://localhost:8082/api/123456789/direct/signature-jobs/1/xades/1'> Xades </a>
+    <a class="button" href='localhost:8082/api/123456789}/direct/signature-jobs/1/pades'> Pades </a>
+    <a class="button" href='http://localhost:8080/123456789/direct/signature-jobs/1/complete'> Get Status </a>
 </div>
 
 </body>
