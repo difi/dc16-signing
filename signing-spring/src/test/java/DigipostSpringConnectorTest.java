@@ -29,8 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Created by camp-nto on 14.07.2016.
  */
 
-
-
 public class DigipostSpringConnectorTest {
 
     private MockMvc mvc = MockMvcBuilders.standaloneSetup(new DigipostSpringConnector()).build();;
@@ -70,7 +68,7 @@ public class DigipostSpringConnectorTest {
     public void testWhenSigningComplete_checksStatus() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/onCompletion"))
                 .andExpect(status().isBadRequest());
-        //Assert.assertNotNull(digipostSpringConnector.whenSigningComplete(@RequestParam("status_query_token")));
+       // Assert.assertNotNull(digipostSpringConnector.whenSigningComplete("test-token"));
 
     }
 
