@@ -23,7 +23,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 /**
  * Created by camp-mlo on 14.07.2016.
  */
-public class MockServer {
+public class WireMockTestserver {
 
     private static HttpClient httpClient;
     private final String BASEURL = "http://localhost:8080";
@@ -33,6 +33,7 @@ public class MockServer {
     @Rule
     public WireMockRule wireMockRule =
             new WireMockRule(WireMockConfiguration.wireMockConfig().port(8082));
+
 
     @BeforeClass
     public static void setUp(){
@@ -59,21 +60,21 @@ public class MockServer {
                         //.withBody(String.valueOf(new ByteArrayInputStream(new byte[]{0x03, 0x04})).getBytes())
                         .withBodyFile("PortalJobResponse.xml")));
         stubFor(get(urlPathMatching(statusUrl))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
-                        .withBodyFile("StatusResponse.xml")));
+        .willReturn(aResponse()
+        .withStatus(200)
+        .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
+        .withBodyFile("StatusResponse.xml")));
 
         stubFor(get(urlPathMatching(padesUrl))
-                .willReturn(aResponse()
-                        .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/pdf")
-                        .withBodyFile("pAdES.pdf")));
+        .willReturn(aResponse()
+                .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/pdf")
+        .withBodyFile("pAdES.pdf")));
 
         stubFor(get(urlPathMatching(xadesUrl))
                 .willReturn(aResponse()
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
                         .withBodyFile("xAdES.xml")));
-
+        
 
 
 
@@ -82,6 +83,11 @@ public class MockServer {
     public static DirectJobResponse getSampleSignatureJob(){
         return new DirectJobResponse(5, "redirect url", "status url");
     }
+
+
+
+
+
 
     public static void main(String args[]){
         WireMockServer wireMockServer = new WireMockServer(WireMockConfiguration.options().port(8082));
