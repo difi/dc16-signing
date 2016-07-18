@@ -37,7 +37,6 @@ public class DigipostSpringConnectorTest {
 
     private MockMvc mvc = MockMvcBuilders.standaloneSetup(new DigipostSpringConnector()).build();;
     private DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
-    @Rule
     public ExpectedException exception = ExpectedException.none();
 
 
@@ -117,9 +116,16 @@ public class DigipostSpringConnectorTest {
 
     @Test
     public void getXades_checksStatus() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/getPades"))
+        mvc.perform(MockMvcRequestBuilders.get("/getXades"))
                 .andExpect(status().isOk());
         Assert.assertEquals(digipostSpringConnector.getXades(), "Unable to fetch Xade");
+    }
+
+    @Test
+    public void getJobStatus_checksStatus() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/getJobStatus"))
+                .andExpect(status().isOk());
+        Assert.assertEquals(digipostSpringConnector.getJobStatus(), null);
     }
 
 
