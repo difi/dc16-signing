@@ -62,6 +62,12 @@ public class WireMockTestserver {
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
                         //.withBody(String.valueOf(new ByteArrayInputStream(new byte[]{0x03, 0x04})).getBytes())
                         .withBodyFile("PortalJobResponse.xml")));
+        stubFor(get(urlPathMatching(portalUrl))
+        .willReturn(aResponse()
+        .withStatus(200)
+        .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
+        .withBodyFile("PortalStatusChangeResponse.xml")));
+
         stubFor(get(urlPathMatching(statusUrl))
         .willReturn(aResponse()
         .withStatus(200)
@@ -89,6 +95,7 @@ public class WireMockTestserver {
         stubFor(post(urlPathMatching(confirmationPortalURL))
                 .willReturn(aResponse().withHeader(HttpHeader.CONTENT_TYPE.toString(), "text/html")
                 .withBody("confirmed")));
+
 
         //En http-post mot ressurs. for å opprette signeringsoppdrag
         //Metadata legges i multipart-kallet med application/xml?
