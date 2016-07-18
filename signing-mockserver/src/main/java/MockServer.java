@@ -72,7 +72,8 @@ public class MockServer {
                 .willReturn(aResponse()
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
                         .withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/xAdES.xml")))));
-        ;}
+
+    }
 
     public static DirectJobResponse getSampleSignatureJob(){
         return new DirectJobResponse(5, "redirect url", "status url");
