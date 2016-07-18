@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<portal-signature-job-response xmlns="http://signering.posten.no/schema/v1">
+<direct-signature-job-response xmlns="http://signering.posten.no/schema/v1">
     <signature-job-id>1</signature-job-id>
-    <cancellation-url>localhost:8082/api/{sender-identifier}/portal/signature-jobs/1/cancel</cancellation-url>
-</portal-signature-job-response>
+    <redirect-url>http://localhost:8082/mockSigning.html</redirect-url>
+    <status-url>http://localhost:8082/123456789/direct/signature-jobs/1/status</status-url>
+</direct-signature-job-response>

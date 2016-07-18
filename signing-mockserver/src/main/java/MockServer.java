@@ -2,19 +2,18 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.google.common.io.ByteStreams;
 import no.digipost.signature.client.direct.DirectJobResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-
 import org.eclipse.jetty.http.HttpHeader;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 
 import java.io.File;
+import java.io.IOException;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 
 /**
  * Created by camp-mlo on 14.07.2016.
@@ -32,7 +31,7 @@ public class MockServer {
 
 
     @BeforeClass
-    public static void setUp(){
+    public static void setUp() throws IOException {
         httpClient = HttpClientBuilder.create().build();
         String directUrl = ".*/direct/signature-jobs";
         String portalUrl = ".*/portal/signature-jobs";
@@ -47,32 +46,32 @@ public class MockServer {
         DirectJobResponse sampleJobResponse = getSampleSignatureJob();
         //XMLDirectSignatureJobResponse xmlSample = toJaxb();
         configureFor(8082);
+
         stubFor(post(urlMatching(directUrl))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(), "application/xml")
-                        .withBodyFile("C:\\Users\\camp-mlo\\Documents\\GitHub\\dc16-signing\\signing-mockserver\\src\\main\\resources\\__files")));
+                        .withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/JobResponse.xml")))));
         stubFor(post(urlPathMatching(portalUrl))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
-                        //.withBody(String.valueOf(new ByteArrayInputStream(new byte[]{0x03, 0x04})).getBytes())
-                        .withBodyFile("PortalJobResponse.xml")));
+                        .withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/PortalJobResponse.xml")))));
         stubFor(get(urlPathMatching(statusUrl))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
-                        .withBodyFile("/resources/__files/StatusResponse.xml")));
+                        .withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/StatusResponse.xml")))));
 
         stubFor(get(urlPathMatching(padesUrl))
                 .willReturn(aResponse()
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/pdf")
-                        .withBodyFile("/resources/__files/pAdES.pdf")));
+                        .withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/pAdES.pdf")))));
 
         stubFor(get(urlPathMatching(xadesUrl))
                 .willReturn(aResponse()
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
-                        .withBodyFile("xAdES.xml")));
+                        .withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/xAdES.xml")))));
         ;}
 
     public static DirectJobResponse getSampleSignatureJob(){
@@ -80,7 +79,7 @@ public class MockServer {
     }
 
 
-    public static void main(String args[]){
+    public static void main(String args[]) throws IOException {
         WireMockServer wireMockServer = new WireMockServer(WireMockConfiguration.options().port(8082));
         wireMockServer.start();
         setUp();
