@@ -1,3 +1,7 @@
+import no.digipost.signature.client.Certificates;
+import no.digipost.signature.client.ClientConfiguration;
+import no.digipost.signature.client.ServiceUri;
+import no.digipost.signature.client.core.Sender;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -45,10 +49,6 @@ public class DigipostSpringConnectorTest {
         //    mvc = MockMvcBuilders.standaloneSetup(new DigipostSpringConnector()).build();
         //}
 
-    public String whenSigningComplete(@RequestParam("status_query_token") String token){
-        return token;
-
-    }
 
 
     @Test
