@@ -1,4 +1,6 @@
 import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -11,6 +13,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.NestedServletException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -34,11 +37,20 @@ public class DigipostSpringConnectorTest {
 
     private MockMvc mvc = MockMvcBuilders.standaloneSetup(new DigipostSpringConnector()).build();;
     private DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
 
         //@Before
         //public void setup() throws Exception{
         //    mvc = MockMvcBuilders.standaloneSetup(new DigipostSpringConnector()).build();
         //}
+
+    public String whenSigningComplete(@RequestParam("status_query_token") String token){
+        return token;
+
+    }
+
 
     @Test
     public void getHello() throws Exception {
@@ -67,9 +79,9 @@ public class DigipostSpringConnectorTest {
 
     @Test
     public void testWhenSigningComplete_checksStatus() throws Exception {
+
         mvc.perform(MockMvcRequestBuilders.get("/onCompletion"))
                 .andExpect(status().isBadRequest());
-       // Assert.assertNotNull(digipostSpringConnector.whenSigningComplete("test-token"));
 
     }
 
@@ -93,14 +105,22 @@ public class DigipostSpringConnectorTest {
         mvc.perform(MockMvcRequestBuilders.get("/getDocument"))
                 .andExpect(status().isBadRequest());
         Assert.assertNotNull(mvc);
-        //Assert.assertNotNull(digipostSpringConnector.getSignedDocument("test"));
+        //Assert.assertEquals(digipostSpringConnector.getSignedDocument("xades"), "failed2");
     }
 
-    //@Test
-    //public void getPades_checksStatus() throws Exception {
-    //    mvc.perform(MockMvcRequestBuilders.get("/getPades"))
-    //            .andExpect(status().isBadRequest());
-    //}
+    @Test
+    public void getPades_checksStatus() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/getPades"))
+                .andExpect(status().isOk());
+        Assert.assertEquals(digipostSpringConnector.getPades(), "Unable to fetch Pade");
+    }
+
+    @Test
+    public void getXades_checksStatus() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/getPades"))
+                .andExpect(status().isOk());
+        Assert.assertEquals(digipostSpringConnector.getXades(), "Unable to fetch Xade");
+    }
 
 
 

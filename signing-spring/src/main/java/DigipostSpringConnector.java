@@ -54,6 +54,7 @@ public class DigipostSpringConnector {
         return "Hello";
     }
 
+
     @RequestMapping("/asice")
     public ModelAndView makeAsice() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
 
@@ -135,7 +136,7 @@ public class DigipostSpringConnector {
             this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient(),this.statusReader);
             return signedDocumentFetcher.getPades();
         }
-        throw new IllegalStateException("SigningServiceConnector has not been initialized."); //Should maybe be removed 
+        return "Unable to fetch Pade";
         // status was either REJECTED or FAILED, XAdES and PAdES are not available.
         }
 
@@ -143,10 +144,11 @@ public class DigipostSpringConnector {
     public String getXades() throws IOException{
         if(this.signedDocumentFetcher != null){
             return signedDocumentFetcher.getXades();
-        } else {
+        } else if(this.signingServiceConnector != null){
             this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient(),this.statusReader);
             return signedDocumentFetcher.getXades();
         }
+        return "Unable to fetch Xade";
         // status was either REJECTED or FAILED, XAdES and PAdES are not available.
     }
 
