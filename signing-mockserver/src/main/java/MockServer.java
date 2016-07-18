@@ -10,6 +10,8 @@ import org.eclipse.jetty.http.HttpHeader;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 
+import java.io.File;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
@@ -39,6 +41,9 @@ public class MockServer {
         String xadesUrl = ".*/direct/signature-jobs/1/xades/1";
         String confirmationUrl = ".*/direct/signature-jobs/1/complete";
 
+        String filePath = new File("").getAbsolutePath();
+        System.out.print(filePath);
+
         DirectJobResponse sampleJobResponse = getSampleSignatureJob();
         //XMLDirectSignatureJobResponse xmlSample = toJaxb();
         configureFor(8082);
@@ -46,7 +51,7 @@ public class MockServer {
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(), "application/xml")
-                        .withBodyFile("JobResponse.xml")));
+                        .withBodyFile("C:\\Users\\camp-mlo\\Documents\\GitHub\\dc16-signing\\signing-mockserver\\src\\main\\resources\\__files")));
         stubFor(post(urlPathMatching(portalUrl))
                 .willReturn(aResponse()
                         .withStatus(200)
@@ -57,12 +62,12 @@ public class MockServer {
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
-                        .withBodyFile("StatusResponse.xml")));
+                        .withBodyFile("/resources/__files/StatusResponse.xml")));
 
         stubFor(get(urlPathMatching(padesUrl))
                 .willReturn(aResponse()
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/pdf")
-                        .withBodyFile("pAdES.pdf")));
+                        .withBodyFile("/resources/__files/pAdES.pdf")));
 
         stubFor(get(urlPathMatching(xadesUrl))
                 .willReturn(aResponse()
