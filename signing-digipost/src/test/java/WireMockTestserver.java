@@ -43,7 +43,10 @@ public class WireMockTestserver {
         String statusUrl = ".*/direct/signature-jobs/1/status";
         String padesUrl = ".*/direct/signature-jobs/1/pades";
         String xadesUrl = ".*/direct/signature-jobs/1/xades/1";
+        String cancellationURL = ".*/portal/signature-jobs/1/cancel";
         String confirmationUrl = ".*/direct/signature-jobs/1/complete";
+        String padesPortalURL = ".*/portal/signature-jobs/1/pades";
+        String confirmationPortalURL = ".*/portal/signature-jobs/1/complete";
 
         DirectJobResponse sampleJobResponse = getSampleSignatureJob();
         //XMLDirectSignatureJobResponse xmlSample = toJaxb();
@@ -74,7 +77,24 @@ public class WireMockTestserver {
                 .willReturn(aResponse()
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
                         .withBodyFile("xAdES.xml")));
-        
+
+        stubFor(get(urlPathMatching(cancellationURL))
+        .willReturn(aResponse().withHeader(HttpHeader.CONTENT_TYPE.toString(), "text/html")
+        .withBody("cancelled")));
+
+        stubFor(get(urlPathMatching(padesPortalURL))
+                .willReturn(aResponse().withHeader(HttpHeader.CONTENT_TYPE.toString(), "application/pdf")
+                .withBodyFile("pAdESPortal.pdf")));
+
+        stubFor(post(urlPathMatching(confirmationPortalURL))
+                .willReturn(aResponse().withHeader(HttpHeader.CONTENT_TYPE.toString(), "text/html")
+                .withBody("confirmed")));
+
+        //En http-post mot ressurs. for å opprette signeringsoppdrag
+        //Metadata legges i multipart-kallet med application/xml?
+
+
+
 
 
 
