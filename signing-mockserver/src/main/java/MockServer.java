@@ -2,19 +2,13 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import no.digipost.signature.api.xml.XMLDirectSignatureJobResponse;
 import no.digipost.signature.client.direct.DirectJobResponse;
-import no.digipost.signature.client.portal.PortalClient;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.codehaus.groovy.antlr.treewalker.PreOrderTraversal;
-import org.eclipse.jetty.http.HttpHeader;
-import org.junit.Rule;
-import org.springframework.http.HttpStatus;
-import org.testng.annotations.BeforeClass;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
+import org.eclipse.jetty.http.HttpHeader;
+import org.junit.BeforeClass;
+import org.junit.Rule;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -23,7 +17,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 /**
  * Created by camp-mlo on 14.07.2016.
  */
-public class WireMockTestserver {
+public class MockServer {
 
     private static HttpClient httpClient;
     private final String BASEURL = "http://localhost:8080";
@@ -60,33 +54,25 @@ public class WireMockTestserver {
                         //.withBody(String.valueOf(new ByteArrayInputStream(new byte[]{0x03, 0x04})).getBytes())
                         .withBodyFile("PortalJobResponse.xml")));
         stubFor(get(urlPathMatching(statusUrl))
-        .willReturn(aResponse()
-        .withStatus(200)
-        .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
-        .withBodyFile("StatusResponse.xml")));
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
+                        .withBodyFile("StatusResponse.xml")));
 
         stubFor(get(urlPathMatching(padesUrl))
-        .willReturn(aResponse()
-                .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/pdf")
-        .withBodyFile("pAdES.pdf")));
+                .willReturn(aResponse()
+                        .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/pdf")
+                        .withBodyFile("pAdES.pdf")));
 
         stubFor(get(urlPathMatching(xadesUrl))
                 .willReturn(aResponse()
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
                         .withBodyFile("xAdES.xml")));
-        
-
-
-
         ;}
 
     public static DirectJobResponse getSampleSignatureJob(){
         return new DirectJobResponse(5, "redirect url", "status url");
     }
-
-
-
-
 
 
     public static void main(String args[]){
