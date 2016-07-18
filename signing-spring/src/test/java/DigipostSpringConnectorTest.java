@@ -29,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Created by camp-nto on 14.07.2016.
  */
 
+
 public class DigipostSpringConnectorTest {
 
     private MockMvc mvc = MockMvcBuilders.standaloneSetup(new DigipostSpringConnector()).build();;
