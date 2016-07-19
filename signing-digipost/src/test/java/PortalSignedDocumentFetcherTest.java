@@ -48,10 +48,10 @@ public class PortalSignedDocumentFetcherTest {
 
     }
 
-    @Test
+  /*  @Test
     public void getPadesTest() throws IOException {
         String padesStatus = signedDocumentFetcher.getPades();
         Assert.assertEquals(padesStatus, "pades retrieved" );
-    }
+    }*/
 
 }
