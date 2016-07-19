@@ -31,6 +31,22 @@ public class MockServer {
 
     @BeforeClass
     public static void setUp() throws IOException {
+
+        WireMockServer wireMockServer = new WireMockServer(WireMockConfiguration.options().port(8082));
+        wireMockServer.start();
+
+        System.out.println("Server started");
+
+        WireMock.configureFor(8082);
+        System.out.println("Client configured");
+/*
+        WireMock.stubFor(WireMock.get(WireMock.anyUrl())
+                .willReturn(WireMock.aResponse()
+                        .withBody("DPA")));*/
+        System.out.println("Server has config");
+        System.out.println(wireMockServer.listAllStubMappings().getMappings());
+        String filePath = new File("").getAbsolutePath();
+        System.out.print(filePath);
         httpClient = HttpClientBuilder.create().build();
         String directUrl = ".*/direct/signature-jobs";
         String portalUrl = ".*/portal/signature-jobs";
@@ -100,6 +116,8 @@ public class MockServer {
                 .withBody("confirmed")));
 
 
+
+
         //En http-post mot ressurs. for å opprette signeringsoppdrag
         //Metadata legges i multipart-kallet med application/xml?
 
@@ -109,23 +127,5 @@ public class MockServer {
         return new DirectJobResponse(5, "redirect url", "status url");
     }
 
-    
-    public static void main(String args[]) throws IOException {
-        WireMockServer wireMockServer = new WireMockServer(WireMockConfiguration.options().port(8082));
-        wireMockServer.start();
-        setUp();
 
-        System.out.println("Server started");
-
-        WireMock.configureFor(8082);
-        System.out.println("Client configured");
-/*
-        WireMock.stubFor(WireMock.get(WireMock.anyUrl())
-                .willReturn(WireMock.aResponse()
-                        .withBody("DPA")));*/
-        System.out.println("Server has config");
-        System.out.println(wireMockServer.listAllStubMappings().getMappings());
-        String filePath = new File("").getAbsolutePath();
-        System.out.print(filePath);
-    }
 }
