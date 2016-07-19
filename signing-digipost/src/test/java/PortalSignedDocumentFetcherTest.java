@@ -7,6 +7,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,12 +19,12 @@ public class PortalSignedDocumentFetcherTest {
     };
 
     @BeforeClass
-    public void setUp() throws IOException {
+    public void setUp() throws IOException, URISyntaxException {
         setUpIsPadesReady();
 
     }
 
-    public void setUpIsPadesReady() throws IOException {
+    public void setUpIsPadesReady() throws IOException, URISyntaxException {
         PortalAsiceMaker portalAsiceMaker = new PortalAsiceMaker();
         SetupClientConfig clientConfig = new SetupClientConfig("Portal");
         clientConfig.setupKeystoreConfig(portalAsiceMaker.getContactInfo());
@@ -38,6 +39,9 @@ public class PortalSignedDocumentFetcherTest {
 
         PortalClient portalClient = new PortalClient(clientConfig.getClientConfiguration());
         PortalJobPoller poller = new PortalJobPoller(portalClient);
+
+        SigningServiceConnector connector = new SigningServiceConnector();
+        connector.sendPortalRequest(portalAsiceMaker.getPortalJob(), clientConfig.getKeyStoreConfig());
 
         this.signedDocumentFetcher = new PortalSignedDocumentFetcher(poller, portalClient);
 
