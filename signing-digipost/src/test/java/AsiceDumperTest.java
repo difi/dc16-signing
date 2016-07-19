@@ -15,7 +15,7 @@ public class AsiceDumperTest {
 @Test
     public void testThatDocumentbundleIsDumpedToDisk() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException, URISyntaxException {
     String[] exitUrls = {
-            "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
+            "http://localhost:8081/onCompletion","http://localhost:8081/onRejection","http://localhost:8081/onError"
     };
 
     AsiceMaker asiceMaker = new AsiceMaker();

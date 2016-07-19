@@ -9,28 +9,26 @@ public class StatusReader {
     private DirectJobResponse jobResponse;
     private String token;
 
-    StatusReader(DirectClient client, DirectJobResponse jobResponse, String token){
+    StatusReader(DirectClient client, DirectJobResponse jobResponse, String token) {
         this.client = client;
         this.jobResponse = jobResponse;
         this.token = token;
     }
 
-    public String getStatus(){
+    public String getStatus() {
         this.statusResponse = client.getStatus(StatusReference.of(jobResponse).withStatusQueryToken(token));
         System.out.println(this.statusResponse.getStatus().toString());
         System.out.println(statusResponse.getStatus().toString());
         return statusResponse.getStatus().toString();
     }
 
-    public void confirmProcessedSignatureJob(){
+    public void confirmProcessedSignatureJob() {
         this.client.confirm(statusResponse);
     }
 
-    public DirectJobStatusResponse getStatusResponse(){
+    public DirectJobStatusResponse getStatusResponse() {
         return this.statusResponse;
     }
-
-
 
 
 }

@@ -20,7 +20,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 public class MockServer {
 
     private static HttpClient httpClient;
-    private final String BASEURL = "http://localhost:8080";
+    private final String BASEURL = "http://localhost:8081";
     private final String portalUrl = "/%s/portal/signature-jobs";
     private final String directUrl = "/%s/direct/signature-jobs";
 
@@ -29,7 +29,7 @@ public class MockServer {
             new WireMockRule(WireMockConfiguration.wireMockConfig().port(8082));
 
 
-    @BeforeClass
+
     public static void setUp() throws IOException {
 
         WireMockServer wireMockServer = new WireMockServer(WireMockConfiguration.options().port(8082));

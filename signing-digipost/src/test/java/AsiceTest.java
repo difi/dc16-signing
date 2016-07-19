@@ -19,7 +19,7 @@ public class AsiceTest {
         //TODO: Read in test configuration here instead of having constants.
 
         String[] exitUrls = {
-                "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
+                "http://localhost:8081/onCompletion","http://localhost:8081/onRejection","http://localhost:8081/onError"
         };
         AsiceMaker asiceMaker = new AsiceMaker();
         SetupClientConfig clientConfig = new SetupClientConfig("Direct");
