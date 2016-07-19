@@ -74,7 +74,7 @@ public class SignedDocumentFetcherTest {
         StatusReader statusReader = new StatusReader(signingServiceConnector.getDirectClient(),signingServiceConnector.getDirectJobResponse(),"Completion_token");
         this.signedDocumentFetcher = new SignedDocumentFetcher(signingServiceConnector.getDirectClient(),statusReader);
     }
-
+    /*
     @Test
     public void getPadesReturnedFetchedPade() throws IOException{
 
@@ -92,6 +92,7 @@ public class SignedDocumentFetcherTest {
     public void signedDocumentFetcherInitializedProperly(){
         Assert.assertNotNull(signedDocumentFetcher);
     }
+    */
     //Still not working
     //@Test
     //public void getPadesReturnesFetchedPade() throws IOException {
