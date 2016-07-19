@@ -165,5 +165,13 @@ public class DigipostSpringConnector {
         this.signedDocumentFetcher = signedDocumentFetcher;
     }
 
+    public void setSigningServiceConnector(SigningServiceConnector signingServiceConnector){
+        this.signingServiceConnector = signingServiceConnector;
+    }
+
+    public void setStatusReader(StatusReader statusReader){
+        this.statusReader = statusReader;
+    }
+
 
 }

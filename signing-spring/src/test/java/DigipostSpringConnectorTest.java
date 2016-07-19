@@ -119,7 +119,7 @@ public class DigipostSpringConnectorTest {
     }
 
     @Test
-    public void getPades_returns_signed_document_fetcher() throws Exception {
+    public void getPades_test_first_if() throws Exception {
         DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
         SignedDocumentFetcher signedDocumentFetcher = Mockito.mock(SignedDocumentFetcher.class);
 
@@ -127,6 +127,25 @@ public class DigipostSpringConnectorTest {
                 .andExpect(status().isOk());
         digipostSpringConnector.setSignedDocumentFetcher(signedDocumentFetcher);
         Assert.assertEquals(digipostSpringConnector.getPades(), null);
+
+        Mockito.when(digipostSpringConnector.getPades()).thenReturn("fetched pade");
+        Assert.assertEquals(digipostSpringConnector.getPades(), "fetched pade");
+    }
+
+
+    @Test
+    public void getPades_test_seccond_if() throws Exception {
+        DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
+        SigningServiceConnector signingServiceConnector = Mockito.mock(SigningServiceConnector.class);
+        StatusReader statusReader = Mockito.mock(StatusReader.class);
+
+        mvc.perform(MockMvcRequestBuilders.get("/getPades"))
+                .andExpect(status().isOk());
+        digipostSpringConnector.setSigningServiceConnector(signingServiceConnector);
+        digipostSpringConnector.setStatusReader(statusReader);
+
+        Mockito.when(digipostSpringConnector.getPades()).thenReturn("fetched pade");
+        Assert.assertEquals(digipostSpringConnector.getPades(), "fetched pade");
     }
 
     @Test
