@@ -97,6 +97,10 @@ public class SigningServiceConnector {
         return this.directClient;
     }
 
+    public void setDirectClient(DirectClient client){
+        this.directClient = client;
+    }
+
     public DirectJobResponse getDirectJobResponse(){
         return this.directJobResponse;
     }

@@ -2,6 +2,8 @@ import no.digipost.signature.client.Certificates;
 import no.digipost.signature.client.ClientConfiguration;
 import no.digipost.signature.client.ServiceUri;
 import no.digipost.signature.client.core.Sender;
+import no.digipost.signature.client.direct.DirectClient;
+import no.digipost.signature.client.direct.DirectJobStatusResponse;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -100,16 +102,6 @@ public class DigipostSpringConnectorTest {
     }
 
     @Test
-    public void getSignedDocument_checksStatus() throws Exception {
-        DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
-
-        mvc.perform(MockMvcRequestBuilders.get("/getDocument"))
-                .andExpect(status().isBadRequest());
-        Assert.assertNotNull(mvc);
-        //Assert.assertEquals(digipostSpringConnector.getSignedDocument("xades"), "failed2");
-    }
-
-    @Test
     public void getPades_returns_unable_to_Fetch_Pade() throws Exception {
         DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
 
@@ -119,7 +111,7 @@ public class DigipostSpringConnectorTest {
     }
 
     @Test
-    public void getPades_test_first_if() throws Exception {
+    public void getPades_test_fetchingPade() throws Exception {
         DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
         SignedDocumentFetcher signedDocumentFetcher = Mockito.mock(SignedDocumentFetcher.class);
 
@@ -132,21 +124,44 @@ public class DigipostSpringConnectorTest {
         Assert.assertEquals(digipostSpringConnector.getPades(), "fetched pade");
     }
 
-
     @Test
-    public void getPades_test_seccond_if() throws Exception {
+    public void getXades_test_fetchingXade() throws Exception {
         DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
-        SigningServiceConnector signingServiceConnector = Mockito.mock(SigningServiceConnector.class);
-        StatusReader statusReader = Mockito.mock(StatusReader.class);
+        SignedDocumentFetcher signedDocumentFetcher = Mockito.mock(SignedDocumentFetcher.class);
 
-        mvc.perform(MockMvcRequestBuilders.get("/getPades"))
+        mvc.perform(MockMvcRequestBuilders.get("/getXades"))
                 .andExpect(status().isOk());
-        digipostSpringConnector.setSigningServiceConnector(signingServiceConnector);
-        digipostSpringConnector.setStatusReader(statusReader);
+        digipostSpringConnector.setSignedDocumentFetcher(signedDocumentFetcher);
+        Assert.assertEquals(digipostSpringConnector.getPades(), null);
 
-        Mockito.when(digipostSpringConnector.getPades()).thenReturn("fetched pade");
-        Assert.assertEquals(digipostSpringConnector.getPades(), "fetched pade");
+        Mockito.when(digipostSpringConnector.getPades()).thenReturn("fetched xade");
+        Assert.assertEquals(digipostSpringConnector.getPades(), "fetched xade");
     }
+
+
+    //@Test
+    //public void getPades_test_seccond_if() throws Exception {
+    //    DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
+    //    SigningServiceConnector signingServiceConnector = Mockito.mock(SigningServiceConnector.class);
+    //    StatusReader statusReader = Mockito.mock(StatusReader.class);
+    //    DirectClient directClient = Mockito.mock(DirectClient.class);
+    //    DirectJobStatusResponse directJobStatusResponse = Mockito.mock(DirectJobStatusResponse.class);
+    //    Mockito.when(directClient.getStatusChange()).thenReturn(directJobStatusResponse);
+    //    SignedDocumentFetcher signedDocumentFetcher = Mockito.mock(SignedDocumentFetcher.class);
+    //    Mockito.when(signedDocumentFetcher.getPades()).thenReturn("fetched pade2");
+
+    //    signedDocumentFetcher = null;
+    //    mvc.perform(MockMvcRequestBuilders.get("/getPades"))
+    //            .andExpect(status().isOk());
+    //    digipostSpringConnector.setSigningServiceConnector(signingServiceConnector);
+    //    signingServiceConnector.setDirectClient(directClient);
+    //    digipostSpringConnector.setStatusReader(statusReader);
+
+    //    Assert.assertEquals(digipostSpringConnector.getPades(), "fetched pade2");
+
+
+        //Assert.assertEquals(digipostSpringConnector.getPades(), "fetched pade");
+    //}
 
     @Test
     public void getXades_checksStatus() throws Exception {

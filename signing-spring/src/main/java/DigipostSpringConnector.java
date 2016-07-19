@@ -111,23 +111,6 @@ public class DigipostSpringConnector {
         //Returnerer statusChange.toString()
     }
 
-    @RequestMapping("/getDocument")
-    public String getSignedDocument(@RequestParam("document_type") String document_type){
-        if (this.statusReader.getStatusResponse().is(this.statusReader.getStatusResponse().getStatus().SIGNED)) {
-            if(document_type == "xades") {
-                InputStream xAdESStream = signingServiceConnector.getDirectClient().getXAdES(this.statusReader.getStatusResponse().getxAdESUrl());
-                return "fetched xade";
-            } else if(document_type == "pades") {
-                InputStream pAdESStream = signingServiceConnector.getDirectClient().getPAdES(this.statusReader.getStatusResponse().getpAdESUrl());
-                return "fetched pade";
-            }
-            else return "failed";
-        } else {
-            return "failed2";
-            // status was either REJECTED or FAILED, XAdES and PAdES are not available.
-        }
-    }
-
     @RequestMapping("/getPades")
     public String getPades() throws IOException{
         if(this.signedDocumentFetcher != null){
