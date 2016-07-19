@@ -78,7 +78,7 @@ public class SigningServiceConnector {
     public boolean sendPortalRequest(PortalJob portalJob, KeyStoreConfig keyStoreConfig) throws URISyntaxException {
         client = ClientConfiguration.builder(keyStoreConfig)
             .serviceUri(new URI("http://localhost:8082/"))
-                //.serviceUri(ServiceUri.DIFI_TEST)
+            //.serviceUri(ServiceUri.DIFI_TEST)
             .trustStore(Certificates.TEST)
             .globalSender(new Sender("991825827"))
             .build();
