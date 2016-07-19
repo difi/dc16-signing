@@ -58,6 +58,11 @@ public class MockServer {
                         .withStatus(200)
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
                         .withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/PortalJobResponse.xml")))));
+        stubFor(get(urlPathMatching(portalUrl))
+        .willReturn(aResponse()
+        .withStatus(200)
+        .withHeader(HttpHeader.CONTENT_TYPE.toString(), "application/xml")
+        .withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/PortalPollResponse.xml")))));
 
         stubFor(get(urlPathMatching(statusUrl))
                 .willReturn(aResponse()
@@ -85,7 +90,6 @@ public class MockServer {
                 .withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/pAdESPortal.pdf")))));
 
         stubFor(post(urlPathMatching(confirmationPortalURL))
-
                 .willReturn(aResponse().withHeader(HttpHeader.CONTENT_TYPE.toString(), "text/html")
                 .withBody("confirmed")));
 
