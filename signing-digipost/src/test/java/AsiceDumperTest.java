@@ -4,6 +4,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -12,7 +13,7 @@ import java.security.cert.CertificateException;
 public class AsiceDumperTest {
 
 @Test
-    public void testThatDocumentbundleIsDumpedToDisk() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException {
+    public void testThatDocumentbundleIsDumpedToDisk() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException, URISyntaxException {
     String[] exitUrls = {
             "http://localhost:8081/onCompletion","http://localhost:8081/onRejection","http://localhost:8081/onError"
     };

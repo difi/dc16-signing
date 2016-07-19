@@ -85,8 +85,8 @@ public class SigningServiceConnector {
                 .trustStore(Certificates.TEST)
                 .globalSender(new Sender("991825827"))
                 .build();
-        portalClient = new PortalClient(client);
 
+        portalClient =  new PortalClient(client);
         PortalJobResponse portalJobResponse = portalClient.create(portalJob);
 
         this.cancellationUrl = portalJobResponse.getCancellationUrl().toString();

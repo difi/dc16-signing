@@ -3,6 +3,8 @@
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.net.URISyntaxException;
+
 public class SetupClientConfigTest {
 
 
@@ -16,7 +18,7 @@ public class SetupClientConfigTest {
     }
 
     @Test
-    public void setUpClientConfigurationNotNull(){
+    public void setUpClientConfigurationNotNull() throws URISyntaxException{
         AsiceMaker asiceMaker = new AsiceMaker();
         SetupClientConfig setupClientConfig = new SetupClientConfig("Direct");
         setupClientConfig.setupClientConfiguration("123456789");

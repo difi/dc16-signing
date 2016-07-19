@@ -11,6 +11,11 @@
     <modelVersion>4.0.0</modelVersion>
 
 
+    <properties>
+        <java.version>1.8</java.version>
+        <java.encoding>UTF-8</java.encoding>
+    </properties>
+
     <artifactId>signing-digipost</artifactId>
     <dependencies>
         <dependency>
@@ -18,6 +23,11 @@
             <artifactId>wiremock</artifactId>
             <version>RELEASE</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.difi.idporten.signing</groupId>
+            <artifactId>signing-mockserver</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

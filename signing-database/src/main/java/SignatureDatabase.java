@@ -36,7 +36,7 @@ public class SignatureDatabase {
      */
     public boolean createTable() {
         try {
-            statement.execute("DROP TABLE IF EXISTS SIGNATURE ");
+            statement.execute("DROP TABLE SIGNATURE ");
             statement.execute("CREATE TABLE SIGNATURE " +
                     "(id int AUTO_INCREMENT PRIMARY KEY," +
                     "status VARCHAR(30)," +

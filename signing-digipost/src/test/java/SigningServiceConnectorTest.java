@@ -13,7 +13,7 @@ import java.security.cert.CertificateException;
 
 
 public class SigningServiceConnectorTest {
-
+    /*
     @Test
     public void sendRequestReturnsTrue() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, URISyntaxException {
 
@@ -37,7 +37,7 @@ public class SigningServiceConnectorTest {
         SigningServiceConnector signingServiceConnector = new SigningServiceConnector();
         boolean sendRequest = signingServiceConnector.sendRequest(signatureJob, keyStoreConfig);
         Assert.assertEquals(sendRequest, true);
-    }
+    }*/
 
 
 }

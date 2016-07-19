@@ -17,6 +17,7 @@ public class StatusReader {
 
     public String getStatus() {
         this.statusResponse = client.getStatus(StatusReference.of(jobResponse).withStatusQueryToken(token));
+        System.out.println(this.statusResponse.getStatus().toString());
         System.out.println(statusResponse.getStatus().toString());
         return statusResponse.getStatus().toString();
     }
