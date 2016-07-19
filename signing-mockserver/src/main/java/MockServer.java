@@ -109,7 +109,7 @@ public class MockServer {
         return new DirectJobResponse(5, "redirect url", "status url");
     }
 
-
+    
     public static void main(String args[]) throws IOException {
         WireMockServer wireMockServer = new WireMockServer(WireMockConfiguration.options().port(8082));
         wireMockServer.start();

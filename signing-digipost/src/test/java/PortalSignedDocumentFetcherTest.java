@@ -20,7 +20,9 @@ public class PortalSignedDocumentFetcherTest {
 
     @BeforeClass
     public void setUp() throws IOException, URISyntaxException {
+
         setUpIsPadesReady();
+
 
     }
 
