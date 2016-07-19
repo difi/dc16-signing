@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <direct-signature-job-response xmlns="http://signering.posten.no/schema/v1">
     <signature-job-id>1</signature-job-id>
-    <redirect-url>http://localhost:8082/mockSigning.html</redirect-url>
+    <redirect-url>http://localhost:8082/mockSigningPortal.html</redirect-url>
     <status-url>http://localhost:8082/123456789/direct/signature-jobs/1/status</status-url>
 </direct-signature-job-response>
