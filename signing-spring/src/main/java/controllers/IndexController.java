@@ -16,4 +16,7 @@ public class IndexController {
     public String getHomePage(){
         return "index";
     }
+
+    @RequestMapping("/simulertLogin")
+    public String goToLogin(){ return "simulertLogin";}
 }
