@@ -1,4 +1,6 @@
 import no.digipost.signature.client.core.SignatureJob;
+import no.digipost.signature.client.direct.DirectClient;
+import no.digipost.signature.client.direct.DirectJobResponse;
 import no.digipost.signature.client.portal.Notifications;
 import no.digipost.signature.client.portal.PortalJob;
 import no.digipost.signature.client.portal.PortalSigner;
@@ -152,9 +154,14 @@ public class DigipostSpringConnector {
         this.signingServiceConnector = signingServiceConnector;
     }
 
-    public void setStatusReader(StatusReader statusReader){
-        this.statusReader = statusReader;
+    public void setStatusReader(StatusReader statsreader){
+        this.statusReader = statsreader;
     }
+
+    public void setStorage(){
+        storage.insertSignaturejobToDB(s);
+    }
+
 
 
 }
