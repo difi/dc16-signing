@@ -10,7 +10,7 @@ import java.util.List;
 
 public class SignatureDatabase {
     private final String JDBC_DRIVER = "org.h2.Driver";
-    private final String DB_URL = "jdbc:h2:file:src/main/resources/signature";
+    private final String DB_URL = "jdbc:h2:file:/signing-database/src/main/resources/signature";
     private final String USER = "SA";
     private final String PASS = "";
 

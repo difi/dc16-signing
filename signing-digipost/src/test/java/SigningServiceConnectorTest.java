@@ -10,6 +10,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -19,7 +20,7 @@ import java.security.cert.CertificateException;
 public class SigningServiceConnectorTest {
 
     @Test
-    public void sendRequestReturnsTrue() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
+    public void sendRequestReturnsTrue() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, URISyntaxException {
 
         AsiceMaker asiceMaker = new AsiceMaker();
 

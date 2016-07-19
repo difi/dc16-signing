@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -55,7 +56,7 @@ public class DigipostSpringConnector {
     }
 
     @RequestMapping("/asice")
-    public ModelAndView makeAsice() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
+    public ModelAndView makeAsice() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, URISyntaxException {
 
         storage.insertSignaturejobToDB(s);
 
@@ -86,6 +87,7 @@ public class DigipostSpringConnector {
     public String whenSigningComplete(@RequestParam("status_query_token") String token){
         this.statusQueryToken = token;
         this.statusReader = new StatusReader(signingServiceConnector.getDirectClient(), signingServiceConnector.getDirectJobResponse(), this.statusQueryToken);
+        System.out.println("here");
         storage.updateStatus(s, statusReader.getStatus());
         return statusReader.getStatus();
 
