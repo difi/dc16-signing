@@ -45,6 +45,7 @@ public class MockServer {
         String filePath = new File("").getAbsolutePath();
         System.out.print(filePath);
 
+
         DirectJobResponse sampleJobResponse = getSampleSignatureJob();
         //XMLDirectSignatureJobResponse xmlSample = toJaxb();
         configureFor(8082);
