@@ -1,4 +1,5 @@
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -12,6 +13,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -27,13 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class DigipostSpringConnectorTest {
 
-    private MockMvc mvc = MockMvcBuilders.standaloneSetup(new DigipostSpringConnector()).build();;
+    private MockMvc mvc = MockMvcBuilders.standaloneSetup(new DigipostSpringConnector()).build();
     private DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
-
-        //@Before
-        //public void setup() throws Exception{
-        //    mvc = MockMvcBuilders.standaloneSetup(new DigipostSpringConnector()).build();
-        //}
 
     @Test
     public void getHello() throws Exception {
@@ -53,12 +50,14 @@ public class DigipostSpringConnectorTest {
         Assert.assertNotNull(digipostSpringConnector);
     }
 
+/*
     @Test
     public void testMakeAsice_checksStatus() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/asice"))
                 .andExpect(status().isFound());
         Assert.assertNotNull(digipostSpringConnector.makeAsice());
     }
+*/
 
     @Test
     public void testWhenSigningComplete_checksStatus() throws Exception {

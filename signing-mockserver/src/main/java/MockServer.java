@@ -29,7 +29,7 @@ public class MockServer {
             new WireMockRule(WireMockConfiguration.wireMockConfig().port(8082));
 
 
-    @BeforeClass
+
     public static void setUp() throws IOException {
 
         WireMockServer wireMockServer = new WireMockServer(WireMockConfiguration.options().port(8082));
