@@ -42,16 +42,24 @@ public class PortalSignedDocumentFetcherTest {
 
         SigningServiceConnector connector = new SigningServiceConnector();
         connector.sendPortalRequest(portalAsiceMaker.getPortalJob(), clientConfig.getKeyStoreConfig());
+        poller.poll();
 
         this.signedDocumentFetcher = new PortalSignedDocumentFetcher(poller, portalClient);
 
 
     }
 
-  /*  @Test
+    @Test
     public void getPadesTest() throws IOException {
         String padesStatus = signedDocumentFetcher.getPades();
         Assert.assertEquals(padesStatus, "pades retrieved" );
-    }*/
+    }
+
+    @Test
+    public void getXadesTest() throws IOException {
+        String xadesStatus = signedDocumentFetcher.getXades();
+        Assert.assertEquals(xadesStatus, "got xAdES files");
+    }
+
 
 }

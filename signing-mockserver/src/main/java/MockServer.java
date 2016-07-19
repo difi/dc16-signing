@@ -40,10 +40,10 @@ public class MockServer {
         String cancellationURL = ".*/portal/signature-jobs/1/cancel";
         String confirmationUrl = ".*/direct/signature-jobs/1/complete";
         String padesPortalURL = ".*/portal/signature-jobs/1/pades";
+        String xadesPortalURL = ".*/portal/signature-jobs/1/xades/1";
         String confirmationPortalURL = ".*/portal/signature-jobs/1/complete";
 
-        String filePath = new File("").getAbsolutePath();
-        System.out.print(filePath);
+
 
         DirectJobResponse sampleJobResponse = getSampleSignatureJob();
         //XMLDirectSignatureJobResponse xmlSample = toJaxb();
@@ -90,6 +90,9 @@ public class MockServer {
         stubFor(get(urlPathMatching(padesPortalURL))
                 .willReturn(aResponse().withHeader(HttpHeader.CONTENT_TYPE.toString(), "application/pdf")
                 .withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/pAdESPortal.pdf")))));
+        stubFor(get(urlPathMatching(xadesPortalURL))
+                .willReturn(aResponse().withHeader(HttpHeader.CONTENT_TYPE.toString(), "application/pdf")
+                        .withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/xAdES.xml")))));
 
         stubFor(post(urlPathMatching(confirmationPortalURL))
                 .willReturn(aResponse().withHeader(HttpHeader.CONTENT_TYPE.toString(), "text/html")
@@ -121,5 +124,7 @@ public class MockServer {
                         .withBody("DPA")));*/
         System.out.println("Server has config");
         System.out.println(wireMockServer.listAllStubMappings().getMappings());
+        String filePath = new File("").getAbsolutePath();
+        System.out.print(filePath);
     }
 }
