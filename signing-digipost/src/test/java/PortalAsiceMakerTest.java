@@ -39,7 +39,7 @@ public class PortalAsiceMakerTest {
         clientConfig.setupKeystoreConfig(portalAsiceMaker.getContactInfo());
         clientConfig.setupClientConfiguration("123456789");
         String[] exitUrls = {
-                "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
+                "http://localhost:8081/onCompletion","http://localhost:8081/onRejection","http://localhost:8081/onError"
         };
         List<PortalSigner> portalSigners = new ArrayList<>();
         portalSigners.add( PortalSigner.builder("17079493538", Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());

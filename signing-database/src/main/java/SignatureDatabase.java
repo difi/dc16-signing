@@ -1,16 +1,8 @@
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type;
-import org.apache.catalina.Server;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.File;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SignatureDatabase {
     private final String JDBC_DRIVER = "org.h2.Driver";
-    private final String DB_URL = "jdbc:h2:file:/signing-database/src/main/resources/signature";
+    private final String DB_URL = "jdbc:h2:mem:signature";
     private final String USER = "SA";
     private final String PASS = "";
 
@@ -22,13 +14,13 @@ public class SignatureDatabase {
     /**
      * Connects the database.
      */
-    public SignatureDatabase(){
+    public SignatureDatabase() {
         try {
             Class.forName(JDBC_DRIVER);
             connection = DriverManager.getConnection(DB_URL, USER, PASS);
             statement = connection.createStatement();
 
-        } catch (SQLException | ClassNotFoundException e){
+        } catch (SQLException | ClassNotFoundException e) {
             System.err.println("Exception caught in SignatureDatabase.SignatureDatabase(): " + e);
             e.printStackTrace();
         }
@@ -42,7 +34,7 @@ public class SignatureDatabase {
      * sender = the org.number of the person/organisation who is sending the document to signing
      * document = the document, actual file or path/id??
      */
-    public boolean createTable(){
+    public boolean createTable() {
         try {
             statement.execute("DROP TABLE IF EXISTS SIGNATURE ");
             statement.execute("CREATE TABLE SIGNATURE " +
@@ -50,7 +42,7 @@ public class SignatureDatabase {
                     "status VARCHAR(30)," +
                     "signer VARCHAR(30), " +
                     "sender VARCHAR(30)," +
-                    "document VARCHAR(30));" );
+                    "document VARCHAR(30));");
             System.out.println("DB: Table created");
             return true;
         } catch (SQLException e) {
@@ -62,19 +54,21 @@ public class SignatureDatabase {
 
     /**
      * This method inserts a signature job into the database.
+     *
      * @param signatureJob
      */
-    public void insertSignature(SignatureJobModel signatureJob){
+    public void insertSignature(SignatureJobModel signatureJob) {
         String query = String.format("INSERT INTO SIGNATURE (status, signer, sender, document) " +
                 "VALUES ('%s','%s','%s','%s');", signatureJob.getStatus(), signatureJob.getSigner(), signatureJob.getSender(), "document");
 
         try {
             statement.executeUpdate(query);
             System.out.println("DB: Signature inserted into the database ");
-        } catch (SQLException e){
+        } catch (SQLException e) {
             System.err.println("SQLException caught in SignatureDatabase.insertSignature(): " + e);
             e.printStackTrace();
-        }   System.out.println("DB: Insert signature query: " + query);
+        }
+        System.out.println("DB: Insert signature query: " + query);
     }
 
     /**
@@ -100,14 +94,15 @@ public class SignatureDatabase {
     */
 
     /**
-     *This method gets a signature job, using the sender as a key.
+     * This method gets a signature job, using the sender as a key.
+     *
      * @param signatureJob
      * @return String signaturejob  with the whole signature job
      */
     public String getSignatureJob(SignatureJobModel signatureJob) {
         String query = String.format("SELECT (id, status, signer, sender, document)" +
-                        "FROM SIGNATURE " +
-                        "WHERE sender LIKE '%s';", signatureJob.getSender());
+                "FROM SIGNATURE " +
+                "WHERE sender LIKE '%s';", signatureJob.getSender());
 
         String signaturejob = "";
         System.out.println("DB: Select query: " + query);
@@ -115,7 +110,7 @@ public class SignatureDatabase {
             resultSet = statement.executeQuery(query);
             metaData = resultSet.getMetaData();
 
-            while(resultSet.next())
+            while (resultSet.next())
                 signaturejob = resultSet.getString(1);
             return signaturejob;
 
@@ -124,14 +119,15 @@ public class SignatureDatabase {
             e.printStackTrace();
         }
         return null;
-        }
+    }
 
     /**
      * This method retrives signer id using sender as key.
+     *
      * @param sender
      * @return signer
      **/
-    public String getSigner(String sender){
+    public String getSigner(String sender) {
         String query = String.format("SELECT (signer)" +
                 "FROM SIGNATURE " +
                 "WHERE sender LIKE '%s';", sender);
@@ -140,7 +136,7 @@ public class SignatureDatabase {
             resultSet = statement.executeQuery(query);
             metaData = resultSet.getMetaData();
             String signer = null;
-            while(resultSet.next())
+            while (resultSet.next())
                 signer = resultSet.getString(1);
             return signer;
 
@@ -151,7 +147,7 @@ public class SignatureDatabase {
         return null;
     }
 
-    public void updateStatus(SignatureJobModel signatureJob, String value){
+    public void updateStatus(SignatureJobModel signatureJob, String value) {
         String update = String.format("UPDATE SIGNATURE " +
                 "SET status = '%s' " +
                 "WHERE sender = '%s' ;", value, signatureJob.getSender());
@@ -159,7 +155,7 @@ public class SignatureDatabase {
         signatureJob.updateStatus(value);
         try {
             statement.executeUpdate(update);
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             System.err.println("SQLException caught in SignatureDatabase.updateStatus()" + e);
         }
 

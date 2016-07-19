@@ -9,7 +9,7 @@ public class SignedDocumentFetcher {
     private DirectJobStatusResponse statusResponse;
     private StatusReader statusReader;
 
-    SignedDocumentFetcher(DirectClient client, StatusReader statusReader){
+    SignedDocumentFetcher(DirectClient client, StatusReader statusReader) {
         this.client = client;
         this.statusResponse = client.getStatusChange();
         this.statusReader = statusReader;
@@ -17,8 +17,8 @@ public class SignedDocumentFetcher {
     }
 
     public InputStream getSignedDocuments(String format) {
-        if(statusResponse.is(DirectJobStatus.SIGNED)){
-            if(format == "xades"){
+        if (statusResponse.is(DirectJobStatus.SIGNED)) {
+            if (format == "xades") {
                 return client.getXAdES(statusResponse.getxAdESUrl());
             } else if (format == "pades") {
                 return client.getPAdES(statusResponse.getpAdESUrl());
@@ -27,7 +27,7 @@ public class SignedDocumentFetcher {
         return null;
     }
 
-    public String getPades() throws IOException{
+    public String getPades() throws IOException {
 
         if (this.statusReader.getStatusResponse().is(this.statusReader.getStatusResponse().getStatus().SIGNED)) {
 
@@ -42,11 +42,10 @@ public class SignedDocumentFetcher {
             }
 
             return "fetched pade";
-        }
-        else return "failed";
+        } else return "failed";
     }
 
-    public String getXades() throws IOException{
+    public String getXades() throws IOException {
 
         if (this.statusReader.getStatusResponse().is(this.statusReader.getStatusResponse().getStatus().SIGNED)) {
             InputStream xAdESStream = client.getXAdES(this.statusReader.getStatusResponse().getxAdESUrl());
@@ -59,15 +58,8 @@ public class SignedDocumentFetcher {
             this.statusReader.confirmProcessedSignatureJob();
 
             return "fetched xade";
-        }
-        else return "failed";
+        } else return "failed";
     }
-
-
-
-
-
-
 
 
 }

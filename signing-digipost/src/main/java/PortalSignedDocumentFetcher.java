@@ -1,25 +1,24 @@
-import com.google.common.io.ByteStreams;
 import no.digipost.signature.client.portal.PortalClient;
 import no.digipost.signature.client.portal.Signature;
 import no.digipost.signature.client.portal.SignatureStatus;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class PortalSignedDocumentFetcher {
     private PortalJobPoller poller;
     private PortalClient client;
-    PortalSignedDocumentFetcher(PortalJobPoller poller, PortalClient portalClient){
+
+    PortalSignedDocumentFetcher(PortalJobPoller poller, PortalClient portalClient) {
         this.poller = poller;
         this.client = portalClient;
     }
 
     //Uses poller to check if the pAdES is available, then reads it to a file. pAdES is only available
     //if all signers have signed.
-    public String getPades() throws IOException{
-        if(poller.isPadesReady()){
+    public String getPades() throws IOException {
+        if (poller.isPadesReady()) {
             InputStream pAdESStream = client.getPAdES(poller.getStatusChange().getpAdESUrl());
             OutputStream outputStream = new FileOutputStream(System.getProperty("user.dir") + "pAdESTest.pdf");
 
@@ -56,7 +55,7 @@ public class PortalSignedDocumentFetcher {
                 for (InputStream inputStream : inputStreams) {
                     byte[] buffer = new byte[inputStream.available()];
                     inputStream.read(buffer);
-                    File targetFile = new File(System.getProperty("user.dir") + inputStreams.indexOf(inputStream) +  "targetFile2.pdf");
+                    File targetFile = new File(System.getProperty("user.dir") + inputStreams.indexOf(inputStream) + "targetFile2.pdf");
                     OutputStream outStream = new FileOutputStream(targetFile);
                     outStream.write(buffer);
                 }

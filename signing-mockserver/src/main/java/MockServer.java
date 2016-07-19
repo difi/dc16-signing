@@ -21,7 +21,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 public class MockServer {
 
     private static HttpClient httpClient;
-    private final String BASEURL = "http://localhost:8080";
+    private final String BASEURL = "http://localhost:8081";
     private final String portalUrl = "/%s/portal/signature-jobs";
     private final String directUrl = "/%s/direct/signature-jobs";
 

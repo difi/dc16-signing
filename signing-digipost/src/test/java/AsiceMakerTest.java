@@ -34,7 +34,7 @@ public class AsiceMakerTest {
         SetupClientConfig clientConfig = new SetupClientConfig("Direct");
         clientConfig.initialize(asiceMaker.getContactInfo(),"123456789");
         String[] exitUrls = {
-                "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
+                "http://localhost:8081/onCompletion","http://localhost:8081/onRejection","http://localhost:8081/onError"
         };
         DocumentBundle preparedAsic = asiceMaker.createAsice("17079493538","123456789",exitUrls, clientConfig.getClientConfiguration());
         Assert.assertNotNull(asiceMaker.getSignatureJob());
