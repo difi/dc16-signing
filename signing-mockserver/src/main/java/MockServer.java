@@ -15,9 +15,6 @@ import java.io.IOException;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
-/**
- * Created by camp-mlo on 14.07.2016.
- */
 public class MockServer {
 
     private static HttpClient httpClient;
@@ -61,7 +58,6 @@ public class MockServer {
                         .withStatus(200)
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
                         .withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/PortalJobResponse.xml")))));
-        stubFor(get(urlPathMatching(portalUrl))
 
         stubFor(get(urlPathMatching(statusUrl))
                 .willReturn(aResponse()
@@ -77,7 +73,7 @@ public class MockServer {
         stubFor(get(urlPathMatching(xadesUrl))
                 .willReturn(aResponse()
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
-                        .withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/xAdES.xml")));
+                        .withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/xAdES.xml")))));
 
         stubFor(get(urlPathMatching(cancellationURL))
         .willReturn(aResponse().withHeader(HttpHeader.CONTENT_TYPE.toString(), "text/html")
@@ -96,13 +92,6 @@ public class MockServer {
 
         //En http-post mot ressurs. for å opprette signeringsoppdrag
         //Metadata legges i multipart-kallet med application/xml?
-
-
-
-
-=======
-                        .withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/xAdES.xml")))));
->>>>>>> ec741ab431ceee16d7d71228d3deb57b1fec33ef:signing-mockserver/src/main/java/MockServer.java
 
     }
 

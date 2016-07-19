@@ -12,6 +12,7 @@
         <module>signing-spring</module>
         <module>signing-digipost</module>
         <module>signing-database</module>
+        <module>signing-mockserver</module>
 
     </modules>
 
