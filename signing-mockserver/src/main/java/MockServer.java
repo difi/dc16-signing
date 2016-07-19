@@ -1,5 +1,6 @@
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.common.SingleRootFileSource;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.io.ByteStreams;
@@ -26,9 +27,20 @@ public class MockServer {
     public WireMockRule wireMockRule =
             new WireMockRule(WireMockConfiguration.wireMockConfig().port(8082));
 
+    @Rule
+    public WireMockRule wireMockRuleFilePath =
+            new WireMockRule(WireMockConfiguration.options().fileSource(new SingleRootFileSource(System.getProperty("user.dir")+"\\signing-mockserver\\src\\main\\resources")));
+
+    @Rule WireMockRule wireMockRuleSource =
+            new WireMockRule(WireMockConfiguration.wireMockConfig().usingFilesUnderDirectory(System.getProperty("user.dir")+"\\signing-mockserver\\src\\main\\resources"));
+
 
     @BeforeClass
     public static void setUp() throws IOException {
+        System.out.println(System.getProperty("user.dir"));
+        //WireMockConfiguration.options().fileSource(new SingleRootFileSource(System.getProperty("user.dir")+"\\signing-mockserver\\src\\main\\resources"));
+        WireMockConfiguration.options().withRootDirectory(System.getProperty("user.dir")+"\\signing-mockserver\\src\\main\\resources");
+        System.out.println(System.getProperty("user.dir")+"/signing-mockserver/src/main/resources");
         httpClient = HttpClientBuilder.create().build();
         String directUrl = ".*/direct/signature-jobs";
         String portalUrl = ".*/portal/signature-jobs";
