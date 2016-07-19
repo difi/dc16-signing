@@ -122,5 +122,7 @@ public class MockServer {
                         .withBody("DPA")));*/
         System.out.println("Server has config");
         System.out.println(wireMockServer.listAllStubMappings().getMappings());
+        String filePath = new File("").getAbsolutePath();
+        System.out.print(filePath);
     }
 }
