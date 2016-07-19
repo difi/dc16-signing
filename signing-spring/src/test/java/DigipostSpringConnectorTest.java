@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class DigipostSpringConnectorTest {
-
+/*
     private MockMvc mvc = MockMvcBuilders.standaloneSetup(new DigipostSpringConnector()).build();;
     private DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
 
@@ -98,5 +98,5 @@ public class DigipostSpringConnectorTest {
     //}
 
 
-
+*/
 }
