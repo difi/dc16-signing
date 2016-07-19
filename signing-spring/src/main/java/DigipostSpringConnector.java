@@ -152,17 +152,6 @@ public class DigipostSpringConnector {
         // status was either REJECTED or FAILED, XAdES and PAdES are not available.
     }
 
-
-    //In order to get to the sign-in portal, such as BankID, the user needs a redirect-url and a valid token. This method checks if the token is valid
-    public boolean checkToken(){
-        return false;
-    }
-
-    //Exists in the library, is used to check if the signing process was sucessfull, or if the user rejected it, or if an error occured (see completion-, rejection-, and errorURL)
-    public String signingStatus(){ //Finnes i biblioteket
-        return null;
-    }
-
     //Returnes one of the three URLS (completion, rejection, and errorURL) based on how the signing (aka the "job") went
     @RequestMapping("/getJobStatus") //Can not remove
     public URL getJobStatus(){
@@ -170,6 +159,10 @@ public class DigipostSpringConnector {
         return this.completionURL;
         //or return this.rejectionURL
         //or return this.errorURL
+    }
+
+    public void setSignedDocumentFetcher(SignedDocumentFetcher signedDocumentFetcher){
+        this.signedDocumentFetcher = signedDocumentFetcher;
     }
 
 
