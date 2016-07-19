@@ -7,6 +7,7 @@ import no.difi.idporten.oidc.proxy.proxy.ProxyModule;
 import no.difi.idporten.oidc.proxy.storage.StorageModule;
 import org.springframework.boot.SpringApplication;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 /**
@@ -21,6 +22,7 @@ public class ApplicationMain {
             add(new StorageModule());
             add(new ProxyModule());
         }});
+
 
 
         Object[] sources = {DigipostSpringConnector.class, controllers.IndexController.class, PortalController.class};
