@@ -8,6 +8,11 @@
     <artifactId>signing-mockserver</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 
+    <properties>
+        <java.version>1.8</java.version>
+        <java.encoding>UTF-8</java.encoding>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
@@ -19,13 +24,20 @@
             <artifactId>signature-api-client-java</artifactId>
             <version>1.2</version>
         </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>19.0</version>
-        </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 
 </project>

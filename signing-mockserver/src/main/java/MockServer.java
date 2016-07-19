@@ -1,5 +1,6 @@
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.common.SingleRootFileSource;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.io.ByteStreams;
@@ -15,9 +16,6 @@ import java.io.IOException;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
-/**
- * Created by camp-mlo on 14.07.2016.
- */
 public class MockServer {
 
     private static HttpClient httpClient;
@@ -29,16 +27,19 @@ public class MockServer {
     public WireMockRule wireMockRule =
             new WireMockRule(WireMockConfiguration.wireMockConfig().port(8082));
 
-
     @BeforeClass
     public static void setUp() throws IOException {
+        //WireMockConfiguration.options().fileSource(new SingleRootFileSource(System.getProperty("user.dir")+"\\signing-mockserver\\src\\main\\resources"));
         httpClient = HttpClientBuilder.create().build();
         String directUrl = ".*/direct/signature-jobs";
         String portalUrl = ".*/portal/signature-jobs";
-        String statusUrl = ".*/direct/signature-jobs/1/status";
+        String statusUrl = ".*/direct/signature-jobs";
         String padesUrl = ".*/direct/signature-jobs/1/pades";
         String xadesUrl = ".*/direct/signature-jobs/1/xades/1";
+        String cancellationURL = ".*/portal/signature-jobs/1/cancel";
         String confirmationUrl = ".*/direct/signature-jobs/1/complete";
+        String padesPortalURL = ".*/portal/signature-jobs/1/pades";
+        String confirmationPortalURL = ".*/portal/signature-jobs/1/complete";
 
         String filePath = new File("").getAbsolutePath();
         System.out.print(filePath);
@@ -46,6 +47,7 @@ public class MockServer {
         DirectJobResponse sampleJobResponse = getSampleSignatureJob();
         //XMLDirectSignatureJobResponse xmlSample = toJaxb();
         configureFor(8082);
+
 
         stubFor(post(urlMatching(directUrl))
                 .willReturn(aResponse()
@@ -57,6 +59,12 @@ public class MockServer {
                         .withStatus(200)
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
                         .withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/PortalJobResponse.xml")))));
+        stubFor(get(urlPathMatching(portalUrl))
+        .willReturn(aResponse()
+        .withStatus(200)
+        .withHeader(HttpHeader.CONTENT_TYPE.toString(), "application/xml")
+        .withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/PortalPollResponse.xml")))));
+
         stubFor(get(urlPathMatching(statusUrl))
                 .willReturn(aResponse()
                         .withStatus(200)
@@ -72,6 +80,23 @@ public class MockServer {
                 .willReturn(aResponse()
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
                         .withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/xAdES.xml")))));
+
+        stubFor(get(urlPathMatching(cancellationURL))
+        .willReturn(aResponse().withHeader(HttpHeader.CONTENT_TYPE.toString(), "text/html")
+        .withBody("cancelled")));
+
+
+        stubFor(get(urlPathMatching(padesPortalURL))
+                .willReturn(aResponse().withHeader(HttpHeader.CONTENT_TYPE.toString(), "application/pdf")
+                .withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/pAdESPortal.pdf")))));
+
+        stubFor(post(urlPathMatching(confirmationPortalURL))
+                .willReturn(aResponse().withHeader(HttpHeader.CONTENT_TYPE.toString(), "text/html")
+                .withBody("confirmed")));
+
+
+        //En http-post mot ressurs. for å opprette signeringsoppdrag
+        //Metadata legges i multipart-kallet med application/xml?
 
     }
 
