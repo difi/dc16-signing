@@ -1,3 +1,4 @@
+import no.digipost.signature.client.core.exceptions.TooEagerPollingException;
 import no.digipost.signature.client.portal.PortalClient;
 import no.digipost.signature.client.portal.PortalJobStatusChanged;
 import no.digipost.signature.client.portal.SignatureStatus;
@@ -13,8 +14,17 @@ public class PortalJobPoller {
 
     //Gets the PortalJobStatusChanged object, should only be called once. Polling exception lasts for several minutes if it is called twice.
     public String poll(){
-        this.statusChange =  client.getStatusChange();
-        return statusChange.getStatus().toString();
+        try {
+            this.statusChange =  client.getStatusChange();
+            return statusChange.getStatus().toString();
+        }catch (TooEagerPollingException eagerPollingException){
+            String nextAvailablePollingTime = eagerPollingException.getNextPermittedPollTime().toString();
+            System.out.print(nextAvailablePollingTime);
+            return "Too frequent polling, please wait until " + nextAvailablePollingTime;
+        }
+
+
+
     }
 
     //Checks whether a pades is available. For portals it is only available when all signers have signed.

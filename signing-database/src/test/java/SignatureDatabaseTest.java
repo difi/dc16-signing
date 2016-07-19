@@ -1,6 +1,9 @@
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.sql.SQLException;
+import java.util.List;
+
 /**
  * Created by camp-mlo on 12.07.2016.
  */
@@ -57,6 +60,5 @@ public class SignatureDatabaseTest {
         db.insertSignature(signatureJobModel3);
         Assert.assertEquals(db.getSigner("123456777"), "33333333333");
     }
-
 
 }

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> [mock] Signeringstjeneste - Portal</title>
+
+    <style>
+        a:hover {
+            opacity: 0.9;
+        }
+        a:active {
+            opacity: 0.8;
+        }
+        .signers {
+              font: bold 16px Arial;
+              text-decoration: none;
+              color: white;
+              background-color: #33cc59;
+              color: #white;
+              padding: 30px;
+              border-style:solid;
+              border-color: gray;
+              border-width:3px;
+        }
+
+        div {
+            padding-bottom:30px;
+            padding-top:30px;
+        }
+        a{
+            padding: 20px;
+        }
+
+        .disabled {
+          font: bold 16px Arial;
+          text-decoration: none;
+          background-color: #33cc59;
+          color: #white;
+          padding: 30px;
+          border-style:solid;
+          border-color: gray;
+          border-width:3px;
+          opacity: 0.5;
+                }
+    </style>
+
+<body>
+<h1> Simuler signering av dokukment med flere signatarer her: </h1>
+
+<div>
+   <button class="signers" id="1" onclick="signed(1)"> Signatar 1 </button>
+   <button class="signers" id="2" onclick="signed(2)"> Signatar 2 </button>
+</div>
+<div id="second">
+    <a class="disabled" id="pades" target="_blank"> Pades </a> &nbsp
+    <a class="signers" href='http://localhost:8082/api/123456789/portal/signature-jobs/1/xades/1' target="_blank"> Xades </a>&nbsp
+    <a class="signers" href='http://localhost:8080/123456789/portal/signature-jobs' target="_blank" onclick="poll()"> Poll </a>
+</div>
+<br>
+<br>
+<hr>
+<div >
+    <p id="pollMessage"> </p>
+    <button class="confirm"> Bekreft og avslutt </button>
+</div>
+
+</body>
+<script>
+var counter = 0;
+document.getElementById("pades").disabled = true;
+
+function signed(id){
+    var signatar = document.getElementById(id);
+    signatar.style.opacity = "0.5";
+    signatar.disabled = true;
+    counter++;
+
+    if (counter >= 2){pades()}
+}
+
+function pades(){
+    var link = document.getElementById("pades");
+    link.href= "http://localhost:8082/api/123456789/portal/signature-jobs/1/pades";
+    link.className = "signers";
+}
+
+function poll(){
+    var message = document.getElementById("pollMessage");
+    message.innerHTML = counter + " signatar(er) har signert dokumentet";
+}
+
+
+</script>
+</html>

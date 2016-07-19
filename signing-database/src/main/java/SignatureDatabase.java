@@ -78,10 +78,11 @@ public class SignatureDatabase {
     }
 
     /**
-     * This method prints the table in the database.
+     * This method prints the table in the database. Not currently in use, but is nice to have when debugging.
      * @throws SQLException
      */
-    public void printDB() throws SQLException {
+  /*
+   public void printDB() throws SQLException {
         String query = "SELECT * FROM SIGNATURE";
         resultSet = statement.executeQuery(query);
         metaData = resultSet.getMetaData();
@@ -96,6 +97,7 @@ public class SignatureDatabase {
         }
         System.out.println("\n --------------------------------- \n");
     }
+    */
 
     /**
      *This method gets a signature job, using the sender as a key.

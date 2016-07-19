@@ -33,7 +33,9 @@ public class DigipostSpringConnector {
     private SignedDocumentFetcher signedDocumentFetcher;
     private PortalSignedDocumentFetcher portalSignedDocumentFetcher;
     private PortalJobPoller poller;
+
     private SigningServiceConnector signingServiceConnector;
+
     private String[] exitUrls = {
             "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
     };
@@ -47,6 +49,11 @@ public class DigipostSpringConnector {
      * @throws IOException
      *
      */
+
+    @RequestMapping("/test")
+    public String test(){
+        return "Hello";
+    }
 
     @RequestMapping("/asice")
     public ModelAndView makeAsice() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, URISyntaxException {
@@ -126,10 +133,11 @@ public class DigipostSpringConnector {
     public String getPades() throws IOException{
         if(this.signedDocumentFetcher != null){
             return signedDocumentFetcher.getPades();
-        } else {
+        } else if (this.signingServiceConnector != null) {
             this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient(),this.statusReader);
             return signedDocumentFetcher.getPades();
         }
+        throw new IllegalStateException("SigningServiceConnector has not been initialized."); //Should maybe be removed 
         // status was either REJECTED or FAILED, XAdES and PAdES are not available.
         }
 
