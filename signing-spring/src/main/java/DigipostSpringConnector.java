@@ -33,7 +33,7 @@ public class DigipostSpringConnector {
     private SigningServiceConnector signingServiceConnector;
 
     private String[] exitUrls = {
-            "http://localhost:8081/onCompletion", "http://localhost:8081/onRejection", "http://localhost:8081/onError"
+            "http://localhost:8080/onCompletion", "http://localhost:8080/onRejection", "http://localhost:8080/onError"
     };
     public DatabaseSignatureStorage storage = new DatabaseSignatureStorage();
     public SignatureJobModel s = new SignatureJobModel("Ikke signert", "123456789", "17079493538");
