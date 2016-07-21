@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @EnableAutoConfiguration
 @Controller
+@RestController
 public class IndexController {
 
     @RequestMapping("/")
@@ -23,8 +24,10 @@ public class IndexController {
     @RequestMapping("/simulertLogin")
     public String goToLogin(){ return "simulertLogin";}
 
-    @RestController("/")
+    @RequestMapping("/pid")
     public String getRequest(HttpServletRequest request, HttpServletRequest response) {
+        System.out.println("HEST: " + request.getHeader("X-DifiProxy-pid"));
+
         return "";
     }
 }
