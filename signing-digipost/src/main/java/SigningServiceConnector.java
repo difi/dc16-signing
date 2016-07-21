@@ -15,6 +15,7 @@ import no.digipost.signature.client.security.KeyStoreConfig;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 /**
  * Class responsible for contacting the signing service.
@@ -27,7 +28,6 @@ public class SigningServiceConnector {
     //Response and client objects
     private DirectJobResponse directJobResponse;
     private DirectClient directClient;
-    private DirectJobStatusResponse directJobStatusResponse;
 
     private PortalClient portalClient;
 
@@ -101,16 +101,16 @@ public class SigningServiceConnector {
 
     }
 
-    public DirectClient getDirectClient() {
-        return this.directClient;
+    public Optional<DirectClient> getDirectClient() {
+        return Optional.of(directClient);
     }
 
-    public DirectJobResponse getDirectJobResponse() {
-        return this.directJobResponse;
+    public Optional<DirectJobResponse> getDirectJobResponse() {
+        return Optional.of(directJobResponse);
     }
 
-    public PortalClient getPortalClient() {
-        return this.portalClient;
+    public Optional<PortalClient> getPortalClient() {
+        return Optional.of(portalClient);
     }
 }
 

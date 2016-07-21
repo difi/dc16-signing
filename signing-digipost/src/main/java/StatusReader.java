@@ -3,6 +3,8 @@ import no.digipost.signature.client.direct.DirectJobResponse;
 import no.digipost.signature.client.direct.DirectJobStatusResponse;
 import no.digipost.signature.client.direct.StatusReference;
 
+import java.util.Optional;
+
 public class StatusReader {
     private DirectClient client;
     private DirectJobStatusResponse statusResponse;
@@ -24,8 +26,8 @@ public class StatusReader {
         this.client.confirm(statusResponse);
     }
 
-    public DirectJobStatusResponse getStatusResponse() {
-        return this.statusResponse;
+    public Optional<DirectJobStatusResponse> getStatusResponse() {
+        return Optional.of(statusResponse);
     }
 
 
