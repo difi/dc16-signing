@@ -26,6 +26,12 @@
             <groupId>no.difi.idporten.signing</groupId>
             <artifactId>signing-database</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-servlet-api</artifactId>
+            <version>7.0.21</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
     <modelVersion>4.0.0</modelVersion>
 
