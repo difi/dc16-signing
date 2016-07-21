@@ -35,6 +35,7 @@ import static org.mockito.Mockito.when;
 public class PortalControllerTest {
 
     private MockMvc mvc = MockMvcBuilders.standaloneSetup(new DigipostSpringConnector()).build();
+
     @Test
     public void getPortalXades_returns_getXades() throws IOException {
         PortalController portalController = new PortalController();
@@ -98,10 +99,12 @@ public class PortalControllerTest {
         portalController.setSigningServiceConnector(signingServiceConnector);
 
         PortalJobPoller portalJobPoller = mock(PortalJobPoller.class);
-        when(portalJobPoller.poll()).thenReturn("polled");
-        portalJobPoller.poll();
+        portalController.setPortalJobPoller(portalJobPoller);
+        when(portalJobPoller.poll()).thenReturn("polled from portalJobPoller");
 
-        Assert.assertEquals(portalJobPoller.poll(), "polled");
+        portalController.poll();
+
+        Assert.assertEquals(portalController.poll(), "Client must be initialized");
     }
 
 }

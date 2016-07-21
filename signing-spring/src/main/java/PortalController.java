@@ -70,8 +70,10 @@ public class PortalController {
 
     @RequestMapping("/poll")
     public String poll(){
-        this.portalJobPoller = new PortalJobPoller(signingServiceConnector.getPortalClient());
-        String status = portalJobPoller.poll();
+        if(this.portalJobPoller != null){
+            this.portalJobPoller = new PortalJobPoller(signingServiceConnector.getPortalClient()); //added extra line, before without "if" //Lage sjekk
+        }
+        String status = this.portalJobPoller.poll();
         return status;
     }
 

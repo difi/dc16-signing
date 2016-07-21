@@ -19,8 +19,13 @@ public class PortalJobPoller {
     //Gets the PortalJobStatusChanged object, should only be called once. Polling exception lasts for several minutes if it is called twice.
     public String poll(){
         try {
-            this.statusChange =  client.getStatusChange();
-            return statusChange.getStatus().toString();
+            if(this.client != null){
+                this.statusChange =  client.getStatusChange();
+                return statusChange.getStatus().toString();
+            }
+            else {
+                return "Client must be initialized"; //Added later, was never an else before. Remove if problem
+            }
         }catch (TooEagerPollingException eagerPollingException){
             String nextAvailablePollingTime = eagerPollingException.getNextPermittedPollTime().toString();
             System.out.print(nextAvailablePollingTime);
