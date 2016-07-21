@@ -12,6 +12,10 @@ public class PortalJobPoller {
 
     }
 
+    public void setPortalClient(PortalClient client){
+        this.client = client; //Removed?
+    }
+
     //Gets the PortalJobStatusChanged object, should only be called once. Polling exception lasts for several minutes if it is called twice.
     public String poll(){
         try {
