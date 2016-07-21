@@ -33,7 +33,7 @@ public class DigipostSpringConnector {
     private SigningServiceConnector signingServiceConnector;
 
     private String[] exitUrls = {
-            "http://localhost:8081/onCompletion", "http://localhost:8081/onRejection", "http://localhost:8081/onError"
+            "http://localhost:8080/onCompletion", "http://localhost:8080/onRejection", "http://localhost:8080/onError"
     };
     public DatabaseSignatureStorage storage = new DatabaseSignatureStorage();
     public SignatureJobModel s = new SignatureJobModel("Ikke signert", "123456789", "17079493538");
@@ -85,7 +85,9 @@ public class DigipostSpringConnector {
         this.statusReader = new StatusReader(signingServiceConnector.getDirectClient(), signingServiceConnector.getDirectJobResponse(), this.statusQueryToken);
         System.out.println("here");
         storage.updateStatus(s, statusReader.getStatus());
-        return statusReader.getStatus();
+        return statusReader.getStatus().concat("<br> <a href='http://localhost:8080/getXades'> Click here to get Xades </a>")
+                                        .concat("<br> <a href='http://localhost:8080/getPades'> Click here to get Pades");
+
 
     }
 
@@ -105,6 +107,7 @@ public class DigipostSpringConnector {
         this.statusReader = new StatusReader(signingServiceConnector.getDirectClient(), signingServiceConnector.getDirectJobResponse(), this.statusQueryToken);
         storage.updateStatus(s, statusReader.getStatus());
         return statusReader.getStatus();
+
         //Returnerer statusChange.toString()
     }
 
@@ -124,8 +127,8 @@ public class DigipostSpringConnector {
         }
     }
 
-    @RequestMapping("/getPades")
-    public String getPades() throws IOException {
+    @RequestMapping(value = "/getPades", produces = "application/pdf")
+    public byte[] getPades() throws IOException {
         if (this.signedDocumentFetcher != null) {
             return signedDocumentFetcher.getPades();
         } else if (this.signingServiceConnector != null) {
@@ -136,8 +139,8 @@ public class DigipostSpringConnector {
         // status was either REJECTED or FAILED, XAdES and PAdES are not available.
     }
 
-    @RequestMapping("/getXades")
-    public String getXades() throws IOException {
+    @RequestMapping(value = "/getXades", produces = "application/xml")
+    public byte[] getXades() throws IOException {
         if (this.signedDocumentFetcher != null) {
             return signedDocumentFetcher.getXades();
         } else {

@@ -1,3 +1,7 @@
+import com.google.common.io.ByteStreams;
+import no.digipost.signature.client.core.PAdESReference;
+import no.digipost.signature.client.core.XAdESReference;
+import no.digipost.signature.client.core.exceptions.TooEagerPollingException;
 import no.digipost.signature.client.direct.DirectClient;
 import no.digipost.signature.client.direct.DirectJobStatus;
 import no.digipost.signature.client.direct.DirectJobStatusResponse;
@@ -11,7 +15,12 @@ public class SignedDocumentFetcher {
 
     SignedDocumentFetcher(DirectClient client, StatusReader statusReader) {
         this.client = client;
-        this.statusResponse = client.getStatusChange();
+        try {
+            this.statusResponse = client.getStatusChange();
+        } catch (TooEagerPollingException eagerPollingException) {
+            String nextAvailablePollingTime = eagerPollingException.getNextPermittedPollTime().toString();
+            System.out.print(nextAvailablePollingTime);
+        }
         this.statusReader = statusReader;
 
     }
@@ -27,12 +36,18 @@ public class SignedDocumentFetcher {
         return null;
     }
 
-    public String getPades() throws IOException {
+    public byte[] getPades() throws IOException {
+        PAdESReference pAdESReference = null;
+        try{
+        DirectJobStatusResponse directJobStatusResponse = this.statusReader.getStatusResponse();
 
-        if (this.statusReader.getStatusResponse().is(this.statusReader.getStatusResponse().getStatus().SIGNED)) {
+        if (directJobStatusResponse.is(directJobStatusResponse.getStatus().SIGNED)) {
+            pAdESReference = directJobStatusResponse.getpAdESUrl();
+            XAdESReference xAdESReference = directJobStatusResponse.getxAdESUrl();
 
-            InputStream pAdESStream = client.getPAdES(this.statusReader.getStatusResponse().getpAdESUrl());
-
+            InputStream pAdESStream = client.getPAdES(pAdESReference);
+            System.out.println(pAdESReference.getpAdESUrl());
+            System.out.println(xAdESReference.getxAdESUrl());
             OutputStream outputStream = new FileOutputStream(System.getProperty("user.dir") + "pAdESTest.pdf");
             int read = 0;
 
@@ -40,14 +55,23 @@ public class SignedDocumentFetcher {
             while ((read = pAdESStream.read(bytes)) != -1) {
                 outputStream.write(bytes, 0, read);
             }
-
-            return "fetched pade";
-        } else return "failed";
+        }
+        } catch (TooEagerPollingException eagerPollingException) {
+                String nextAvailablePollingTime = eagerPollingException.getNextPermittedPollTime().toString();
+                System.out.print(nextAvailablePollingTime);
+                //return "Too frequent polling, please wait until " + nextAvailablePollingTime;
+                return "".getBytes();
+            }
+            return ByteStreams.toByteArray(client.getPAdES(pAdESReference));
     }
 
-    public String getXades() throws IOException {
 
-        if (this.statusReader.getStatusResponse().is(this.statusReader.getStatusResponse().getStatus().SIGNED)) {
+
+    public byte[] getXades() throws IOException {
+        XAdESReference xAdESReference = null;
+        DirectJobStatusResponse directJobStatusResponse = this.statusReader.getStatusResponse();
+        if (directJobStatusResponse.is(directJobStatusResponse.getStatus().SIGNED)) {
+            xAdESReference = directJobStatusResponse.getxAdESUrl();
             InputStream xAdESStream = client.getXAdES(this.statusReader.getStatusResponse().getxAdESUrl());
             byte[] buffer = new byte[xAdESStream.available()];
             xAdESStream.read(buffer);
@@ -57,8 +81,8 @@ public class SignedDocumentFetcher {
             outStream.write(buffer);
             this.statusReader.confirmProcessedSignatureJob();
 
-            return "fetched xade";
-        } else return "failed";
+            return ByteStreams.toByteArray(client.getXAdES(xAdESReference));
+        } else return "".getBytes();
     }
 
 
