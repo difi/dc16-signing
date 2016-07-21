@@ -11,11 +11,11 @@ import no.digipost.signature.client.portal.PortalSigner;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public class PortalAsiceMaker {
     private CreateASiCE createASiCE;
     private ManifestCreator manifestCreator = new CreateDirectManifest();
-    private SignatureJob signatureJob;
     private PortalJob portalJob;
     private File dokumentTilSignering;
     private File kontaktInfoClientTest;

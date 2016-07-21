@@ -28,6 +28,7 @@ public class ApplicationMain {
         Object[] sources = {DigipostSpringConnector.class, controllers.IndexController.class, PortalController.class};
         SpringApplication.run(sources, args);
         injector.getInstance(NettyHttpListener.class).run();
+
     }
 
     //DirectSignatureJobResponse.getStatusURL

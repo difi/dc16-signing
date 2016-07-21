@@ -1,3 +1,5 @@
+import com.google.common.io.ByteStreams;
+import no.digipost.signature.client.core.PAdESReference;
 import no.digipost.signature.client.portal.PortalClient;
 import no.digipost.signature.client.portal.Signature;
 import no.digipost.signature.client.portal.SignatureStatus;
@@ -17,26 +19,14 @@ public class PortalSignedDocumentFetcher {
 
     //Uses poller to check if the pAdES is available, then reads it to a file. pAdES is only available
     //if all signers have signed.
-    public String getPades() throws IOException {
+    public byte[] getPades() throws IOException {
+        PAdESReference pAdESReference = null;
+
         if (poller.isPadesReady()) {
-            InputStream pAdESStream = client.getPAdES(poller.getStatusChange().getpAdESUrl());
-            OutputStream outputStream = new FileOutputStream(System.getProperty("user.dir") + "pAdESTest.pdf");
-
-            int read = 0;
-
-            byte[] bytes = new byte[999999999];
-            //byte[] buffer = new byte[pAdESStream.available()];
-
-            while ((read = pAdESStream.read(bytes)) != -1) {
-                outputStream.write(bytes, 0, read);
-            }
-            //pAdESStream.read(buffer);
-            //File targetFile = new File(System.getProperty("user.dir") + "pAdES.pdf");
-            //OutputStream outStream = new FileOutputStream(targetFile);
-            //outStream.write(buffer);
-            return "pades retrieved";
+            pAdESReference = poller.getStatusChange().getpAdESUrl();
+            return ByteStreams.toByteArray(client.getPAdES(pAdESReference));
         } else {
-            return "pades not ready or failed";
+            return "".getBytes();
         }
     }
 
