@@ -82,10 +82,12 @@ public class PortalControllerTest {
     @Test
     public void startPortalJob_sendsPortalRequest_if_signingSerViceConnector_not_null() throws IOException {
         PortalController portalController = new PortalController();
+        PortalJob portalJob = mock(PortalJob.class);
+        KeyStoreConfig keyStoreConfig = mock(KeyStoreConfig.class);
 
         SigningServiceConnector signingServiceConnector = Mockito.mock(SigningServiceConnector.class);
         portalController.setSigningServiceConnector(signingServiceConnector);
-        portalController.startPortalJob();
+        when(signingServiceConnector.sendPortalRequest(portalJob, keyStoreConfig)).thenReturn(true);
 
     }
 
@@ -97,6 +99,7 @@ public class PortalControllerTest {
 
         PortalJobPoller portalJobPoller = mock(PortalJobPoller.class);
         when(portalJobPoller.poll()).thenReturn("polled");
+        portalJobPoller.poll();
 
         Assert.assertEquals(portalJobPoller.poll(), "polled");
     }
