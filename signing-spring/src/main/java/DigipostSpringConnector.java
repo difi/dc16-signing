@@ -2,11 +2,13 @@ import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.security.KeyStoreConfig;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -19,6 +21,7 @@ import java.security.cert.CertificateException;
  * This class is a sceleton for the signing-flow.
  */
 @RestController
+@Controller
 @EnableAutoConfiguration
 public class DigipostSpringConnector {
 
@@ -36,7 +39,8 @@ public class DigipostSpringConnector {
             "http://localhost:8080/onCompletion", "http://localhost:8080/onRejection", "http://localhost:8080/onError"
     };
     public DatabaseSignatureStorage storage = new DatabaseSignatureStorage();
-    public SignatureJobModel s = new SignatureJobModel("Ikke signert", "123456789", "17079493538");
+    public SignatureJobModel s;
+    private String senderPid;
 
     /**
      * This is the mapping for starting the process. It should probably have a parameter designating the correct document by ID
@@ -49,6 +53,13 @@ public class DigipostSpringConnector {
     @RequestMapping("/test")
     public String test() {
         return "Hello";
+    }
+
+    @RequestMapping("/")
+    public String getRequest(HttpServletRequest request, HttpServletRequest response) {
+        senderPid = request.getHeader("X-DifiProxy-pid");
+        s = new SignatureJobModel("Ikke signert", "123456789", "17079493538", senderPid);
+        return "index";
     }
 
     @RequestMapping("/asice")
