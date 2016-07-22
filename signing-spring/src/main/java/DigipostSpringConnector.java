@@ -10,12 +10,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
+
+
 
 /**
  * This class is a sceleton for the signing-flow.
@@ -54,7 +55,6 @@ public class DigipostSpringConnector {
     public String test() {
         return "Hello";
     }
-
 
     @RequestMapping("/asice")
     public ModelAndView makeAsice(HttpServletRequest request, HttpServletRequest response) throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, URISyntaxException {
@@ -117,21 +117,6 @@ public class DigipostSpringConnector {
         //Returnerer statusChange.toString()
     }
 
-    @RequestMapping("/getDocument")
-    public String getSignedDocument(@RequestParam("document_type") String document_type) {
-        if (this.statusReader.getStatusResponse().is(this.statusReader.getStatusResponse().getStatus().SIGNED)) {
-            if (document_type == "xades") {
-                InputStream xAdESStream = signingServiceConnector.getDirectClient().getXAdES(this.statusReader.getStatusResponse().getxAdESUrl());
-                return "fetched xade";
-            } else if (document_type == "pades") {
-                InputStream pAdESStream = signingServiceConnector.getDirectClient().getPAdES(this.statusReader.getStatusResponse().getpAdESUrl());
-                return "fetched pade";
-            } else return "failed";
-        } else {
-            return "failed2";
-            // status was either REJECTED or FAILED, XAdES and PAdES are not available.
-        }
-    }
 
     @RequestMapping(value = "/getPades", produces = "application/pdf")
     public byte[] getPades() throws IOException {
@@ -141,7 +126,7 @@ public class DigipostSpringConnector {
             this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient(), this.statusReader);
             return signedDocumentFetcher.getPades();
         }
-        throw new IllegalStateException("SigningServiceConnector has not been initialized."); //Should maybe be removed 
+        return "Unable to fetch Pade".getBytes();
         // status was either REJECTED or FAILED, XAdES and PAdES are not available.
     }
 
@@ -149,10 +134,12 @@ public class DigipostSpringConnector {
     public byte[] getXades() throws IOException {
         if (this.signedDocumentFetcher != null) {
             return signedDocumentFetcher.getXades();
-        } else {
-            this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient(), this.statusReader);
+        } else if(this.signingServiceConnector != null){
+            this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient(),this.statusReader);
+
             return signedDocumentFetcher.getXades();
         }
+        return "Unable to fetch Xade".getBytes();
         // status was either REJECTED or FAILED, XAdES and PAdES are not available.
     }
 
@@ -175,6 +162,27 @@ public class DigipostSpringConnector {
         //or return this.rejectionURL
         //or return this.errorURL
     }
+
+    public void setSignedDocumentFetcher(SignedDocumentFetcher signedDocumentFetcher){
+        this.signedDocumentFetcher = signedDocumentFetcher;
+    }
+
+    public void setSigningServiceConnector(SigningServiceConnector signingServiceConnector){
+        this.signingServiceConnector = signingServiceConnector;
+    }
+
+    public void setStatusReader(StatusReader statsreader){
+        this.statusReader = statsreader;
+    }
+
+    public void setStatusQueryToken(String token){
+        this.statusQueryToken = token;
+    }
+
+    public void setStorage(){
+        storage.insertSignaturejobToDB(s);
+    }
+
 
 
 }

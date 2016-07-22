@@ -15,12 +15,24 @@ public class StatusReader {
         this.token = token;
     }
 
-    public String getStatus() {
-        this.statusResponse = client.getStatus(StatusReference.of(jobResponse).withStatusQueryToken(token));
-        System.out.println(this.statusResponse.getStatus().toString());
-        System.out.println(statusResponse.getStatus().toString());
-        return statusResponse.getStatus().toString();
+    public String getStatus(){
+        //La til if, må kanskje fjernes
+            this.statusResponse = client.getStatus(StatusReference.of(jobResponse).withStatusQueryToken(token));
+            return statusResponse.getStatus().toString();
     }
+
+    public void setDirectClient(DirectClient client){
+        this.client = client;
+    }
+
+    public void setJobResponse(DirectJobResponse jobResponse){
+        this.jobResponse = jobResponse;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
 
     public void confirmProcessedSignatureJob() {
         this.client.confirm(statusResponse);
