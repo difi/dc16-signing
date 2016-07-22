@@ -16,6 +16,11 @@ public class SignedDocumentFetcher {
 
     }
 
+    public void setDirectJobStatusResponse(DirectJobStatusResponse statusResponse){
+        this.statusResponse = statusResponse;
+    }
+
+
     public InputStream getSignedDocuments(String format) {
         if (statusResponse.is(DirectJobStatus.SIGNED)) {
             if (format == "xades") {
@@ -40,9 +45,11 @@ public class SignedDocumentFetcher {
             while ((read = pAdESStream.read(bytes)) != -1) {
                 outputStream.write(bytes, 0, read);
             }
-
             return "fetched pade";
-        } else return "failed";
+        }
+        else{
+            return "failed";
+        }
     }
 
     public String getXades() throws IOException {
@@ -60,6 +67,8 @@ public class SignedDocumentFetcher {
             return "fetched xade";
         } else return "failed";
     }
+
+
 
 
 }
