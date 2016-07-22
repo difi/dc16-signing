@@ -19,6 +19,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
 
+
+
 /**
  * This class is a sceleton for the signing-flow.
  *
@@ -156,6 +158,10 @@ public class DigipostSpringConnector {
 
     public void setStatusReader(StatusReader statsreader){
         this.statusReader = statsreader;
+    }
+
+    public void setStatusQueryToken(String token){
+        this.statusQueryToken = token;
     }
 
     public void setStorage(){

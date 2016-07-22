@@ -16,8 +16,9 @@ public class StatusReader {
     }
 
     public String getStatus(){
-        this.statusResponse = client.getStatus(StatusReference.of(jobResponse).withStatusQueryToken(token));
-        return statusResponse.getStatus().toString();
+        //La til if, må kanskje fjernes
+            this.statusResponse = client.getStatus(StatusReference.of(jobResponse).withStatusQueryToken(token));
+            return statusResponse.getStatus().toString();
     }
 
     public void setDirectClient(DirectClient client){

@@ -42,6 +42,37 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import no.digipost.signature.client.ClientConfiguration;
+import no.digipost.signature.client.portal.PortalClient;
+import no.digipost.signature.client.portal.PortalJob;
+import no.digipost.signature.client.portal.PortalJobStatusChanged;
+import no.digipost.signature.client.security.KeyStoreConfig;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import no.digipost.signature.client.portal.*;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+
+import java.io.IOException;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 /**
  * Created by camp-nto on 14.07.2016.
  */
@@ -156,6 +187,22 @@ public class DigipostSpringConnectorTest {
         mvc.perform(MockMvcRequestBuilders.get("/getJobStatus"))
                 .andExpect(status().isOk());
         Assert.assertEquals(digipostSpringConnector.getJobStatus(), null);
+    }
+
+    @Test
+    public void onCompletion_returns_directJobStatusResponse(){
+        //DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
+        //StatusReader statusReader = mock()
+        //SigningServiceConnector signingServiceConnector = mock(SigningServiceConnector.class);
+
+        //digipostSpringConnector.setStatusReader(statusReader);
+        //digipostSpringConnector.setStatusQueryToken("token");
+        //digipostSpringConnector.setSigningServiceConnector(signingServiceConnector);
+
+
+        //digipostSpringConnector.whenSigningComplete("token");
+
+
     }
 
 
