@@ -39,11 +39,11 @@ public class SignedDocumentFetcher {
     public byte[] getPades() throws IOException {
         PAdESReference pAdESReference = null;
         if(this.statusReader != null){
-        DirectJobStatusResponse directJobStatusResponse = this.statusReader.getStatusResponse().get();
-        if (directJobStatusResponse.is(directJobStatusResponse.getStatus().SIGNED)) {
-            pAdESReference = directJobStatusResponse.getpAdESUrl();
+            DirectJobStatusResponse directJobStatusResponse = this.statusReader.getStatusResponse().get();
+            if (directJobStatusResponse.is(directJobStatusResponse.getStatus().SIGNED)) {
+                pAdESReference = directJobStatusResponse.getpAdESUrl();
 
-            return ByteStreams.toByteArray(client.getPAdES(pAdESReference));
+                return ByteStreams.toByteArray(client.getPAdES(pAdESReference));
             }
         }
         return "".getBytes();
