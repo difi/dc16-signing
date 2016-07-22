@@ -79,6 +79,21 @@ public class SigningServiceConnector {
         }
     }
 
+    //Added for testing
+    public void setDirectClient(KeyStoreConfig keyStoreConfig){
+        client = ClientConfiguration.builder(keyStoreConfig)
+                .serviceUri(ServiceUri.DIFI_TEST)
+                .trustStore(Certificates.TEST)
+                .globalSender(new Sender("991825827"))
+                .build();
+
+        this.directClient = new DirectClient(client);
+    }
+
+    public void setDirectJobResponse(SignatureJob signatureJob){
+        this.directJobResponse = directClient.create((DirectJob)signatureJob);
+    }
+
     public boolean sendPortalRequest(PortalJob portalJob, KeyStoreConfig keyStoreConfig) throws URISyntaxException {
         client = ClientConfiguration.builder(keyStoreConfig)
                 //.serviceUri(new URI("http://localhost:8082/"))
@@ -108,6 +123,11 @@ public class SigningServiceConnector {
     public Optional<DirectJobResponse> getDirectJobResponse() {
         return Optional.of(directJobResponse);
     }
+
+    public void setDirectClient(DirectClient client){
+        this.directClient = client;
+    }
+
 
     public Optional<PortalClient> getPortalClient() {
         return Optional.of(portalClient);

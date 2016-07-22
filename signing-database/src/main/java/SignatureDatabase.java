@@ -42,7 +42,7 @@ public class SignatureDatabase {
                     "status VARCHAR(30)," +
                     "signer VARCHAR(30), " +
                     "sender VARCHAR(30)," +
-                    "document VARCHAR(30));");
+                    "senderPid VARCHAR(30));");
             System.out.println("DB: Table created");
             return true;
         } catch (SQLException e) {
@@ -58,8 +58,8 @@ public class SignatureDatabase {
      * @param signatureJob
      */
     public void insertSignature(SignatureJobModel signatureJob) {
-        String query = String.format("INSERT INTO SIGNATURE (status, signer, sender, document) " +
-                "VALUES ('%s','%s','%s','%s');", signatureJob.getStatus(), signatureJob.getSigner(), signatureJob.getSender(), "document");
+        String query = String.format("INSERT INTO SIGNATURE (status, signer, sender, senderPid) " +
+                "VALUES ('%s','%s','%s','%s');", signatureJob.getStatus(), signatureJob.getSigner(), signatureJob.getSender(), signatureJob.getSenderPid());
 
         try {
             statement.executeUpdate(query);
@@ -100,7 +100,7 @@ public class SignatureDatabase {
      * @return String signaturejob  with the whole signature job
      */
     public String getSignatureJob(SignatureJobModel signatureJob) {
-        String query = String.format("SELECT (id, status, signer, sender, document)" +
+        String query = String.format("SELECT (id, status, signer, sender, senderPid)" +
                 "FROM SIGNATURE " +
                 "WHERE sender LIKE '%s';", signatureJob.getSender());
 
@@ -160,5 +160,6 @@ public class SignatureDatabase {
         }
 
     }
+
 
 }
