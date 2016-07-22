@@ -47,7 +47,18 @@ public class SignedDocumentFetcherTest {
         //Assert.assertEquals(signedDocumentFetcher.getPades(), "failed");
     }
 
-   
+    @Test
+    public void getXades() throws IOException{
+       StatusReader statusReader = mock(StatusReader.class);
+       DirectClient directClient = mock(DirectClient.class);
+       DirectJobStatusResponse directJobStatusResponse = mock(DirectJobStatusResponse.class);
+       SignedDocumentFetcher signedDocumentFetcher = new SignedDocumentFetcher(directClient, statusReader);
+
+       signedDocumentFetcher.setDirectJobStatusResponse(directJobStatusResponse);
+
+       //signedDocumentFetcher.getXades();
+       //Assert.assertEquals(signedDocumentFetcher.getXades(), "rand");
+   }
 
 
 }
