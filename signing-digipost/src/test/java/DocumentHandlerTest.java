@@ -12,6 +12,7 @@ public class DocumentHandlerTest {
     public void documentTitleAndNameCorrect() throws IOException{
 
         ClassLoader classLoader = getClass().getClassLoader();
+        DocumentHandler documentHandler = new DocumentHandler();
         File pathToFile = new File(classLoader.getResource("kontaktinfo-client-test.jks").getFile());
         String PDFPath = DocumentHandler.setAbsolutePathToPDF(pathToFile).toString();
 
@@ -19,6 +20,7 @@ public class DocumentHandlerTest {
 
         Assert.assertEquals(directDocument.getTitle(), "Subject");
         Assert.assertEquals(directDocument.getFileName(), "document.pdf");
+        Assert.assertNotNull(documentHandler);
 
     }
 
