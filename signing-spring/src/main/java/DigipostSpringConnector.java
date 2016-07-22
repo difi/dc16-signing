@@ -82,7 +82,7 @@ public class DigipostSpringConnector {
     @RequestMapping("/onCompletion")
     public String whenSigningComplete(@RequestParam("status_query_token") String token) {
         this.statusQueryToken = token;
-        this.statusReader = new StatusReader(signingServiceConnector.getDirectClient(), signingServiceConnector.getDirectJobResponse(), this.statusQueryToken);
+        this.statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(), signingServiceConnector.getDirectJobResponse().get(), this.statusQueryToken);
         System.out.println("here");
         storage.updateStatus(s, statusReader.getStatus());
         return statusReader.getStatus().concat("<br> <a href='http://localhost:8080/getXades'> Click here to get Xades </a>")
@@ -94,7 +94,7 @@ public class DigipostSpringConnector {
     @RequestMapping("/onError")
     public String whenSigningFails(@RequestParam("status_query_token") String token) {
         this.statusQueryToken = token;
-        this.statusReader = new StatusReader(signingServiceConnector.getDirectClient(), signingServiceConnector.getDirectJobResponse(), this.statusQueryToken);
+        this.statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(), signingServiceConnector.getDirectJobResponse().get(), this.statusQueryToken);
         storage.updateStatus(s, statusReader.getStatus());
         return statusReader.getStatus();
 
@@ -104,35 +104,20 @@ public class DigipostSpringConnector {
     public String whenUserRejects(@RequestParam("status_query_token") String token) {
         //String status = signingServiceConnector.checkStatus();
         this.statusQueryToken = token;
-        this.statusReader = new StatusReader(signingServiceConnector.getDirectClient(), signingServiceConnector.getDirectJobResponse(), this.statusQueryToken);
+        this.statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(), signingServiceConnector.getDirectJobResponse().get(), this.statusQueryToken);
         storage.updateStatus(s, statusReader.getStatus());
         return statusReader.getStatus();
 
         //Returnerer statusChange.toString()
     }
 
-    @RequestMapping("/getDocument")
-    public String getSignedDocument(@RequestParam("document_type") String document_type) {
-        if (this.statusReader.getStatusResponse().is(this.statusReader.getStatusResponse().getStatus().SIGNED)) {
-            if (document_type == "xades") {
-                InputStream xAdESStream = signingServiceConnector.getDirectClient().getXAdES(this.statusReader.getStatusResponse().getxAdESUrl());
-                return "fetched xade";
-            } else if (document_type == "pades") {
-                InputStream pAdESStream = signingServiceConnector.getDirectClient().getPAdES(this.statusReader.getStatusResponse().getpAdESUrl());
-                return "fetched pade";
-            } else return "failed";
-        } else {
-            return "failed2";
-            // status was either REJECTED or FAILED, XAdES and PAdES are not available.
-        }
-    }
 
     @RequestMapping(value = "/getPades", produces = "application/pdf")
     public byte[] getPades() throws IOException {
         if (this.signedDocumentFetcher != null) {
             return signedDocumentFetcher.getPades();
         } else if (this.signingServiceConnector != null) {
-            this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient(), this.statusReader);
+            this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient().get(), this.statusReader);
             return signedDocumentFetcher.getPades();
         }
         throw new IllegalStateException("SigningServiceConnector has not been initialized."); //Should maybe be removed 
@@ -144,7 +129,7 @@ public class DigipostSpringConnector {
         if (this.signedDocumentFetcher != null) {
             return signedDocumentFetcher.getXades();
         } else {
-            this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient(), this.statusReader);
+            this.signedDocumentFetcher = new SignedDocumentFetcher(this.signingServiceConnector.getDirectClient().get(), this.statusReader);
             return signedDocumentFetcher.getXades();
         }
         // status was either REJECTED or FAILED, XAdES and PAdES are not available.

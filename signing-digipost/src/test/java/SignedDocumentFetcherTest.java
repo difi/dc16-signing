@@ -24,6 +24,8 @@ public class SignedDocumentFetcherTest {
 
     private SignedDocumentFetcher signedDocumentFetcher;
     private SignedDocumentFetcher failedSignedDocumentFetcher;
+
+    @Mock StatusReader statusReader;
     @BeforeClass
     public void setUp() throws URISyntaxException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException {
         //Force using localhost as server somehow?
@@ -51,7 +53,7 @@ public class SignedDocumentFetcherTest {
         SigningServiceConnector signingServiceConnector = new SigningServiceConnector();
         signingServiceConnector.sendRequest(signatureJob, keyStoreConfig);
         StatusReader statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(),signingServiceConnector.getDirectJobResponse().get(),"???");
-        statusReader.getStatus();
+        //statusReader.getStatus();
         this.failedSignedDocumentFetcher = new SignedDocumentFetcher(signingServiceConnector.getDirectClient().get(),statusReader);
     }
 
@@ -72,8 +74,10 @@ public class SignedDocumentFetcherTest {
         KeyStoreConfig keyStoreConfig = clientConfig.getKeyStoreConfig();
         SigningServiceConnector signingServiceConnector = new SigningServiceConnector();
         signingServiceConnector.sendRequest(signatureJob, keyStoreConfig);
-        StatusReader statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(),signingServiceConnector.getDirectJobResponse().get(),"Completion_token");
-        statusReader.getStatus();
+        //StatusReader statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(),signingServiceConnector.getDirectJobResponse().get(),"Completion_token");
+        StatusReader statusReader = mock(StatusReader.class);
+
+        //statusReader.getStatus();
         this.signedDocumentFetcher = new SignedDocumentFetcher(signingServiceConnector.getDirectClient().get(),statusReader);
     }
 
