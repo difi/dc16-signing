@@ -25,16 +25,18 @@ public class SignedDocumentFetcherTest {
     private SignedDocumentFetcher signedDocumentFetcher;
     private SignedDocumentFetcher failedSignedDocumentFetcher;
 
-    @Mock StatusReader statusReader;
+    @Mock
+    StatusReader statusReader;
+
     @BeforeClass
     public void setUp() throws URISyntaxException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException {
         //Force using localhost as server somehow?
         MockServer.setUp();
-        setUpDocumentFetcherAbleToRetrieve();
-        setUpDocumentFetcherUnableToRetrieve();
+        //setUpDocumentFetcherAbleToRetrieve();
+        //setUpDocumentFetcherUnableToRetrieve();
 
     }
-
+    /*
     public void setUpDocumentFetcherUnableToRetrieve() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException, URISyntaxException {
         String[] exitUrls = {
                 "http://localhost:8082/onCompletion","http://localhost:8082/onRejection","http://localhost:8082/onError"
@@ -76,6 +78,7 @@ public class SignedDocumentFetcherTest {
         signingServiceConnector.sendRequest(signatureJob, keyStoreConfig);
         //StatusReader statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(),signingServiceConnector.getDirectJobResponse().get(),"Completion_token");
         StatusReader statusReader = mock(StatusReader.class);
+        when(statusReader.getStatus()).thenReturn("SIGNED");
 
         //statusReader.getStatus();
         this.signedDocumentFetcher = new SignedDocumentFetcher(signingServiceConnector.getDirectClient().get(),statusReader);
@@ -94,29 +97,7 @@ public class SignedDocumentFetcherTest {
         Assert.assertNotEquals(padesStatus,"".getBytes());
     }
 
-    @Test
-    public void signedDocumentFetcherInitializedProperly(){
-        Assert.assertNotNull(signedDocumentFetcher);
-    }
 
-    //Still not working
-    //@Test
-    //public void getPadesReturnesFetchedPade() throws IOException {
-    //    SetupClientConfig clientConfig = new SetupClientConfig();
-    //    clientConfig.setupClientConfiguration("123456789");
-
-
-    //    DirectClient client = new DirectClient(clientConfig.getClientConfiguration());
-    //    AsiceMaker asiceMaker = new AsiceMaker();
-    //    SignatureJob signatureJob = asiceMaker.getSignatureJob();
-
-    //    String statusQueryToken = "0A3BQ54C";
-    //    DirectJobResponse directJobResponse = client.create((DirectJob)signatureJob);
-    //    DirectJobStatusResponse directJobStatusResponse = client.getStatus(StatusReference.of(directJobResponse).withStatusQueryToken(statusQueryToken));
-
-    //    StatusReader statusReader = new StatusReader(client, directJobResponse, statusQueryToken);
-    //    SignedDocumentFetcher signedDocumentFetcher = new SignedDocumentFetcher(client, statusReader);
-    //    Assert.assertEquals(signedDocumentFetcher.getPades(), "fetched pade");
-
-    //}
+}
+*/
 }
