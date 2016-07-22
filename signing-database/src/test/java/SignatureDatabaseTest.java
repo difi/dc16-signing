@@ -29,7 +29,7 @@ public class SignatureDatabaseTest {
 
     @Test
     public void testConnection(){
-        Assert.assertEquals(db.connection.toString(), "conn0: url=jdbc:h2:file:src/main/resources/signature user=SA");
+        Assert.assertEquals(db.connection.toString(), "conn0: url=jdbc:h2:mem:signature user=SA");
     }
 
     @Test

@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -31,7 +32,7 @@ public class PortalAsiceMakerTest {
     }
 
     @Test
-    public void signatureJobExistsAfterCreatingAsic() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException {
+    public void signatureJobExistsAfterCreatingAsic() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException, URISyntaxException {
         PortalAsiceMaker portalAsiceMaker = new PortalAsiceMaker();
         SetupClientConfig clientConfig = new SetupClientConfig("Direct");
         clientConfig.initialize(portalAsiceMaker.getContactInfo(),"123456789");
@@ -39,7 +40,7 @@ public class PortalAsiceMakerTest {
         clientConfig.setupKeystoreConfig(portalAsiceMaker.getContactInfo());
         clientConfig.setupClientConfiguration("123456789");
         String[] exitUrls = {
-                "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
+                "http://localhost:8081/onCompletion","http://localhost:8081/onRejection","http://localhost:8081/onError"
         };
         List<PortalSigner> portalSigners = new ArrayList<>();
         portalSigners.add( PortalSigner.builder("17079493538", Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());

@@ -1,77 +1,15 @@
-import no.digipost.signature.client.Certificates;
-import no.digipost.signature.client.ClientConfiguration;
-import no.digipost.signature.client.ServiceUri;
-import no.digipost.signature.client.core.Sender;
-import no.digipost.signature.client.core.SignatureJob;
-import no.digipost.signature.client.direct.DirectClient;
-import no.digipost.signature.client.direct.DirectJobResponse;
-import no.digipost.signature.client.direct.DirectJobStatusResponse;
-import no.digipost.signature.client.security.KeyStoreConfig;
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.mockito.stubbing.OngoingStubbing;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockServletContext;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.util.NestedServletException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.cert.CertificateException;
-
 import static org.hamcrest.Matchers.equalTo;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import no.digipost.signature.client.ClientConfiguration;
-import no.digipost.signature.client.portal.PortalClient;
-import no.digipost.signature.client.portal.PortalJob;
-import no.digipost.signature.client.portal.PortalJobStatusChanged;
-import no.digipost.signature.client.security.KeyStoreConfig;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import no.digipost.signature.client.portal.*;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-
-import java.io.IOException;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by camp-nto on 14.07.2016.
@@ -102,6 +40,7 @@ public class DigipostSpringConnectorTest {
         Assert.assertNotNull(digipostSpringConnector);
     }
 
+/*
     @Test
     public void testMakeAsice_checksStatus() throws Exception {
         DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
@@ -110,6 +49,7 @@ public class DigipostSpringConnectorTest {
                 .andExpect(status().isFound());
         Assert.assertNotNull(digipostSpringConnector.makeAsice());
     }
+*/
 
     @Test
     public void testWhenSigningComplete_checksStatus() throws Exception {

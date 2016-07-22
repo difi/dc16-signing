@@ -1,18 +1,19 @@
 import no.digipost.signature.client.ClientConfiguration;
-import no.digipost.signature.client.asice.*;
+import no.digipost.signature.client.asice.CreateASiCE;
+import no.digipost.signature.client.asice.DocumentBundle;
 import no.digipost.signature.client.asice.manifest.CreateDirectManifest;
 import no.digipost.signature.client.asice.manifest.ManifestCreator;
 import no.digipost.signature.client.core.SignatureJob;
-import no.digipost.signature.client.direct.*;
-import no.digipost.signature.client.portal.PortalDocument;
+import no.digipost.signature.client.direct.DirectDocument;
+import no.digipost.signature.client.direct.DirectJob;
+import no.digipost.signature.client.direct.DirectSigner;
 import no.digipost.signature.client.portal.PortalJob;
-import no.digipost.signature.client.portal.PortalSigner;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.util.List;
 
 public class AsiceMaker {
 
@@ -67,9 +68,20 @@ public class AsiceMaker {
         return new DirectJob.Builder(signer, document, exitUrls[0], exitUrls[1], exitUrls[2]).build();
     }
 
-    public File getContactInfo() {return kontaktInfoClientTest;}
-    public SignatureJob getSignatureJob() {return this.signatureJob;}
-    public PortalJob getPortalJob() { return this.portalJob;}
-    public File getDokumentTilSignering(){ return dokumentTilSignering;}
+    public File getContactInfo() {
+        return kontaktInfoClientTest;
+    }
+
+    public SignatureJob getSignatureJob() {
+        return this.signatureJob;
+    }
+
+    public PortalJob getPortalJob() {
+        return this.portalJob;
+    }
+
+    public File getDokumentTilSignering() {
+        return dokumentTilSignering;
+    }
 
 }

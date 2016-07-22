@@ -4,6 +4,7 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -29,12 +30,12 @@ public class AsiceMakerTest {
      * Checks that both the documentbundle and the signature job exist after calling createAsice.
      */
     @Test
-    public void signatureJobExistsAfterCreatingAsic() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException {
+    public void signatureJobExistsAfterCreatingAsic() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException, URISyntaxException {
         AsiceMaker asiceMaker = new AsiceMaker();
         SetupClientConfig clientConfig = new SetupClientConfig("Direct");
         clientConfig.initialize(asiceMaker.getContactInfo(),"123456789");
         String[] exitUrls = {
-                "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
+                "http://localhost:8081/onCompletion","http://localhost:8081/onRejection","http://localhost:8081/onError"
         };
         DocumentBundle preparedAsic = asiceMaker.createAsice("17079493538","123456789",exitUrls, clientConfig.getClientConfiguration());
         Assert.assertNotNull(asiceMaker.getSignatureJob());

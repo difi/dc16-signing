@@ -9,7 +9,7 @@ public class StatusReader {
     private DirectJobResponse jobResponse;
     private String token;
 
-    StatusReader(DirectClient client, DirectJobResponse jobResponse, String token){
+    StatusReader(DirectClient client, DirectJobResponse jobResponse, String token) {
         this.client = client;
         this.jobResponse = jobResponse;
         this.token = token;
@@ -29,19 +29,18 @@ public class StatusReader {
         this.jobResponse = jobResponse;
     }
 
-    public void setToken(String token){
+    public void setToken(String token) {
         this.token = token;
     }
 
-    public void confirmProcessedSignatureJob(){
+
+    public void confirmProcessedSignatureJob() {
         this.client.confirm(statusResponse);
     }
 
-    public DirectJobStatusResponse getStatusResponse(){
+    public DirectJobStatusResponse getStatusResponse() {
         return this.statusResponse;
     }
-
-
 
 
 }

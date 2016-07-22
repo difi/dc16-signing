@@ -22,7 +22,6 @@ public class PortalAsiceMaker {
     private String relativeDocumentPath = "Documents//Dokument til signering 3.pdf";
 
 
-
     public PortalAsiceMaker() {
         //Creates classLoader to load file
         ClassLoader classLoader = getClass().getClassLoader();
@@ -44,12 +43,13 @@ public class PortalAsiceMaker {
     }
 
     public PortalJob createSignatureJobPortal(List<PortalSigner> signers, PortalDocument document, String[] exitUrls) {
-        return PortalJob.builder(document,signers).build();
+        return PortalJob.builder(document, signers).build();
     }
 
     /**
      * Makes a portal document bundle. Instead of just one signer this function needs a list of signers.
-     * @param signers List of signers.
+     *
+     * @param signers             List of signers.
      * @param exitUrls
      * @param clientConfiguration
      */
@@ -57,12 +57,20 @@ public class PortalAsiceMaker {
         String PDFPath = DocumentHandler.setAbsolutePathToPDF(dokumentTilSignering).toString();
         createASiCE = new CreateASiCE(manifestCreator, clientConfiguration);
         PortalDocument document = DocumentHandler.pdfToPortalDocument(PDFPath);
-        this.portalJob = createSignatureJobPortal(signers,document,exitUrls);
+        this.portalJob = createSignatureJobPortal(signers, document, exitUrls);
         //return createASiCE.createASiCE(this.portalJob);
         return null;
     }
 
-    public File getContactInfo() {return kontaktInfoClientTest;}
-    public PortalJob getPortalJob() { return this.portalJob;}
-    public File getDokumentTilSignering(){ return dokumentTilSignering;}
+    public File getContactInfo() {
+        return kontaktInfoClientTest;
+    }
+
+    public PortalJob getPortalJob() {
+        return this.portalJob;
+    }
+
+    public File getDokumentTilSignering() {
+        return dokumentTilSignering;
+    }
 }

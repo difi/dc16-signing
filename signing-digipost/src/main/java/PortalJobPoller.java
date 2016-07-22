@@ -7,7 +7,7 @@ public class PortalJobPoller {
     private PortalClient client;
     private PortalJobStatusChanged statusChange;
 
-    PortalJobPoller(PortalClient portalClient){
+    PortalJobPoller(PortalClient portalClient) {
         this.client = portalClient;
 
     }
@@ -17,7 +17,7 @@ public class PortalJobPoller {
     }
 
     //Gets the PortalJobStatusChanged object, should only be called once. Polling exception lasts for several minutes if it is called twice.
-    public String poll(){
+    public String poll() {
         try {
             if(this.client != null){
                 this.statusChange =  client.getStatusChange();
@@ -26,20 +26,19 @@ public class PortalJobPoller {
             else {
                 return "Client must be initialized"; //Added later, was never an else before. Remove if problem
             }
-        }catch (TooEagerPollingException eagerPollingException){
+        } catch (TooEagerPollingException eagerPollingException) {
             String nextAvailablePollingTime = eagerPollingException.getNextPermittedPollTime().toString();
             System.out.print(nextAvailablePollingTime);
             return "Too frequent polling, please wait until " + nextAvailablePollingTime;
         }
 
 
-
     }
 
     //Checks whether a pades is available. For portals it is only available when all signers have signed.
-    public boolean isPadesReady(){
-        if(hasPolled() ){
-            if(statusChange.isPAdESAvailable()){
+    public boolean isPadesReady() {
+        if (hasPolled()) {
+            if (statusChange.isPAdESAvailable()) {
                 return true;
             } else {
                 return false;
@@ -50,9 +49,9 @@ public class PortalJobPoller {
     }
 
     //Xades can be requested as long as at least one of the signers have signed.
-    public boolean isXadesReady(){
-        if(hasPolled()){
-            if(statusChange.getSignatures() != null){
+    public boolean isXadesReady() {
+        if (hasPolled()) {
+            if (statusChange.getSignatures() != null) {
                 return statusChange.getSignatures().stream().anyMatch(x -> x.is(SignatureStatus.SIGNED));
             }
         } else {
@@ -62,22 +61,21 @@ public class PortalJobPoller {
     }
 
     //Avoiding hitting the polling exception by polling only once
-    public boolean hasPolled(){
-        if(this.statusChange != null){
+    public boolean hasPolled() {
+        if (this.statusChange != null) {
             return true;
         } else {
             return false;
         }
     }
 
-    public PortalJobStatusChanged getStatusChange(){
-        if(hasPolled()){
+    public PortalJobStatusChanged getStatusChange() {
+        if (hasPolled()) {
             return this.statusChange;
         } else {
             return null;
         }
     }
-
 
 
 }
