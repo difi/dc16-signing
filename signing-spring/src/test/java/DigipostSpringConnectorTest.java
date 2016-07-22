@@ -11,9 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-/**
- * Created by camp-nto on 14.07.2016.
- */
+
 
 
 public class DigipostSpringConnectorTest {
@@ -94,7 +92,7 @@ public class DigipostSpringConnectorTest {
         digipostSpringConnector.setSignedDocumentFetcher(signedDocumentFetcher);
         Assert.assertEquals(digipostSpringConnector.getPades(), null);
 
-        Mockito.when(digipostSpringConnector.getPades()).thenReturn("fetched pade");
+        Mockito.when(digipostSpringConnector.getPades()).thenReturn("fetched pade".getBytes());
         Assert.assertEquals(digipostSpringConnector.getPades(), "fetched pade");
     }
 
