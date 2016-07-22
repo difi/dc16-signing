@@ -27,7 +27,7 @@ public class StatusReader {
     }
 
     public Optional<DirectJobStatusResponse> getStatusResponse() {
-        return Optional.of(statusResponse);
+        return Optional.ofNullable(statusResponse);
     }
 
 

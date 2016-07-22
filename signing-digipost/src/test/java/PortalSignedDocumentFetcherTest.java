@@ -80,8 +80,8 @@ public class PortalSignedDocumentFetcherTest {
 
     @Test
     public void getPadesTest() throws IOException {
-        String padesStatus = signedDocumentFetcher.getPades();
-        Assert.assertEquals(padesStatus, "pades retrieved" );
+        byte[] padesStatus = signedDocumentFetcher.getPades();
+        Assert.assertNotEquals(padesStatus, "".getBytes() );
     }
 
     @Test
@@ -92,8 +92,8 @@ public class PortalSignedDocumentFetcherTest {
 
     @Test
     public void getFailedPadesTest() throws IOException {
-        String padesStatus = failedSignedDocumentFetcher.getPades();
-        Assert.assertEquals(padesStatus, "pades not ready or failed" );
+        byte[] padesStatus = failedSignedDocumentFetcher.getPades();
+        Assert.assertEquals(padesStatus, "".getBytes() );
     }
 
     @Test

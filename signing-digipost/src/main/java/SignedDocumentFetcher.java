@@ -38,25 +38,27 @@ public class SignedDocumentFetcher {
 
     public byte[] getPades() throws IOException {
         PAdESReference pAdESReference = null;
-        DirectJobStatusResponse directJobStatusResponse = this.statusReader.getStatusResponse();
+        if(this.statusReader != null){
+        DirectJobStatusResponse directJobStatusResponse = this.statusReader.getStatusResponse().get();
         if (directJobStatusResponse.is(directJobStatusResponse.getStatus().SIGNED)) {
             pAdESReference = directJobStatusResponse.getpAdESUrl();
 
             return ByteStreams.toByteArray(client.getPAdES(pAdESReference));
-        } else return "".getBytes();
+            }
+        }
+        return "".getBytes();
     }
-
-
 
     public byte[] getXades() throws IOException {
         XAdESReference xAdESReference = null;
-        DirectJobStatusResponse directJobStatusResponse = this.statusReader.getStatusResponse();
-        if (directJobStatusResponse.is(directJobStatusResponse.getStatus().SIGNED)) {
-            xAdESReference = directJobStatusResponse.getxAdESUrl();
+        if (this.statusReader != null) {
+            DirectJobStatusResponse directJobStatusResponse = this.statusReader.getStatusResponse().get();
+            if (directJobStatusResponse.is(directJobStatusResponse.getStatus().SIGNED)) {
+                xAdESReference = directJobStatusResponse.getxAdESUrl();
 
-            return ByteStreams.toByteArray(client.getXAdES(xAdESReference));
-        } else return "".getBytes();
+                return ByteStreams.toByteArray(client.getXAdES(xAdESReference));
+            }
+        }
+        return "".getBytes();
     }
-
-
 }

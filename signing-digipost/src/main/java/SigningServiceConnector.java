@@ -58,8 +58,8 @@ public class SigningServiceConnector {
 
         //Both the serviceUri and the truststore are constants taken from the api library signature-api-client-java
         client = ClientConfiguration.builder(keyStoreConfig)
-                //.serviceUri(new URI("http://localhost:8082/"))
-                .serviceUri(ServiceUri.DIFI_TEST)
+                .serviceUri(new URI("http://localhost:8082/"))
+                //.serviceUri(ServiceUri.DIFI_TEST)
                 .trustStore(Certificates.TEST)
                 .globalSender(new Sender("991825827"))
                 .build();
@@ -81,8 +81,8 @@ public class SigningServiceConnector {
 
     public boolean sendPortalRequest(PortalJob portalJob, KeyStoreConfig keyStoreConfig) throws URISyntaxException {
         client = ClientConfiguration.builder(keyStoreConfig)
-                //.serviceUri(new URI("http://localhost:8082/"))
-                .serviceUri(ServiceUri.DIFI_TEST)
+                .serviceUri(new URI("http://localhost:8082/"))
+                //.serviceUri(ServiceUri.DIFI_TEST)
                 .trustStore(Certificates.TEST)
                 .globalSender(new Sender("991825827"))
                 .build();
