@@ -16,7 +16,7 @@ import java.util.List;
 public class PortalController {
 
     private PortalSignedDocumentFetcher portalSignedDocumentFetcher;
-    private PortalJobPoller poller;
+    private PortalJobPoller portalJobPoller;
     private SigningServiceConnector signingServiceConnector;
 
     private String[] exitUrls = {
@@ -28,7 +28,7 @@ public class PortalController {
         if (portalSignedDocumentFetcher != null) {
             return portalSignedDocumentFetcher.getXades();
         } else {
-            this.portalSignedDocumentFetcher = new PortalSignedDocumentFetcher(poller, signingServiceConnector.getPortalClient());
+            this.portalSignedDocumentFetcher = new PortalSignedDocumentFetcher(portalJobPoller,signingServiceConnector.getPortalClient());
             return portalSignedDocumentFetcher.getXades();
         }
 
@@ -39,7 +39,7 @@ public class PortalController {
         if (portalSignedDocumentFetcher != null) {
             return portalSignedDocumentFetcher.getPades();
         } else {
-            this.portalSignedDocumentFetcher = new PortalSignedDocumentFetcher(poller, signingServiceConnector.getPortalClient());
+            this.portalSignedDocumentFetcher = new PortalSignedDocumentFetcher(portalJobPoller,signingServiceConnector.getPortalClient());
             return portalSignedDocumentFetcher.getPades();
         }
     }
@@ -71,9 +71,23 @@ public class PortalController {
     }
 
     @RequestMapping("/poll")
-    public String poll() {
-        this.poller = new PortalJobPoller(signingServiceConnector.getPortalClient());
-        String status = poller.poll();
+    public String poll(){
+        if(this.portalJobPoller != null){
+            this.portalJobPoller = new PortalJobPoller(signingServiceConnector.getPortalClient()); //added extra line, before without "if" //Lage sjekk
+        }
+        String status = this.portalJobPoller.poll();
         return status;
+    }
+
+    public void setPortalSignedDocumentFetcher(PortalSignedDocumentFetcher portalSignedDocumentFetcher){
+        this.portalSignedDocumentFetcher = portalSignedDocumentFetcher;
+    }
+
+    public void setPortalJobPoller(PortalJobPoller portalJobPoller){
+        this.portalJobPoller = portalJobPoller;
+    }
+
+    public void setSigningServiceConnector(SigningServiceConnector signingServiceConnector){
+        this.signingServiceConnector = signingServiceConnector;
     }
 }

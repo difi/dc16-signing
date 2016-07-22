@@ -1,6 +1,7 @@
 import no.digipost.signature.client.portal.*;
 import org.junit.Assert;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -61,6 +62,7 @@ public class PortalJobPollerTest {
         PortalJobPoller poller = new PortalJobPoller(client);
         poller.poll();
         Assert.assertTrue(poller.hasPolled());
+        PortalJobPoller portalJobPoller = Mockito.mock(PortalJobPoller.class);
     }
 
     @Test
