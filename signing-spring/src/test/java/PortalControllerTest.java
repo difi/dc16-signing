@@ -9,7 +9,6 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by camp-nto on 18.07.2016.
@@ -79,7 +78,7 @@ public class PortalControllerTest {
 
     }
 
-    @Test
+/*    @Test
     public void poll_returns_status(){
         PortalController portalController = new PortalController();
         SigningServiceConnector signingServiceConnector = Mockito.mock(SigningServiceConnector.class);
@@ -92,6 +91,6 @@ public class PortalControllerTest {
         String status = portalController.poll();
 
         Assert.assertEquals(portalController.poll(), "Client must be initialized");
-    }
+    }*/
 
 }
