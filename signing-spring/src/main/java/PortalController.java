@@ -77,8 +77,10 @@ public class PortalController {
     public String poll(){
         if(this.portalJobPoller != null){
             this.portalJobPoller = new PortalJobPoller(signingServiceConnector.getPortalClient().get()); //added extra line, before without "if" //Lage sjekk
+
         }
         String status = this.portalJobPoller.poll();
+
         return status;
     }
 

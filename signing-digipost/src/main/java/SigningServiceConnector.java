@@ -6,14 +6,12 @@ import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.direct.DirectClient;
 import no.digipost.signature.client.direct.DirectJob;
 import no.digipost.signature.client.direct.DirectJobResponse;
-import no.digipost.signature.client.direct.DirectJobStatusResponse;
 import no.digipost.signature.client.portal.PortalClient;
 import no.digipost.signature.client.portal.PortalJob;
 import no.digipost.signature.client.portal.PortalJobResponse;
 import no.digipost.signature.client.security.KeyStoreConfig;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
 
@@ -130,7 +128,9 @@ public class SigningServiceConnector {
 
 
     public Optional<PortalClient> getPortalClient() {
-        return Optional.of(portalClient);
+
+        return Optional.ofNullable(portalClient);
+
     }
 }
 
