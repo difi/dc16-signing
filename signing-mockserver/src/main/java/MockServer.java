@@ -14,8 +14,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 
 public class MockServer {
 
@@ -24,10 +27,18 @@ public class MockServer {
     private final String portalUrl = "/%s/portal/signature-jobs";
     private final String directUrl = "/%s/direct/signature-jobs";
 
-    @Rule
-    public WireMockRule wireMockRule =
-            new WireMockRule(WireMockConfiguration.wireMockConfig().port(8082));
+    //@Rule
+    //public WireMockRule wireMockRule =
+    //        new WireMockRule(wireMockConfig().port(8082));
 
+    @Rule
+    public WireMockRule wireMockRuleS = new WireMockRule(wireMockConfig()
+            .httpsPort(8082)
+            .keystorePath("__files/kontaktinfo-client-test.jks")
+            .keystorePassword("changeit")); // Defaults to "password" if omitted
+
+    public MockServer() throws KeyStoreException {
+    }
 
 
     public static void setUp() throws IOException {

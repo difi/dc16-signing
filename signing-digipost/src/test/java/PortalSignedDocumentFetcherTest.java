@@ -8,6 +8,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ public class PortalSignedDocumentFetcherTest {
         PortalJobPoller poller = new PortalJobPoller(portalClient);
 
         SigningServiceConnector connector = new SigningServiceConnector();
-        connector.sendPortalRequest(portalAsiceMaker.getPortalJob(), clientConfig.getKeyStoreConfig());
+        connector.sendPortalRequest(portalAsiceMaker.getPortalJob(), clientConfig.getKeyStoreConfig(), new URI("http://localhost:8082/"));
         poller.poll();
 
         this.signedDocumentFetcher = new PortalSignedDocumentFetcher(poller, portalClient);
@@ -71,7 +72,7 @@ public class PortalSignedDocumentFetcherTest {
         PortalJobPoller poller = new PortalJobPoller(portalClient);
 
         SigningServiceConnector connector = new SigningServiceConnector();
-        connector.sendPortalRequest(portalAsiceMaker.getPortalJob(), clientConfig.getKeyStoreConfig());
+        connector.sendPortalRequest(portalAsiceMaker.getPortalJob(), clientConfig.getKeyStoreConfig(), new URI("http://localhost:8082/"));
         //poller.poll();
 
         this.failedSignedDocumentFetcher = new PortalSignedDocumentFetcher(poller, portalClient);
