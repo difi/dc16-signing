@@ -1,33 +1,14 @@
-import no.digipost.signature.client.ClientConfiguration;
-import no.digipost.signature.client.portal.PortalClient;
 import no.digipost.signature.client.portal.PortalJob;
-import no.digipost.signature.client.portal.PortalJobStatusChanged;
 import no.digipost.signature.client.security.KeyStoreConfig;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import no.digipost.signature.client.portal.*;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 
 import java.io.IOException;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by camp-nto on 18.07.2016.
@@ -54,8 +35,10 @@ public class PortalControllerTest {
         SigningServiceConnector signingServiceConnector = Mockito.mock(SigningServiceConnector.class);
         portalController.setPortalJobPoller(portalJobPoller);
         portalController.setSigningServiceConnector(signingServiceConnector);
+        PortalSignedDocumentFetcher portalSignedDocumentFetcher = Mockito.mock(PortalSignedDocumentFetcher.class);
+        portalController.setPortalSignedDocumentFetcher(portalSignedDocumentFetcher);
 
-        Assert.assertEquals(portalController.getPortalXades(), "no xades available");
+        Assert.assertEquals(portalController.getPortalXades(), null);
     }
 
     @Test
@@ -63,6 +46,7 @@ public class PortalControllerTest {
         PortalController portalController = new PortalController();
 
         PortalSignedDocumentFetcher portalSignedDocumentFetcher = Mockito.mock(PortalSignedDocumentFetcher.class);
+        portalController.setPortalSignedDocumentFetcher(portalSignedDocumentFetcher);
 
         portalController.setPortalSignedDocumentFetcher(portalSignedDocumentFetcher);
         Assert.assertEquals(portalController.getPortalPades(), null);
@@ -76,8 +60,10 @@ public class PortalControllerTest {
         SigningServiceConnector signingServiceConnector = Mockito.mock(SigningServiceConnector.class);
         portalController.setPortalJobPoller(portalJobPoller);
         portalController.setSigningServiceConnector(signingServiceConnector);
+        PortalSignedDocumentFetcher portalSignedDocumentFetcher = Mockito.mock(PortalSignedDocumentFetcher.class);
+        portalController.setPortalSignedDocumentFetcher(portalSignedDocumentFetcher);
 
-        Assert.assertEquals(portalController.getPortalPades(), "pades not ready or failed");
+        Assert.assertEquals(portalController.getPortalPades(), null);
     }
 
     @Test
@@ -92,7 +78,7 @@ public class PortalControllerTest {
 
     }
 
-    @Test
+/*    @Test
     public void poll_returns_status(){
         PortalController portalController = new PortalController();
         SigningServiceConnector signingServiceConnector = Mockito.mock(SigningServiceConnector.class);
@@ -102,9 +88,9 @@ public class PortalControllerTest {
         portalController.setPortalJobPoller(portalJobPoller);
         when(portalJobPoller.poll()).thenReturn("polled from portalJobPoller");
 
-        portalController.poll();
+        String status = portalController.poll();
 
         Assert.assertEquals(portalController.poll(), "Client must be initialized");
-    }
+    }*/
 
 }
