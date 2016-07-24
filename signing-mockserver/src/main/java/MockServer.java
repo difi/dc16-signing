@@ -26,7 +26,7 @@ public class MockServer {
     private final String BASEURL = "http://localhost:8081";
     private final String portalUrl = "/%s/portal/signature-jobs";
     private final String directUrl = "/%s/direct/signature-jobs";
-
+    private static WireMockServer wireMockServer;
     //@Rule
     //public WireMockRule wireMockRule =
     //        new WireMockRule(wireMockConfig().port(8082));
@@ -43,7 +43,7 @@ public class MockServer {
 
     public static void setUp() throws IOException {
 
-        WireMockServer wireMockServer = new WireMockServer(WireMockConfiguration.options().port(8082));
+        wireMockServer = new WireMockServer(WireMockConfiguration.options().port(8082));
         wireMockServer.start();
 
         System.out.println("Server started");
@@ -136,6 +136,10 @@ public class MockServer {
 
     public static DirectJobResponse getSampleSignatureJob(){
         return new DirectJobResponse(5, "redirect url", "status url");
+    }
+
+    public static void shutDown(){
+        wireMockServer.shutdownServer();
     }
 
 

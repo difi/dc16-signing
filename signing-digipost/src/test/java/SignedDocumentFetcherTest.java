@@ -4,6 +4,7 @@ import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.security.KeyStoreConfig;
 import org.mockito.Mock;
 import org.testng.Assert;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -103,6 +104,11 @@ public class SignedDocumentFetcherTest {
     public void getPadesReturnedFailed() throws IOException{
         byte[] padesStatus = failedSignedDocumentFetcher.getPades();
         Assert.assertEquals(padesStatus,"".getBytes());
+    }
+
+    @AfterTest
+    public void stopServer(){
+        MockServer.shutDown();
     }
 }
 

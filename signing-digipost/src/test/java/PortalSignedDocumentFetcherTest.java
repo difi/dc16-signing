@@ -4,6 +4,7 @@ import no.digipost.signature.client.portal.PortalClient;
 import no.digipost.signature.client.portal.PortalJob;
 import no.digipost.signature.client.portal.PortalSigner;
 import org.testng.Assert;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -103,5 +104,9 @@ public class PortalSignedDocumentFetcherTest {
         Assert.assertEquals(xadesStatus, "no xades available");
     }
 
+    @AfterTest
+    public void stopServer(){
+        MockServer.shutDown();
+    }
 
 }
