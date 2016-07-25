@@ -6,6 +6,7 @@ import no.digipost.signature.client.portal.PortalSigner;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -21,9 +22,12 @@ public class PortalSignedDocumentFetcherTest {
             "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
     };
 
+    @BeforeSuite
+    public void setupServer() throws IOException{
+        MockServer.setUp();
+    }
     @BeforeClass
     public void setUp() throws IOException, URISyntaxException {
-        MockServer.setUp();
 
         setUpWithCorrectXadesAndPades();
         setUpWithFailedXadesAndPades();

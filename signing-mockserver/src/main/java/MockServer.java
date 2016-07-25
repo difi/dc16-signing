@@ -27,15 +27,10 @@ public class MockServer {
     private final String portalUrl = "/%s/portal/signature-jobs";
     private final String directUrl = "/%s/direct/signature-jobs";
     private static WireMockServer wireMockServer;
-    //@Rule
-    //public WireMockRule wireMockRule =
-    //        new WireMockRule(wireMockConfig().port(8082));
-
     @Rule
-    public WireMockRule wireMockRuleS = new WireMockRule(wireMockConfig()
-            .httpsPort(8082)
-            .keystorePath("__files/kontaktinfo-client-test.jks")
-            .keystorePassword("changeit")); // Defaults to "password" if omitted
+    public WireMockRule wireMockRule =
+           new WireMockRule(wireMockConfig().port(8082));
+
 
     public MockServer() throws KeyStoreException {
     }

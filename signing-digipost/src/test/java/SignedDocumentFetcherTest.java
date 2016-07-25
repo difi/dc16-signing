@@ -31,7 +31,6 @@ public class SignedDocumentFetcherTest {
 
     @BeforeClass
     public void setUp() throws URISyntaxException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException {
-        MockServer.setUp();
 
         Optional<SignedDocumentFetcher> optSignedDocumentFetcher = setUpDocumentFetcherAbleToRetrieve();
         if(optSignedDocumentFetcher.isPresent()){
