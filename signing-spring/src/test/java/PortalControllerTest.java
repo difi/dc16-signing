@@ -1,14 +1,19 @@
+import no.digipost.signature.client.portal.PortalClient;
 import no.digipost.signature.client.portal.PortalJob;
 import no.digipost.signature.client.security.KeyStoreConfig;
 import org.mockito.Mockito;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by camp-nto on 18.07.2016.
@@ -16,6 +21,12 @@ import static org.mockito.Mockito.mock;
 public class PortalControllerTest {
 
     private MockMvc mvc = MockMvcBuilders.standaloneSetup(new DigipostSpringConnector()).build();
+
+    @BeforeSuite
+    public void setupServer() throws IOException{
+        MockServer.setUp();
+    }
+
 
     @Test
     public void getPortalXades_returns_getXades() throws IOException {
@@ -30,15 +41,9 @@ public class PortalControllerTest {
     @Test
     public void getPortalXades_returnes_getXades_if_signedDocumentFetcher_is_null() throws IOException {
         PortalController portalController = new PortalController();
-
-        PortalJobPoller portalJobPoller = Mockito.mock(PortalJobPoller.class);
-        SigningServiceConnector signingServiceConnector = Mockito.mock(SigningServiceConnector.class);
-        portalController.setPortalJobPoller(portalJobPoller);
+        SigningServiceConnector signingServiceConnector = new SigningServiceConnector();
         portalController.setSigningServiceConnector(signingServiceConnector);
-        PortalSignedDocumentFetcher portalSignedDocumentFetcher = Mockito.mock(PortalSignedDocumentFetcher.class);
-        portalController.setPortalSignedDocumentFetcher(portalSignedDocumentFetcher);
 
-        Assert.assertEquals(portalController.getPortalXades(), null);
     }
 
     @Test
@@ -67,14 +72,12 @@ public class PortalControllerTest {
     }
 
     @Test
-    public void startPortalJob_sendsPortalRequest_if_signingSerViceConnector_not_null() throws IOException {
+    public void startPortalJob_sendsPortalRequest_if_signingSerViceConnector_not_null() throws IOException, URISyntaxException {
         PortalController portalController = new PortalController();
-        PortalJob portalJob = mock(PortalJob.class);
-        KeyStoreConfig keyStoreConfig = mock(KeyStoreConfig.class);
-
-        SigningServiceConnector signingServiceConnector = Mockito.mock(SigningServiceConnector.class);
+        SigningServiceConnector signingServiceConnector = new SigningServiceConnector();
         portalController.setSigningServiceConnector(signingServiceConnector);
-        //signingServiceConnector.sendPortalRequest(portalJob, keyStoreConfig)).thenReturn(true);
+        portalController.startPortalJob();
+
 
     }
 

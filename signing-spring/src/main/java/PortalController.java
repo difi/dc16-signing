@@ -28,7 +28,6 @@ public class PortalController {
         if (portalSignedDocumentFetcher != null) {
             return portalSignedDocumentFetcher.getXades();
         } else {
-
             this.portalSignedDocumentFetcher = new PortalSignedDocumentFetcher(portalJobPoller,signingServiceConnector.getPortalClient().get());
             return portalSignedDocumentFetcher.getXades();
         }
