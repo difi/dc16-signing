@@ -24,12 +24,12 @@ import static org.mockito.Mockito.mock;
 public class DigipostSpringConnectorTest {
 
     @BeforeSuite
-    public void setUp() throws IOException {
+    public void startServer() throws IOException {
         MockServer.setUp();
     }
 
     @BeforeClass
-    public void setUpSignatureJob() throws URISyntaxException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException {
+    public void setUp() throws URISyntaxException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException {
 
 
     }
@@ -87,8 +87,8 @@ public class DigipostSpringConnectorTest {
         signingServiceConnector.sendRequest(signatureJob, keyStoreConfig, new URI("http://localhost:8082/"));
 
         StatusReader statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(),signingServiceConnector.getDirectJobResponse().get(),"tt");
-        SignedDocumentFetcher signedDocumentFetcher1 = new SignedDocumentFetcher(signingServiceConnector.getDirectClient().get(),statusReader);
-
+        SignedDocumentFetcher signedDocumentFetcher = new SignedDocumentFetcher(signingServiceConnector.getDirectClient().get(),statusReader);
+        connector.setSignedDocumentFetcher(signedDocumentFetcher);
 
         byte[] padesStatus = connector.getPades();
         Assert.assertNotSame(padesStatus, "".getBytes());
@@ -111,16 +111,14 @@ public class DigipostSpringConnectorTest {
 
         SigningServiceConnector signingServiceConnector = new SigningServiceConnector();
         signingServiceConnector.sendRequest(signatureJob, keyStoreConfig, new URI("http://localhost:8082/"));
-
-        StatusReader statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(),signingServiceConnector.getDirectJobResponse().get(),"tt");
-        //SignedDocumentFetcher signedDocumentFetcher = new SignedDocumentFetcher(signingServiceConnector.getDirectClient().get(),statusReader);
+        connector.setSigningServiceConnector(signingServiceConnector);
 
         byte[] padesStatus = connector.getPades();
         Assert.assertNotSame(padesStatus, "".getBytes());
     }
 
     @Test
-    public void testGetXades() throws IOException, URISyntaxException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
+    public void testGetXadesSignedDocumentFetcherNotNull() throws IOException, URISyntaxException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
         DigipostSpringConnector connector = new DigipostSpringConnector();
 
         String[] exitUrls = {
@@ -137,11 +135,32 @@ public class DigipostSpringConnectorTest {
         SigningServiceConnector signingServiceConnector = new SigningServiceConnector();
         signingServiceConnector.sendRequest(signatureJob, keyStoreConfig, new URI("http://localhost:8082/"));
 
-        StatusReader statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(),signingServiceConnector.getDirectJobResponse().get(),"tt");
-        SignedDocumentFetcher signedDocumentFetcher = new SignedDocumentFetcher(signingServiceConnector.getDirectClient().get(),statusReader);
+        byte[] xadesStatus = connector.getXades();
+        Assert.assertNotSame(xadesStatus, "".getBytes());
+    }
+
+    @Test
+    public void testGetXadesSigningServiceConnectorNotNull() throws IOException, URISyntaxException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
+        DigipostSpringConnector connector = new DigipostSpringConnector();
+
+        String[] exitUrls = {
+                "http://localhost:8081/onCompletion","http://localhost:8081/onRejection","http://localhost:8081/onError"};
+
+        AsiceMaker asiceMaker = new AsiceMaker();
+        SetupClientConfig clientConfig = new SetupClientConfig("Direct");
+        clientConfig.initialize(asiceMaker.getContactInfo(),"123456789");
+
+        DocumentBundle preparedAsic = asiceMaker.createAsice("17079493538","123456789",exitUrls, clientConfig.getClientConfiguration());
+        SignatureJob signatureJob = asiceMaker.getSignatureJob();
+        KeyStoreConfig keyStoreConfig = clientConfig.getKeyStoreConfig();
+
+        SigningServiceConnector signingServiceConnector = new SigningServiceConnector();
+        signingServiceConnector.sendRequest(signatureJob, keyStoreConfig, new URI("http://localhost:8082/"));
+        connector.setSigningServiceConnector(signingServiceConnector);
 
         byte[] xadesStatus = connector.getXades();
         Assert.assertNotSame(xadesStatus, "".getBytes());
+
     }
 
 

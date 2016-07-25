@@ -162,7 +162,7 @@ public class DigipostSpringConnector {
         return this.completionURL;
         //or return this.rejectionURL
         //or return this.errorURL
-    }
+    }*/
 
     public void setSignedDocumentFetcher(SignedDocumentFetcher signedDocumentFetcher){
         this.signedDocumentFetcher = signedDocumentFetcher;
@@ -182,7 +182,7 @@ public class DigipostSpringConnector {
 
     public void setStorage(){
         storage.insertSignaturejobToDB(s);
-    }*/
+    }
 
 
 
