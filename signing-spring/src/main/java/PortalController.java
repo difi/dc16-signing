@@ -28,18 +28,20 @@ public class PortalController {
         if (portalSignedDocumentFetcher != null) {
             return portalSignedDocumentFetcher.getXades();
         } else {
-            this.portalSignedDocumentFetcher = new PortalSignedDocumentFetcher(portalJobPoller,signingServiceConnector.getPortalClient());
+
+            this.portalSignedDocumentFetcher = new PortalSignedDocumentFetcher(portalJobPoller,signingServiceConnector.getPortalClient().get());
             return portalSignedDocumentFetcher.getXades();
         }
 
     }
 
     @RequestMapping("/portalPades")
-    public String getPortalPades() throws IOException {
+    public byte[] getPortalPades() throws IOException {
         if (portalSignedDocumentFetcher != null) {
             return portalSignedDocumentFetcher.getPades();
         } else {
-            this.portalSignedDocumentFetcher = new PortalSignedDocumentFetcher(portalJobPoller,signingServiceConnector.getPortalClient());
+
+            this.portalSignedDocumentFetcher = new PortalSignedDocumentFetcher(portalJobPoller,signingServiceConnector.getPortalClient().get());
             return portalSignedDocumentFetcher.getPades();
         }
     }
@@ -71,11 +73,14 @@ public class PortalController {
     }
 
     @RequestMapping("/poll")
+
     public String poll(){
         if(this.portalJobPoller != null){
-            this.portalJobPoller = new PortalJobPoller(signingServiceConnector.getPortalClient()); //added extra line, before without "if" //Lage sjekk
+            this.portalJobPoller = new PortalJobPoller(signingServiceConnector.getPortalClient().get()); //added extra line, before without "if" //Lage sjekk
+
         }
         String status = this.portalJobPoller.poll();
+
         return status;
     }
 

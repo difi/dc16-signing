@@ -13,12 +13,12 @@
 </style>
 <body>
 <h1> Login via ID-porten for å starte signeringen!</h1>
-    <form method="post" action="http://localhost:8081/asice">
+    <form method="post" action="http://localhost:8080/">
         <button type="button" value="[SIMULERT] Logg inn i ID-porten" id="login" onclick="logIn()"> [SIMULERT] Logg inn i ID-porten  </button>
 
      <div id="display" style="display:none;">
          <p id="message"> </p>
-         <input type="submit" value="Gå til signering">   </input>
+         <input type="submit" value="Gå til signering" formaction="http://localhost:8081/asice">   </input>
      </div>
 </form>
 </body>

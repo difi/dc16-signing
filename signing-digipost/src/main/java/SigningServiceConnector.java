@@ -6,15 +6,16 @@ import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.direct.DirectClient;
 import no.digipost.signature.client.direct.DirectJob;
 import no.digipost.signature.client.direct.DirectJobResponse;
-import no.digipost.signature.client.direct.DirectJobStatusResponse;
 import no.digipost.signature.client.portal.PortalClient;
 import no.digipost.signature.client.portal.PortalJob;
 import no.digipost.signature.client.portal.PortalJobResponse;
 import no.digipost.signature.client.security.KeyStoreConfig;
+import org.apache.catalina.Server;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 /**
  * Class responsible for contacting the signing service.
@@ -25,9 +26,8 @@ public class SigningServiceConnector {
     private String statusUrl;
     private String cancellationUrl;
     //Response and client objects
-    private DirectJobResponse directJobResponse;
+    private Optional<DirectJobResponse> directJobResponse;
     private DirectClient directClient;
-    private DirectJobStatusResponse directJobStatusResponse;
 
     private PortalClient portalClient;
 
@@ -54,29 +54,29 @@ public class SigningServiceConnector {
      * Sends a request to difi_test based on a signaturejob and a keyconfig.
      * Returns false if no response was received, true otherwise.
      */
-    public boolean sendRequest(SignatureJob signatureJob, KeyStoreConfig keyStoreConfig) throws URISyntaxException {
+    public Optional<DirectJobResponse> sendRequest(SignatureJob signatureJob, KeyStoreConfig keyStoreConfig, URI... server) throws URISyntaxException {
 
+        URI ServerURI = URI.create("https://api.difitest.signering.posten.no/api");
+        if(server.length != 0){
+            ServerURI = server[0];
+        }
         //Both the serviceUri and the truststore are constants taken from the api library signature-api-client-java
         client = ClientConfiguration.builder(keyStoreConfig)
                 //.serviceUri(new URI("http://localhost:8082/"))
-                .serviceUri(ServiceUri.DIFI_TEST)
+                .serviceUri(ServerURI)
                 .trustStore(Certificates.TEST)
                 .globalSender(new Sender("991825827"))
                 .build();
 
         directClient = new DirectClient(client);
-        directJobResponse = directClient.create((DirectJob) signatureJob);
+        directJobResponse = Optional.ofNullable(directClient.create((DirectJob) signatureJob));
 
-        redirectUrl = directJobResponse.getRedirectUrl();
-        statusUrl = directJobResponse.getStatusUrl();
-
-        if (directJobResponse != null) {
-            System.out.println("true");
-            return true;
-        } else {
-            System.out.println("false");
-            return false;
+        if(directJobResponse.isPresent()){
+            redirectUrl = directJobResponse.get().getRedirectUrl();
+            statusUrl = directJobResponse.get().getStatusUrl();
         }
+
+        return directJobResponse;
     }
 
     //Added for testing
@@ -91,45 +91,52 @@ public class SigningServiceConnector {
     }
 
     public void setDirectJobResponse(SignatureJob signatureJob){
-        this.directJobResponse = directClient.create((DirectJob)signatureJob);
+        this.directJobResponse = Optional.ofNullable(directClient.create((DirectJob)signatureJob));
     }
 
-    public boolean sendPortalRequest(PortalJob portalJob, KeyStoreConfig keyStoreConfig) throws URISyntaxException {
+    public Optional<PortalJobResponse> sendPortalRequest(PortalJob portalJob, KeyStoreConfig keyStoreConfig, URI... server) throws URISyntaxException {
+        URI ServerURI = URI.create("https://api.difitest.signering.posten.no/api");
+        if(server.length != 0){
+            ServerURI = server[0];
+        }
         client = ClientConfiguration.builder(keyStoreConfig)
-                //.serviceUri(new URI("http://localhost:8082/"))
-                .serviceUri(ServiceUri.DIFI_TEST)
+                //.serviceUri()
+                .serviceUri(ServerURI)
                 .trustStore(Certificates.TEST)
                 .globalSender(new Sender("991825827"))
                 .build();
 
         portalClient =  new PortalClient(client);
-        PortalJobResponse portalJobResponse = portalClient.create(portalJob);
+        Optional<PortalJobResponse> portalJobResponse = Optional.ofNullable(portalClient.create(portalJob));
 
-        this.cancellationUrl = portalJobResponse.getCancellationUrl().toString();
-
-        if (portalJobResponse != null) {
-            return true;
+        if(portalJobResponse.isPresent()){
+            this.cancellationUrl = portalJobResponse.get().getCancellationUrl().toString();
         } else {
-            return false;
+            this.cancellationUrl = "No cancellation url due to no response";
         }
+
+        return portalJobResponse;
 
 
     }
 
-    public DirectClient getDirectClient() {
-        return this.directClient;
+    public Optional<DirectClient> getDirectClient() {
+        return Optional.ofNullable(directClient);
+    }
+
+    public Optional<DirectJobResponse> getDirectJobResponse() {
+        return directJobResponse;
     }
 
     public void setDirectClient(DirectClient client){
         this.directClient = client;
     }
 
-    public DirectJobResponse getDirectJobResponse(){
-        return this.directJobResponse;
-    }
 
-    public PortalClient getPortalClient() {
-        return this.portalClient;
+    public Optional<PortalClient> getPortalClient() {
+
+        return Optional.ofNullable(portalClient);
+
     }
 }
 

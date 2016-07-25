@@ -14,8 +14,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 
 public class MockServer {
 
@@ -23,16 +26,19 @@ public class MockServer {
     private final String BASEURL = "http://localhost:8081";
     private final String portalUrl = "/%s/portal/signature-jobs";
     private final String directUrl = "/%s/direct/signature-jobs";
-
+    private static WireMockServer wireMockServer;
     @Rule
     public WireMockRule wireMockRule =
-            new WireMockRule(WireMockConfiguration.wireMockConfig().port(8082));
+           new WireMockRule(wireMockConfig().port(8082));
 
+
+    public MockServer() throws KeyStoreException {
+    }
 
 
     public static void setUp() throws IOException {
 
-        WireMockServer wireMockServer = new WireMockServer(WireMockConfiguration.options().port(8082));
+        wireMockServer = new WireMockServer(WireMockConfiguration.options().port(8082));
         wireMockServer.start();
 
         System.out.println("Server started");
@@ -125,6 +131,10 @@ public class MockServer {
 
     public static DirectJobResponse getSampleSignatureJob(){
         return new DirectJobResponse(5, "redirect url", "status url");
+    }
+
+    public static void shutDown(){
+        wireMockServer.shutdownServer();
     }
 
 

@@ -4,10 +4,13 @@ import no.digipost.signature.client.portal.PortalClient;
 import no.digipost.signature.client.portal.PortalJob;
 import no.digipost.signature.client.portal.PortalSigner;
 import org.testng.Assert;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +22,12 @@ public class PortalSignedDocumentFetcherTest {
             "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
     };
 
+    @BeforeSuite
+    public void setupServer() throws IOException{
+        MockServer.setUp();
+    }
     @BeforeClass
     public void setUp() throws IOException, URISyntaxException {
-        MockServer.setUp();
 
         setUpWithCorrectXadesAndPades();
         setUpWithFailedXadesAndPades();
@@ -47,7 +53,7 @@ public class PortalSignedDocumentFetcherTest {
         PortalJobPoller poller = new PortalJobPoller(portalClient);
 
         SigningServiceConnector connector = new SigningServiceConnector();
-        connector.sendPortalRequest(portalAsiceMaker.getPortalJob(), clientConfig.getKeyStoreConfig());
+        connector.sendPortalRequest(portalAsiceMaker.getPortalJob(), clientConfig.getKeyStoreConfig(), new URI("http://localhost:8082/"));
         poller.poll();
 
         this.signedDocumentFetcher = new PortalSignedDocumentFetcher(poller, portalClient);
@@ -71,7 +77,7 @@ public class PortalSignedDocumentFetcherTest {
         PortalJobPoller poller = new PortalJobPoller(portalClient);
 
         SigningServiceConnector connector = new SigningServiceConnector();
-        connector.sendPortalRequest(portalAsiceMaker.getPortalJob(), clientConfig.getKeyStoreConfig());
+        connector.sendPortalRequest(portalAsiceMaker.getPortalJob(), clientConfig.getKeyStoreConfig(), new URI("http://localhost:8082/"));
         //poller.poll();
 
         this.failedSignedDocumentFetcher = new PortalSignedDocumentFetcher(poller, portalClient);
@@ -80,8 +86,8 @@ public class PortalSignedDocumentFetcherTest {
 
     @Test
     public void getPadesTest() throws IOException {
-        String padesStatus = signedDocumentFetcher.getPades();
-        Assert.assertEquals(padesStatus, "pades retrieved" );
+        byte[] padesStatus = signedDocumentFetcher.getPades();
+        Assert.assertNotEquals(padesStatus, "".getBytes() );
     }
 
     @Test
@@ -92,8 +98,8 @@ public class PortalSignedDocumentFetcherTest {
 
     @Test
     public void getFailedPadesTest() throws IOException {
-        String padesStatus = failedSignedDocumentFetcher.getPades();
-        Assert.assertEquals(padesStatus, "pades not ready or failed" );
+        byte[] padesStatus = failedSignedDocumentFetcher.getPades();
+        Assert.assertEquals(padesStatus, "".getBytes() );
     }
 
     @Test
@@ -102,5 +108,9 @@ public class PortalSignedDocumentFetcherTest {
         Assert.assertEquals(xadesStatus, "no xades available");
     }
 
+    @AfterTest
+    public void stopServer(){
+        MockServer.shutDown();
+    }
 
 }
