@@ -1,12 +1,14 @@
 import org.junit.rules.ExpectedException;
-import org.mockito.Mockito;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import javax.servlet.http.HttpServletRequest;
+
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -38,18 +40,18 @@ public class DigipostSpringConnectorTest {
         Assert.assertNotNull(digipostSpringConnector);
     }
 
-/*
-    @Test
-    public void testMakeAsice_checksStatus() throws Exception {
-        DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
 
-        mvc.perform(MockMvcRequestBuilders.get("/asice"))
-                .andExpect(status().isFound());
-        Assert.assertNotNull(digipostSpringConnector.makeAsice());
+    @Test
+    public void testMakeAsice() throws Exception {
+        DigipostSpringConnector connector = new DigipostSpringConnector();
+        HttpServletRequest request = mock(HttpServletRequest.class);
+
+        String asice = connector.makeAsice(request).toString();
+
+        Assert.assertTrue(asice.contains("redirect:https://difitest.signering.posten.no/redirect"));
     }
-*/
 
-    @Test
+    /*@Test
     public void testWhenSigningComplete_checksStatus() throws Exception {
 
     }
@@ -82,7 +84,7 @@ public class DigipostSpringConnectorTest {
     //    Assert.assertEquals(digipostSpringConnector.getPades(), "[B@22bac7bc");
     //}
 
-    /*
+    *//*
     @Test
     public void getPades_test_fetchingPade() throws Exception {
         DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
@@ -96,12 +98,12 @@ public class DigipostSpringConnectorTest {
         Mockito.when(digipostSpringConnector.getPades()).thenReturn("fetched pade".getBytes());
         Assert.assertEquals(digipostSpringConnector.getPades(), "fetched pade");
     }
-    **/
+    **//*
 
     @Test
     public void getXades_test_fetchingXade() throws Exception {
         DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
-        SignedDocumentFetcher signedDocumentFetcher = Mockito.mock(SignedDocumentFetcher.class);
+        SignedDocumentFetcher signedDocumentFetcher = mock(SignedDocumentFetcher.class);
 
         mvc.perform(MockMvcRequestBuilders.get("/getXades"))
                 .andExpect(status().isOk());
@@ -111,7 +113,7 @@ public class DigipostSpringConnectorTest {
         Assert.assertEquals(digipostSpringConnector.getXades(), null);
     }
 
-    /*
+    *//*
     @Test
     public void getXades_checksStatus() throws Exception {
         DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
@@ -120,7 +122,7 @@ public class DigipostSpringConnectorTest {
                 .andExpect(status().isOk());
         Assert.assertEquals(digipostSpringConnector.getXades(), "Unable to fetch Xade");
     }
-    */
+    *//*
     @Test
     public void getJobStatus_checksStatus() throws Exception {
         DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
@@ -144,7 +146,7 @@ public class DigipostSpringConnectorTest {
         //digipostSpringConnector.whenSigningComplete("token");
 
 
-    }
+    }*/
 
 
 

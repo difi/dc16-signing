@@ -57,7 +57,7 @@ public class DigipostSpringConnector {
     }
 
     @RequestMapping("/asice")
-    public ModelAndView makeAsice(HttpServletRequest request, HttpServletRequest response) throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, URISyntaxException {
+    public ModelAndView makeAsice(HttpServletRequest request) throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, URISyntaxException {
         senderPid = request.getHeader("X-DifiProxy-pid");
         s = new SignatureJobModel("Ikke signert", "123456789", "17079493538", senderPid);
         storage.insertSignaturejobToDB(s);
