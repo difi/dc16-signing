@@ -83,16 +83,6 @@ public class SigningServiceConnector {
         return directJobResponse;
     }
 
-    //Added for testing
-    public void setDirectClient(KeyStoreConfig keyStoreConfig){
-        client = ClientConfiguration.builder(keyStoreConfig)
-                .serviceUri(ServiceUri.DIFI_TEST)
-                .trustStore(Certificates.TEST)
-                .globalSender(new Sender("991825827"))
-                .build();
-
-        this.directClient = new DirectClient(client);
-    }
 
     public void setDirectJobResponse(SignatureJob signatureJob){
         this.directJobResponse = Optional.ofNullable(directClient.create((DirectJob)signatureJob));
