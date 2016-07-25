@@ -145,7 +145,7 @@ public class DigipostSpringConnector {
     }
 
 
-    //In order to get to the sign-in portal, such as BankID, the user needs a redirect-url and a valid token. This method checks if the token is valid
+  /*  //In order to get to the sign-in portal, such as BankID, the user needs a redirect-url and a valid token. This method checks if the token is valid
     public boolean checkToken() {
         return false;
     }
@@ -182,7 +182,7 @@ public class DigipostSpringConnector {
 
     public void setStorage(){
         storage.insertSignaturejobToDB(s);
-    }
+    }*/
 
 
 
