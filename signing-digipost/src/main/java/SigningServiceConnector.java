@@ -50,6 +50,10 @@ public class SigningServiceConnector {
         return this.statusUrl;
     }
 
+    public void setPortalClient(PortalClient portalClient){
+        this.portalClient = portalClient;                            //Added later
+    }
+
     /**
      * Sends a request to difi_test based on a signaturejob and a keyconfig.
      * Returns false if no response was received, true otherwise.
