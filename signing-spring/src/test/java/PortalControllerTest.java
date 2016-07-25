@@ -4,6 +4,7 @@ import no.digipost.signature.client.portal.PortalClient;
 import no.digipost.signature.client.portal.PortalJob;
 import no.digipost.signature.client.portal.PortalSigner;
 import no.digipost.signature.client.security.KeyStoreConfig;
+import org.junit.Before;
 import org.mockito.Mockito;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -32,9 +33,12 @@ public class PortalControllerTest {
     };
 
     @BeforeSuite
-    public void setupServer() throws IOException{
+    public void setupServer() throws IOException, URISyntaxException {
         MockServer.setUp();
+
+
     }
+
 
 
     @Test
@@ -48,10 +52,30 @@ public class PortalControllerTest {
     }
 
     @Test
-    public void getPortalXades_returnes_getXades_if_signedDocumentFetcher_is_null() throws IOException {
+    public void getPortalXades_returnes_getXades_if_signedDocumentFetcher_is_null() throws IOException, URISyntaxException {
         PortalController portalController = new PortalController();
+        PortalAsiceMaker portalAsiceMaker = new PortalAsiceMaker();
+        SetupClientConfig clientConfig = new SetupClientConfig("Portal");
+        clientConfig.setupKeystoreConfig(portalAsiceMaker.getContactInfo());
+        clientConfig.setupClientConfiguration("123456789");
+
+        List<PortalSigner> portalSigners = new ArrayList<>();
+        portalSigners.add( PortalSigner.builder("17079493538", Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
+        portalSigners.add( PortalSigner.builder("17079493457",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
+        portalSigners.add( PortalSigner.builder("17079493295",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
+        DocumentBundle preparedAsice = portalAsiceMaker.createPortalAsice(portalSigners, exitUrls , clientConfig.getClientConfiguration());
+
+
+        PortalClient portalClient = new PortalClient(clientConfig.getClientConfiguration());
+        PortalJobPoller poller = new PortalJobPoller(portalClient);
+
         SigningServiceConnector signingServiceConnector = new SigningServiceConnector();
+        signingServiceConnector.sendPortalRequest(portalAsiceMaker.getPortalJob(), clientConfig.getKeyStoreConfig(), new URI("http://localhost:8082/"));
+
         portalController.setSigningServiceConnector(signingServiceConnector);
+
+        portalController.getPortalXades();
+        Assert.assertEquals(portalController.getPortalXades(), "no xades available");
 
     }
 

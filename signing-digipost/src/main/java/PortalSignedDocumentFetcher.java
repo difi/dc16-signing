@@ -34,7 +34,7 @@ public class PortalSignedDocumentFetcher {
     // TODO: Asking for one specific signers xAdES file. Better outputs.
     //There is one xAdES file for each signer.
     public String getXades() throws IOException {
-        if (poller.isXadesReady()) {
+        if ((poller != null) && (poller.isXadesReady())) { //Added later
             List<InputStream> inputStreams;
             inputStreams = poller.getStatusChange().getSignatures().stream()
                     .filter(z -> z.is(SignatureStatus.SIGNED))
