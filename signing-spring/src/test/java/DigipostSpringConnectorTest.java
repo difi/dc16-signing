@@ -1,16 +1,21 @@
-import org.junit.rules.ExpectedException;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import no.digipost.signature.client.asice.DocumentBundle;
+import no.digipost.signature.client.core.SignatureJob;
+import no.digipost.signature.client.security.KeyStoreConfig;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.cert.CertificateException;
 
-import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.mock;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 
@@ -18,19 +23,33 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class DigipostSpringConnectorTest {
 
-    private MockMvc mvc = MockMvcBuilders.standaloneSetup(new DigipostSpringConnector()).build();;
-    public ExpectedException exception = ExpectedException.none();
+    DigipostSpringConnector connector = new DigipostSpringConnector();
+    SignedDocumentFetcher signedDocumentFetcher;
 
-    @Test
-    public void getHello() throws Exception {
-        DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
+    @BeforeSuite
+    public void setUp() throws IOException {
+        MockServer.setUp();
+    }
 
-        mvc.perform(MockMvcRequestBuilders.get("/test"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("Hello")))
-                .andExpect(content().contentType("text/plain;charset=ISO-8859-1"));
-        Assert.assertNotNull(digipostSpringConnector.test());
-        Assert.assertEquals(digipostSpringConnector.test(), digipostSpringConnector.test());
+    @BeforeClass
+    public void setUpSignatureJob() throws URISyntaxException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException {
+        String[] exitUrls = {
+                "http://localhost:8081/onCompletion","http://localhost:8081/onRejection","http://localhost:8081/onError"};
+
+        AsiceMaker asiceMaker = new AsiceMaker();
+        SetupClientConfig clientConfig = new SetupClientConfig("Direct");
+        clientConfig.initialize(asiceMaker.getContactInfo(),"123456789");
+
+        DocumentBundle preparedAsic = asiceMaker.createAsice("17079493538","123456789",exitUrls, clientConfig.getClientConfiguration());
+        SignatureJob signatureJob = asiceMaker.getSignatureJob();
+        KeyStoreConfig keyStoreConfig = clientConfig.getKeyStoreConfig();
+
+        SigningServiceConnector signingServiceConnector = new SigningServiceConnector();
+        signingServiceConnector.sendRequest(signatureJob, keyStoreConfig, new URI("http://localhost:8082/"));
+
+
+        StatusReader statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(),signingServiceConnector.getDirectJobResponse().get(),"tt");
+        signedDocumentFetcher = new SignedDocumentFetcher(signingServiceConnector.getDirectClient().get(),statusReader);
 
     }
 
@@ -43,19 +62,25 @@ public class DigipostSpringConnectorTest {
 
     @Test
     public void testMakeAsice() throws Exception {
-        DigipostSpringConnector connector = new DigipostSpringConnector();
         HttpServletRequest request = mock(HttpServletRequest.class);
-
         String asice = connector.makeAsice(request).toString();
 
         Assert.assertTrue(asice.contains("redirect:https://difitest.signering.posten.no/redirect"));
     }
 
-    /*@Test
-    public void testWhenSigningComplete_checksStatus() throws Exception {
-
+    @Test
+    public void testGetPades() throws IOException {
+        byte[] padesStatus = connector.getPades();
+        Assert.assertNotSame(padesStatus, "".getBytes());
     }
 
+    @Test
+    public void testGetXades() throws IOException {
+        byte[] xadesStatus = connector.getXades();
+        Assert.assertNotSame(xadesStatus, "".getBytes());
+    }
+
+/*
     @Test
     public void whenUserRejects_checksStatus() throws Exception {
         DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
