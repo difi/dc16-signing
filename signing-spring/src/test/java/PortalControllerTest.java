@@ -91,6 +91,32 @@ public class PortalControllerTest {
     }
 
     @Test
+    public void getPortalPades_returns_getPades_if_signedDocumentFetcher_is_null() throws URISyntaxException, IOException {
+        PortalController portalController = new PortalController();
+        PortalAsiceMaker portalAsiceMaker = new PortalAsiceMaker();
+        SetupClientConfig clientConfig = new SetupClientConfig("Portal");
+        clientConfig.setupKeystoreConfig(portalAsiceMaker.getContactInfo());
+        clientConfig.setupClientConfiguration("123456789");
+
+        List<PortalSigner> portalSigners = new ArrayList<>();
+        portalSigners.add( PortalSigner.builder("17079493538", Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
+        portalSigners.add( PortalSigner.builder("17079493457",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
+        portalSigners.add( PortalSigner.builder("17079493295",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
+        DocumentBundle preparedAsice = portalAsiceMaker.createPortalAsice(portalSigners, exitUrls , clientConfig.getClientConfiguration());
+
+        PortalClient portalClient = new PortalClient(clientConfig.getClientConfiguration());
+        PortalJobPoller poller = new PortalJobPoller(portalClient);
+
+        SigningServiceConnector signingServiceConnector = new SigningServiceConnector();
+        signingServiceConnector.sendPortalRequest(portalAsiceMaker.getPortalJob(), clientConfig.getKeyStoreConfig(), new URI("http://localhost:8082/"));
+
+        portalController.setSigningServiceConnector(signingServiceConnector);
+
+        portalController.getPortalPades();
+        Assert.assertEquals(portalController.getPortalXades(), "no xades available");
+    }
+
+    @Test
     public void getPortalPades_returnes_getPades_if_signedDocumentFetcher_is_null() throws IOException {
         PortalController portalController = new PortalController();
 

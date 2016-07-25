@@ -22,7 +22,7 @@ public class PortalSignedDocumentFetcher {
     public byte[] getPades() throws IOException {
         PAdESReference pAdESReference = null;
 
-        if (poller.isPadesReady()) {
+        if ((poller != null) && (poller.isPadesReady())) { //Changed later
             pAdESReference = poller.getStatusChange().getpAdESUrl();
             return ByteStreams.toByteArray(client.getPAdES(pAdESReference));
         } else {
