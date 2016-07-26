@@ -148,15 +148,20 @@ public class SignatureDatabase {
     }
 
     public void updateStatus(SignatureJobModel signatureJob, String value) {
-        String update = String.format("UPDATE SIGNATURE " +
-                "SET status = '%s' " +
-                "WHERE sender = '%s' ;", value, signatureJob.getSender());
-        System.out.println("DB: Update query: Signaturejob with sender = " + signatureJob.getSender() + " has updated 'status' to " + value);
-        signatureJob.updateStatus(value);
-        try {
-            statement.executeUpdate(update);
-        } catch (SQLException e) {
-            System.err.println("SQLException caught in SignatureDatabase.updateStatus()" + e);
+        if(signatureJob != null){
+            String update = String.format("UPDATE SIGNATURE " +
+                    "SET status = '%s' " +
+                    "WHERE sender = '%s' ;", value, signatureJob.getSender());
+            System.out.println("DB: Update query: Signaturejob with sender = " + signatureJob.getSender() + " has updated 'status' to " + value);
+            signatureJob.updateStatus(value);
+            try {
+                statement.executeUpdate(update);
+            } catch (SQLException e) {
+                System.err.println("SQLException caught in SignatureDatabase.updateStatus()" + e);
+            }
+        }
+        else{
+            System.out.println("Sigunature job can not be null");
         }
 
     }

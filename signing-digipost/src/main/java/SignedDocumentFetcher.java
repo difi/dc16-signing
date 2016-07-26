@@ -25,17 +25,6 @@ public class SignedDocumentFetcher {
 
     }
 
-    public InputStream getSignedDocuments(String format) {
-        if (statusResponse.is(DirectJobStatus.SIGNED)) {
-            if (format == "xades") {
-                return client.getXAdES(statusResponse.getxAdESUrl());
-            } else if (format == "pades") {
-                return client.getPAdES(statusResponse.getpAdESUrl());
-            }
-        }
-        return null;
-    }
-
     public byte[] getPades() throws IOException {
         PAdESReference pAdESReference = null;
         if(this.statusReader != null){

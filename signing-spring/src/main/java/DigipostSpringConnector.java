@@ -57,7 +57,7 @@ public class DigipostSpringConnector {
     }
 
     @RequestMapping("/asice")
-    public ModelAndView makeAsice(HttpServletRequest request, HttpServletRequest response) throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, URISyntaxException {
+    public ModelAndView makeAsice(HttpServletRequest request) throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, URISyntaxException {
         senderPid = request.getHeader("X-DifiProxy-pid");
         s = new SignatureJobModel("Ikke signert", "123456789", "17079493538", senderPid);
         storage.insertSignaturejobToDB(s);
@@ -88,7 +88,9 @@ public class DigipostSpringConnector {
     @RequestMapping("/onCompletion")
     public String whenSigningComplete(@RequestParam("status_query_token") String token) {
         this.statusQueryToken = token;
-        this.statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(), signingServiceConnector.getDirectJobResponse().get(), this.statusQueryToken);
+        if(this.statusReader == null){
+            this.statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(), signingServiceConnector.getDirectJobResponse().get(), this.statusQueryToken);
+        }
         System.out.println("here");
         storage.updateStatus(s, statusReader.getStatus());
         return statusReader.getStatus().concat("<br> <a href='http://localhost:8080/getXades'> Click here to get Xades </a>")
@@ -100,7 +102,9 @@ public class DigipostSpringConnector {
     @RequestMapping("/onError")
     public String whenSigningFails(@RequestParam("status_query_token") String token) {
         this.statusQueryToken = token;
-        this.statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(), signingServiceConnector.getDirectJobResponse().get(), this.statusQueryToken);
+        if(this.statusReader == null){
+            this.statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(), signingServiceConnector.getDirectJobResponse().get(), this.statusQueryToken);
+        }
         storage.updateStatus(s, statusReader.getStatus());
         return statusReader.getStatus();
 
@@ -110,7 +114,9 @@ public class DigipostSpringConnector {
     public String whenUserRejects(@RequestParam("status_query_token") String token) {
         //String status = signingServiceConnector.checkStatus();
         this.statusQueryToken = token;
-        this.statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(), signingServiceConnector.getDirectJobResponse().get(), this.statusQueryToken);
+        if(this.statusReader == null){ //Added later for testing purposes
+            this.statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(), signingServiceConnector.getDirectJobResponse().get(), this.statusQueryToken);
+        }
         storage.updateStatus(s, statusReader.getStatus());
         return statusReader.getStatus();
 
@@ -145,7 +151,7 @@ public class DigipostSpringConnector {
     }
 
 
-    //In order to get to the sign-in portal, such as BankID, the user needs a redirect-url and a valid token. This method checks if the token is valid
+  /*  //In order to get to the sign-in portal, such as BankID, the user needs a redirect-url and a valid token. This method checks if the token is valid
     public boolean checkToken() {
         return false;
     }
@@ -162,7 +168,7 @@ public class DigipostSpringConnector {
         return this.completionURL;
         //or return this.rejectionURL
         //or return this.errorURL
-    }
+    }*/
 
     public void setSignedDocumentFetcher(SignedDocumentFetcher signedDocumentFetcher){
         this.signedDocumentFetcher = signedDocumentFetcher;
