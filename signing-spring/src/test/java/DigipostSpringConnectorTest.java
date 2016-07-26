@@ -16,9 +16,7 @@ import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
 
 import static org.mockito.Mockito.mock;
-
-
-
+import static org.mockito.Mockito.when;
 
 
 public class DigipostSpringConnectorTest {
@@ -157,6 +155,86 @@ public class DigipostSpringConnectorTest {
 
     }
 
+    @Test
+    public void whenSigningComplete_return_status() throws URISyntaxException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException {
+        DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
+
+        String[] exitUrls = {
+                "http://localhost:8081/onCompletion","http://localhost:8081/onRejection","http://localhost:8081/onError"};
+
+        AsiceMaker asiceMaker = new AsiceMaker();
+        SetupClientConfig clientConfig = new SetupClientConfig("Direct");
+        clientConfig.initialize(asiceMaker.getContactInfo(),"123456789");
+
+        DocumentBundle preparedAsic = asiceMaker.createAsice("17079493538","123456789",exitUrls, clientConfig.getClientConfiguration());
+        SignatureJob signatureJob = asiceMaker.getSignatureJob();
+        KeyStoreConfig keyStoreConfig = clientConfig.getKeyStoreConfig();
+
+        SigningServiceConnector signingServiceConnector = new SigningServiceConnector();
+        signingServiceConnector.sendRequest(signatureJob, keyStoreConfig, new URI("http://localhost:8082/"));
+        digipostSpringConnector.setSigningServiceConnector(signingServiceConnector);
+
+        StatusReader statusReader = mock(StatusReader.class);
+
+        digipostSpringConnector.setStatusReader(statusReader);
+        when(statusReader.getStatus()).thenReturn("status");
+        digipostSpringConnector.whenSigningComplete("token");
+        Assert.assertEquals(digipostSpringConnector.whenSigningComplete("token"), "status<br> <a href='http://localhost:8080/getXades'> Click here to get Xades </a><br> <a href='http://localhost:8080/getPades'> Click here to get Pades");
+    }
+
+    @Test
+    public void whenSigningFails_return_status() throws URISyntaxException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException {
+        DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
+
+        String[] exitUrls = {
+                "http://localhost:8081/onCompletion","http://localhost:8081/onRejection","http://localhost:8081/onError"};
+
+        AsiceMaker asiceMaker = new AsiceMaker();
+        SetupClientConfig clientConfig = new SetupClientConfig("Direct");
+        clientConfig.initialize(asiceMaker.getContactInfo(),"123456789");
+
+        DocumentBundle preparedAsic = asiceMaker.createAsice("17079493538","123456789",exitUrls, clientConfig.getClientConfiguration());
+        SignatureJob signatureJob = asiceMaker.getSignatureJob();
+        KeyStoreConfig keyStoreConfig = clientConfig.getKeyStoreConfig();
+
+        SigningServiceConnector signingServiceConnector = new SigningServiceConnector();
+        signingServiceConnector.sendRequest(signatureJob, keyStoreConfig, new URI("http://localhost:8082/"));
+        digipostSpringConnector.setSigningServiceConnector(signingServiceConnector);
+
+        StatusReader statusReader = mock(StatusReader.class);
+
+        digipostSpringConnector.setStatusReader(statusReader);
+        when(statusReader.getStatus()).thenReturn("status");
+        digipostSpringConnector.whenSigningFails("token");
+        Assert.assertEquals(digipostSpringConnector.whenSigningFails("token"), "status");
+    }
+
+    @Test
+    public void whenUserRejects_return_status() throws URISyntaxException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException {
+        DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
+
+        String[] exitUrls = {
+                "http://localhost:8081/onCompletion","http://localhost:8081/onRejection","http://localhost:8081/onError"};
+
+        AsiceMaker asiceMaker = new AsiceMaker();
+        SetupClientConfig clientConfig = new SetupClientConfig("Direct");
+        clientConfig.initialize(asiceMaker.getContactInfo(),"123456789");
+
+        DocumentBundle preparedAsic = asiceMaker.createAsice("17079493538","123456789",exitUrls, clientConfig.getClientConfiguration());
+        SignatureJob signatureJob = asiceMaker.getSignatureJob();
+        KeyStoreConfig keyStoreConfig = clientConfig.getKeyStoreConfig();
+
+        SigningServiceConnector signingServiceConnector = new SigningServiceConnector();
+        signingServiceConnector.sendRequest(signatureJob, keyStoreConfig, new URI("http://localhost:8082/"));
+        digipostSpringConnector.setSigningServiceConnector(signingServiceConnector);
+
+        StatusReader statusReader = mock(StatusReader.class);
+
+        digipostSpringConnector.setStatusReader(statusReader);
+        when(statusReader.getStatus()).thenReturn("status");
+        digipostSpringConnector.whenUserRejects("token");
+        Assert.assertEquals(digipostSpringConnector.whenUserRejects("token"), "status");
+    }
 
 
 
