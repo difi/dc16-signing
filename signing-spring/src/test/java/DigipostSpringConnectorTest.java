@@ -2,6 +2,8 @@ import no.digipost.signature.client.asice.DocumentBundle;
 import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.security.KeyStoreConfig;
 import org.testng.Assert;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +22,11 @@ import static org.mockito.Mockito.mock;
 
 
 public class DigipostSpringConnectorTest {
+
+    @BeforeSuite
+    public void startServer() throws IOException {
+        MockServer.setUp();
+    }
 
     @Test
     public void testCoverageTest(){
@@ -150,6 +157,10 @@ public class DigipostSpringConnectorTest {
 
     }
 
+    @AfterSuite
+    public void shutDown(){
+        MockServer.shutDown();
+    }
 
 
 
