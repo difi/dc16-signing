@@ -22,7 +22,7 @@ public class PortalSignedDocumentFetcher {
     public byte[] getPades() throws IOException {
         PAdESReference pAdESReference = null;
 
-        if (poller.isPadesReady()) {
+        if ((poller != null) && (poller.isPadesReady())) { //Changed later
             pAdESReference = poller.getStatusChange().getpAdESUrl();
             return ByteStreams.toByteArray(client.getPAdES(pAdESReference));
         } else {
@@ -34,7 +34,7 @@ public class PortalSignedDocumentFetcher {
     // TODO: Asking for one specific signers xAdES file. Better outputs.
     //There is one xAdES file for each signer.
     public String getXades() throws IOException {
-        if (poller.isXadesReady()) {
+        if ((poller != null) && (poller.isXadesReady())) { //Added later
             List<InputStream> inputStreams;
             inputStreams = poller.getStatusChange().getSignatures().stream()
                     .filter(z -> z.is(SignatureStatus.SIGNED))
