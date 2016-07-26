@@ -57,7 +57,7 @@ public class DigipostSpringConnector {
     }
 
     @RequestMapping("/asice")
-    public ModelAndView makeAsice(HttpServletRequest request, HttpServletRequest response) throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, URISyntaxException {
+    public ModelAndView makeAsice(HttpServletRequest request) throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, URISyntaxException {
         senderPid = request.getHeader("X-DifiProxy-pid");
         s = new SignatureJobModel("Ikke signert", "123456789", "17079493538", senderPid);
         storage.insertSignaturejobToDB(s);
@@ -145,7 +145,7 @@ public class DigipostSpringConnector {
     }
 
 
-    //In order to get to the sign-in portal, such as BankID, the user needs a redirect-url and a valid token. This method checks if the token is valid
+  /*  //In order to get to the sign-in portal, such as BankID, the user needs a redirect-url and a valid token. This method checks if the token is valid
     public boolean checkToken() {
         return false;
     }
@@ -162,7 +162,7 @@ public class DigipostSpringConnector {
         return this.completionURL;
         //or return this.rejectionURL
         //or return this.errorURL
-    }
+    }*/
 
     public void setSignedDocumentFetcher(SignedDocumentFetcher signedDocumentFetcher){
         this.signedDocumentFetcher = signedDocumentFetcher;
