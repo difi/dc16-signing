@@ -13,6 +13,7 @@
         <module>signing-database</module>
         <module>signing-mockserver</module>
         <module>signing-spring</module>
+        <module>signing-config</module>
 
 
     </modules>
