@@ -88,7 +88,9 @@ public class DigipostSpringConnector {
     @RequestMapping("/onCompletion")
     public String whenSigningComplete(@RequestParam("status_query_token") String token) {
         this.statusQueryToken = token;
-        this.statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(), signingServiceConnector.getDirectJobResponse().get(), this.statusQueryToken);
+        if(this.statusReader == null){
+            this.statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(), signingServiceConnector.getDirectJobResponse().get(), this.statusQueryToken);
+        }
         System.out.println("here");
         storage.updateStatus(s, statusReader.getStatus());
         return statusReader.getStatus().concat("<br> <a href='http://localhost:8080/getXades'> Click here to get Xades </a>")
@@ -100,7 +102,9 @@ public class DigipostSpringConnector {
     @RequestMapping("/onError")
     public String whenSigningFails(@RequestParam("status_query_token") String token) {
         this.statusQueryToken = token;
-        this.statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(), signingServiceConnector.getDirectJobResponse().get(), this.statusQueryToken);
+        if(this.statusReader == null){
+            this.statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(), signingServiceConnector.getDirectJobResponse().get(), this.statusQueryToken);
+        }
         storage.updateStatus(s, statusReader.getStatus());
         return statusReader.getStatus();
 
@@ -110,7 +114,9 @@ public class DigipostSpringConnector {
     public String whenUserRejects(@RequestParam("status_query_token") String token) {
         //String status = signingServiceConnector.checkStatus();
         this.statusQueryToken = token;
-        this.statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(), signingServiceConnector.getDirectJobResponse().get(), this.statusQueryToken);
+        if(this.statusReader == null){ //Added later for testing purposes
+            this.statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(), signingServiceConnector.getDirectJobResponse().get(), this.statusQueryToken);
+        }
         storage.updateStatus(s, statusReader.getStatus());
         return statusReader.getStatus();
 
