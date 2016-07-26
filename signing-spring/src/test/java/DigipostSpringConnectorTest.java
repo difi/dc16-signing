@@ -157,10 +157,6 @@ public class DigipostSpringConnectorTest {
 
     }
 
-    @AfterSuite
-    public void shutDown(){
-        MockServer.shutDown();
-    }
 
 
 
