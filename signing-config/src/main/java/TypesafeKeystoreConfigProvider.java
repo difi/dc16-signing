@@ -16,6 +16,6 @@ public class TypesafeKeystoreConfigProvider {
     }
 
     public TypesafeKeystoreConfig getByName(String name){
-        return documents.get("default");
+        return documents.get(name);
     }
 }

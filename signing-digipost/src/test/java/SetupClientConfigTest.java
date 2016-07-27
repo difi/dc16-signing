@@ -7,7 +7,7 @@ public class SetupClientConfigTest {
 
 
     @Test
-    public void setupKeystoreConfigNotNull(){
+    public void setupKeystoreConfigNotNull() throws URISyntaxException {
         AsiceMaker asiceMaker = new AsiceMaker();
         SetupClientConfig setupClientConfig = new SetupClientConfig("Direct");
         setupClientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
