@@ -21,7 +21,7 @@ public class AsiceMakerTest {
 
     @Test
     public void findsFileAtGivenPath(){
-        AsiceMaker asiceMaker = new AsiceMaker("Documents//Dokument til signering 5.pdf");
+        AsiceMaker asiceMaker = new AsiceMaker();
         File file = asiceMaker.getDokumentTilSignering();
         Assert.assertNotNull(file);
     }
