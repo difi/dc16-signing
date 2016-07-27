@@ -1,3 +1,6 @@
+/**
+ * Created by camp-nto on 27.07.2016.
+ */
 import com.typesafe.config.Config;
 
 import java.util.List;
