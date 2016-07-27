@@ -8,6 +8,7 @@ RUN cd $MAVEN_HOME \
  && rm -r $MAVEN_HOME \
  && apt update \
  && apt install -y ruby \
+ && gem update --system \
  && gem install asciidoctor-pdf --pre \
  && rm -r /var/lib/apt/lists
 
