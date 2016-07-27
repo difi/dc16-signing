@@ -19,7 +19,6 @@
         <dependency>
             <groupId>no.difi.idporten.signing</groupId>
             <artifactId>signing-digipost</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

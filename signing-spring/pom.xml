@@ -8,34 +8,44 @@
         <version>0.1.0-SNAPSHOT</version>
     </parent>
 
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>signing-spring</artifactId>
 
     <dependencies>
 
+        <!-- Signing -->
         <dependency>
             <groupId>no.difi.idporten.signing</groupId>
             <artifactId>signing-digipost</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>no.difi.idporten.signing</groupId>
             <artifactId>signing-database</artifactId>
         </dependency>
         <dependency>
+            <groupId>no.difi.idporten.signing</groupId>
+            <artifactId>signing-mockserver</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Tomcat -->
+        <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-servlet-api</artifactId>
             <version>7.0.21</version>
             <scope>provided</scope>
         </dependency>
-    </dependencies>
-    <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>signing-spring</artifactId>
+    </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <dependency>

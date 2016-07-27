@@ -108,7 +108,22 @@
             <!-- Signing -->
             <dependency>
                 <groupId>no.difi.idporten.signing</groupId>
+                <artifactId>signing-digipost</artifactId>
+                <version>0.1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>no.difi.idporten.signing</groupId>
+                <artifactId>signing-database</artifactId>
+                <version>0.1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>no.difi.idporten.signing</groupId>
                 <artifactId>signing-spring</artifactId>
+                <version>0.1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>no.difi.idporten.signing</groupId>
+                <artifactId>signing-mockserver</artifactId>
                 <version>0.1.0-SNAPSHOT</version>
             </dependency>
         </dependencies>
@@ -153,6 +168,24 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>docker-build</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.19.1</version>
+                        <configuration>
+                            <excludedGroups>not-docker</excludedGroups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <repositories>
         <repository>
