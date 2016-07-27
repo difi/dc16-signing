@@ -1,6 +1,5 @@
-<a href="https://codecov.io/gh/difi/dc16-signing">
-  <img src="https://codecov.io/gh/difi/dc16-signing/branch/master/graph/badge.svg" alt="Codecov" />
-</a>
+[![Build Status](https://travis-ci.org/difi/dc16-signing.svg?branch=master)](https://travis-ci.org/difi/dc16-signing)
+[![Codecov](https://codecov.io/gh/difi/dc16-signing/branch/master/graph/badge.svg)](https://codecov.io/gh/difi/dc16-signing)
 
 # DifiCamp 2016 Signing
 
