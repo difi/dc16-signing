@@ -3,7 +3,7 @@ FROM maven:3-jdk-8
 ADD . $MAVEN_HOME
 
 RUN cd $MAVEN_HOME \
- && mvn clean package -Pdocker-build \
+ && mvn -B clean package -Pdocker-build \
  && mv $MAVEN_HOME/target /signing \
  && rm -r $MAVEN_HOME \
  && apt update \
