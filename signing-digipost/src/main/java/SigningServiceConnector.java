@@ -67,6 +67,7 @@ public class SigningServiceConnector {
         return directJobResponse;
     }
 
+
     /**
      * Sends a request for portal signing difi_test based on a signaturejob and a keyconfig.
      * Returns false if no response was received, true otherwise.

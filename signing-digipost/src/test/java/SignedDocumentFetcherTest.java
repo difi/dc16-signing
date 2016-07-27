@@ -1,6 +1,8 @@
 import com.google.common.io.ByteStreams;
+import no.digipost.signature.client.ClientConfiguration;
 import no.digipost.signature.client.asice.DocumentBundle;
 import no.digipost.signature.client.core.SignatureJob;
+import no.digipost.signature.client.direct.DirectClient;
 import no.digipost.signature.client.security.KeyStoreConfig;
 import org.mockito.Mock;
 import org.testng.Assert;
@@ -103,5 +105,7 @@ public class SignedDocumentFetcherTest {
     public void stopServer(){
         MockServer.shutDown();
     }
+
+
 }
 
