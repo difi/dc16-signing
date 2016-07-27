@@ -16,9 +16,6 @@ import java.util.List;
 
 import static org.mockito.Mockito.mock;
 
-/**
- * Created by camp-nto on 18.07.2016.
- */
 public class PortalControllerTest {
 
     private MockMvc mvc = MockMvcBuilders.standaloneSetup(new DigipostSpringConnector()).build();
