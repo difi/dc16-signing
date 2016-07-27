@@ -1,7 +1,6 @@
 import no.digipost.signature.client.asice.DocumentBundle;
 import no.digipost.signature.client.portal.Notifications;
 import no.digipost.signature.client.portal.PortalClient;
-import no.digipost.signature.client.portal.PortalJob;
 import no.digipost.signature.client.portal.PortalSigner;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
@@ -40,13 +39,13 @@ public class PortalSignedDocumentFetcherTest {
         PortalAsiceMaker portalAsiceMaker = new PortalAsiceMaker();
         SetupClientConfig clientConfig = new SetupClientConfig("Portal");
         clientConfig.setupKeystoreConfig(portalAsiceMaker.getContactInfo());
-        clientConfig.setupClientConfiguration("123456789");
+        clientConfig.setupClientConfiguration();
 
         List<PortalSigner> portalSigners = new ArrayList<>();
         portalSigners.add( PortalSigner.builder("17079493538", Notifications.builder().withEmailTo("eulverso2@gmail.com").build()).build());
         portalSigners.add( PortalSigner.builder("17079493457",Notifications.builder().withEmailTo("eulverso2@gmail.com").build()).build());
         portalSigners.add( PortalSigner.builder("17079493295",Notifications.builder().withEmailTo("eulverso2@gmail.com").build()).build());
-        DocumentBundle preparedAsice = portalAsiceMaker.createPortalAsice(portalSigners, exitUrls , clientConfig.getClientConfiguration());
+        DocumentBundle preparedAsice = portalAsiceMaker.createPortalAsice(portalSigners, clientConfig.getClientConfiguration());
 
 
         PortalClient portalClient = new PortalClient(clientConfig.getClientConfiguration());
@@ -65,13 +64,13 @@ public class PortalSignedDocumentFetcherTest {
         PortalAsiceMaker portalAsiceMaker = new PortalAsiceMaker();
         SetupClientConfig clientConfig = new SetupClientConfig("Portal");
         clientConfig.setupKeystoreConfig(portalAsiceMaker.getContactInfo());
-        clientConfig.setupClientConfiguration("7");
+        clientConfig.setupClientConfiguration();
 
         List<PortalSigner> portalSigners = new ArrayList<>();
         portalSigners.add( PortalSigner.builder("17079493538", Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
         portalSigners.add( PortalSigner.builder("11111111111",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
         portalSigners.add( PortalSigner.builder("22222222222",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
-        DocumentBundle preparedAsice = portalAsiceMaker.createPortalAsice(portalSigners, exitUrls , clientConfig.getClientConfiguration());
+        DocumentBundle preparedAsice = portalAsiceMaker.createPortalAsice(portalSigners, clientConfig.getClientConfiguration());
 
         PortalClient portalClient = new PortalClient(clientConfig.getClientConfiguration());
         PortalJobPoller poller = new PortalJobPoller(portalClient);

@@ -66,7 +66,7 @@ public class DigipostSpringConnector {
         SetupClientConfig clientConfig = new SetupClientConfig("Direct");
 
         clientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
-        clientConfig.setupClientConfiguration(s.getSender());
+        clientConfig.setupClientConfiguration();
 
         asiceMaker.createAsice(s.getSigner(), s.getSender(), exitUrls, clientConfig.getClientConfiguration());
 

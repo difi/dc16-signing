@@ -1,16 +1,11 @@
 import no.digipost.signature.client.asice.DocumentBundle;
 import no.digipost.signature.client.portal.Notifications;
 import no.digipost.signature.client.portal.PortalClient;
-import no.digipost.signature.client.portal.PortalJob;
 import no.digipost.signature.client.portal.PortalSigner;
-import no.digipost.signature.client.security.KeyStoreConfig;
-import org.junit.Before;
 import org.mockito.Mockito;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -20,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by camp-nto on 18.07.2016.
@@ -48,13 +42,13 @@ public class PortalControllerTest {
         PortalAsiceMaker portalAsiceMaker = new PortalAsiceMaker();
         SetupClientConfig clientConfig = new SetupClientConfig("Portal");
         clientConfig.setupKeystoreConfig(portalAsiceMaker.getContactInfo());
-        clientConfig.setupClientConfiguration("123456789");
+        clientConfig.setupClientConfiguration();
 
         List<PortalSigner> portalSigners = new ArrayList<>();
         portalSigners.add( PortalSigner.builder("17079493538", Notifications.builder().withEmailTo("eulverso2@gmail.com").build()).build());
         portalSigners.add( PortalSigner.builder("17079493457",Notifications.builder().withEmailTo("eulverso2@gmail.com").build()).build());
         portalSigners.add( PortalSigner.builder("17079493295",Notifications.builder().withEmailTo("eulverso2@gmail.com").build()).build());
-        DocumentBundle preparedAsice = portalAsiceMaker.createPortalAsice(portalSigners, exitUrls , clientConfig.getClientConfiguration());
+        DocumentBundle preparedAsice = portalAsiceMaker.createPortalAsice(portalSigners, clientConfig.getClientConfiguration());
 
 
         PortalClient portalClient = new PortalClient(clientConfig.getClientConfiguration());
@@ -87,13 +81,13 @@ public class PortalControllerTest {
         PortalAsiceMaker portalAsiceMaker = new PortalAsiceMaker();
         SetupClientConfig clientConfig = new SetupClientConfig("Portal");
         clientConfig.setupKeystoreConfig(portalAsiceMaker.getContactInfo());
-        clientConfig.setupClientConfiguration("123456789");
+        clientConfig.setupClientConfiguration();
 
         List<PortalSigner> portalSigners = new ArrayList<>();
         portalSigners.add( PortalSigner.builder("17079493538", Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
         portalSigners.add( PortalSigner.builder("17079493457",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
         portalSigners.add( PortalSigner.builder("17079493295",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
-        DocumentBundle preparedAsice = portalAsiceMaker.createPortalAsice(portalSigners, exitUrls , clientConfig.getClientConfiguration());
+        DocumentBundle preparedAsice = portalAsiceMaker.createPortalAsice(portalSigners, clientConfig.getClientConfiguration());
 
         PortalClient portalClient = new PortalClient(clientConfig.getClientConfiguration());
         PortalJobPoller poller = new PortalJobPoller(portalClient);
@@ -145,13 +139,13 @@ public class PortalControllerTest {
         PortalAsiceMaker portalAsiceMaker = new PortalAsiceMaker();
         SetupClientConfig clientConfig = new SetupClientConfig("Portal");
         clientConfig.setupKeystoreConfig(portalAsiceMaker.getContactInfo());
-        clientConfig.setupClientConfiguration("123456789");
+        clientConfig.setupClientConfiguration();
 
         List<PortalSigner> portalSigners = new ArrayList<>();
         portalSigners.add( PortalSigner.builder("17079493538", Notifications.builder().withEmailTo("eulverso2@gmail.com").build()).build());
         portalSigners.add( PortalSigner.builder("17079493457",Notifications.builder().withEmailTo("eulverso2@gmail.com").build()).build());
         portalSigners.add( PortalSigner.builder("17079493295",Notifications.builder().withEmailTo("eulverso2@gmail.com").build()).build());
-        DocumentBundle preparedAsice = portalAsiceMaker.createPortalAsice(portalSigners, exitUrls , clientConfig.getClientConfiguration());
+        DocumentBundle preparedAsice = portalAsiceMaker.createPortalAsice(portalSigners, clientConfig.getClientConfiguration());
 
 
         PortalClient portalClient = new PortalClient(clientConfig.getClientConfiguration());

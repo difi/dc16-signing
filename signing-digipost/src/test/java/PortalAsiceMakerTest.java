@@ -38,7 +38,7 @@ public class PortalAsiceMakerTest {
         clientConfig.initialize(portalAsiceMaker.getContactInfo(),"123456789");
 
         clientConfig.setupKeystoreConfig(portalAsiceMaker.getContactInfo());
-        clientConfig.setupClientConfiguration("123456789");
+        clientConfig.setupClientConfiguration();
         String[] exitUrls = {
                 "http://localhost:8081/onCompletion","http://localhost:8081/onRejection","http://localhost:8081/onError"
         };
@@ -46,7 +46,7 @@ public class PortalAsiceMakerTest {
         portalSigners.add( PortalSigner.builder("17079493538", Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
         portalSigners.add( PortalSigner.builder("17079493457",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
         portalSigners.add( PortalSigner.builder("17079493295",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
-        DocumentBundle preparedAsic = portalAsiceMaker.createPortalAsice(portalSigners,exitUrls,clientConfig.getClientConfiguration());
+        DocumentBundle preparedAsic = portalAsiceMaker.createPortalAsice(portalSigners, clientConfig.getClientConfiguration());
         Assert.assertNotNull(portalAsiceMaker.getPortalJob());
         //Assert.assertNotNull(preparedAsic);
     }

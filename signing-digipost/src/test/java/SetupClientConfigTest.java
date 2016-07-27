@@ -21,7 +21,7 @@ public class SetupClientConfigTest {
     public void setUpClientConfigurationNotNull() throws URISyntaxException{
         AsiceMaker asiceMaker = new AsiceMaker();
         SetupClientConfig setupClientConfig = new SetupClientConfig("Direct");
-        setupClientConfig.setupClientConfiguration("123456789");
+        setupClientConfig.setupClientConfiguration();
         Assert.assertNotNull(setupClientConfig);
     }
 }

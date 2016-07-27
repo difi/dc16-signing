@@ -8,7 +8,6 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,7 +18,6 @@ import java.security.cert.CertificateException;
 import java.util.Optional;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class SignedDocumentFetcherTest {
 
@@ -50,7 +48,7 @@ public class SignedDocumentFetcherTest {
         AsiceMaker asiceMaker = new AsiceMaker();
         SetupClientConfig clientConfig = new SetupClientConfig("Direct");
         clientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
-        clientConfig.setupClientConfiguration("123456789");
+        clientConfig.setupClientConfiguration();
         DocumentBundle preparedAsic = asiceMaker.createAsice("17079493538","123456789",exitUrls, clientConfig.getClientConfiguration());
         SignatureJob signatureJob = asiceMaker.getSignatureJob();
         KeyStoreConfig keyStoreConfig = clientConfig.getKeyStoreConfig();

@@ -7,7 +7,6 @@ import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.direct.DirectDocument;
 import no.digipost.signature.client.direct.DirectJob;
 import no.digipost.signature.client.direct.DirectSigner;
-import no.digipost.signature.client.portal.PortalJob;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,27 +19,30 @@ public class AsiceMaker {
     private CreateASiCE createASiCE;
     private ManifestCreator manifestCreator = new CreateDirectManifest();
     private SignatureJob signatureJob;
-    private PortalJob portalJob;
     private File dokumentTilSignering;
     private File kontaktInfoClientTest;
     private String relativeDocumentPath = "Documents//Dokument til signering 3.pdf";
 
+    /**
+     * Creates classLoader to load file, Sets field kontaktInfoClientTest to file kontaktinfo-client-test.jks and sets the document for signing.
+     * TODO: Set through a config file?
+     */
+
     public AsiceMaker() {
-        //Creates classLoader to load file
         ClassLoader classLoader = getClass().getClassLoader();
-        //Sets field kontaktInfoClientTest to file kontaktinfo-client-test.jks
         kontaktInfoClientTest = new File(classLoader.getResource("kontaktinfo-client-test.jks").getFile());
-        //Sets the document for signing //TODO: Set through a config file?
         dokumentTilSignering = new File(classLoader.getResource(relativeDocumentPath).getFile());
 
     }
 
+    /**
+     * Same as above, except with the document path as a parameter.
+     *
+     * @param relativeDocumentPath
+     */
     public AsiceMaker(String relativeDocumentPath) {
-        //Creates classLoader to load file
         ClassLoader classLoader = getClass().getClassLoader();
-        //Sets field kontaktInfoClientTest to file kontaktinfo-client-test.jks
         kontaktInfoClientTest = new File(classLoader.getResource("kontaktinfo-client-test.jks").getFile());
-        //Sets the document for signing //TODO: Set through a config file?
         dokumentTilSignering = new File(classLoader.getResource(relativeDocumentPath).getFile());
 
     }
@@ -48,7 +50,6 @@ public class AsiceMaker {
     /**
      * Creates an asice package. Uses current keystore and a hardcoded document.
      *
-     * @return
      */
     public DocumentBundle createAsice(String signerId, String ss, String[] exitUrls, ClientConfiguration clientConfiguration) throws KeyStoreException, NoSuchAlgorithmException, NoSuchProviderException, IOException, java.security.cert.CertificateException {
         String PDFPath = DocumentHandler.setAbsolutePathToPDF(dokumentTilSignering).toString();
@@ -74,10 +75,6 @@ public class AsiceMaker {
 
     public SignatureJob getSignatureJob() {
         return this.signatureJob;
-    }
-
-    public PortalJob getPortalJob() {
-        return this.portalJob;
     }
 
     public File getDokumentTilSignering() {

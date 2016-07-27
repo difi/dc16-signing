@@ -17,12 +17,13 @@ public class PortalSignedDocumentFetcher {
         this.client = portalClient;
     }
 
-    //Uses poller to check if the pAdES is available, then reads it to a file. pAdES is only available
-    //if all signers have signed.
+    /**
+     * Uses poller to check if the pAdES is available, then reads it to a file. pAdES is only available if all signers have signed.
+     */
     public byte[] getPades() throws IOException {
         PAdESReference pAdESReference = null;
 
-        if ((poller != null) && (poller.isPadesReady())) { //Changed later
+        if ((poller != null) && (poller.isPadesReady())) {
             pAdESReference = poller.getStatusChange().getpAdESUrl();
             return ByteStreams.toByteArray(client.getPAdES(pAdESReference));
         } else {
@@ -30,11 +31,12 @@ public class PortalSignedDocumentFetcher {
         }
     }
 
-    //Writes all xAdES files. Uses poller to check if it can be retrieved.
-    // TODO: Asking for one specific signers xAdES file. Better outputs.
-    //There is one xAdES file for each signer.
+    /**
+     * Writes all xAdES files. Uses poller to check if it can be retrieved. There is one xAdES file for each signer.
+     * TODO: Asking for one specific signers xAdES file. Better outputs.
+     */
     public String getXades() throws IOException {
-        if ((poller != null) && (poller.isXadesReady())) { //Added later
+        if ((poller != null) && (poller.isXadesReady())) {
             List<InputStream> inputStreams;
             inputStreams = poller.getStatusChange().getSignatures().stream()
                     .filter(z -> z.is(SignatureStatus.SIGNED))
