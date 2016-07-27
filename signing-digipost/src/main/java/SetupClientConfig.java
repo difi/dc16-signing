@@ -1,3 +1,6 @@
+import com.sun.jndi.toolkit.url.Uri;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import no.digipost.signature.client.Certificates;
 import no.digipost.signature.client.ClientConfiguration;
 import no.digipost.signature.client.core.Sender;
@@ -14,10 +17,26 @@ public class SetupClientConfig {
     private KeyStoreConfig keyStoreConfig;
     private ClientConfiguration clientConfiguration;
     private String type;
+    private TypesafeKeystoreConfig typeSafeKeystoreConfig;
+    private TypesafeKeystoreConfigProvider typesafeKeystoreConfigProvider;
+    private TypesafeServerConfig typesafeServerConfig;
+    private TypesafeServerConfigProvider typesafeServerConfigProvider;
+    private TypesafeDocumentConfig typesafeDocumentConfig;
+    private TypesafeDocumentConfigProvider typesafeDocumentConfigProvider;
 
 
-    SetupClientConfig(String type) {
+
+    SetupClientConfig(String type) throws URISyntaxException {
         this.type = type;
+
+        Config configFile = ConfigFactory.load();
+        this.typesafeKeystoreConfigProvider = new TypesafeKeystoreConfigProvider(configFile);
+        this.typeSafeKeystoreConfig = typesafeKeystoreConfigProvider.getByName("default");
+        this.typesafeServerConfigProvider = new TypesafeServerConfigProvider(configFile);
+        this.typesafeServerConfig = typesafeServerConfigProvider.getByName("default");
+        this.typesafeDocumentConfigProvider = new TypesafeDocumentConfigProvider(configFile);
+        this.typesafeDocumentConfig = typesafeDocumentConfigProvider.getByEmail("eulverso2@gmail.com");
+
     }
 
     /**
@@ -31,9 +50,9 @@ public class SetupClientConfig {
     public void setupKeystoreConfig(File kontaktInfo) {
         try {
             keyStore = KeyStore.getInstance("JKS");
-            keyStore.load((new FileInputStream(kontaktInfo)), "changeit".toCharArray());
+            keyStore.load((new FileInputStream(kontaktInfo)), typeSafeKeystoreConfig.getPassword().toCharArray());
             keyStoreConfig = KeyStoreConfig.fromKeyStore(new FileInputStream(kontaktInfo)
-                    , keyStore.aliases().nextElement(), "changeit", "changeit");
+                    , keyStore.aliases().nextElement(), typeSafeKeystoreConfig.getPassword(), typeSafeKeystoreConfig.getPassword());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,9 +64,9 @@ public class SetupClientConfig {
      */
     public void setupClientConfiguration() throws URISyntaxException{
         clientConfiguration = ClientConfiguration.builder(keyStoreConfig)
-                .serviceUri(new URI("http://localhost:8082/"))
+                .serviceUri(typesafeServerConfig.getServiceUri())
                 .trustStore(Certificates.TEST)
-                .globalSender(new Sender("991825827"))
+                .globalSender(new Sender(this.typesafeDocumentConfig.getSender()))
                 .build();
     }
 
