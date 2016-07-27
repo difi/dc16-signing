@@ -14,8 +14,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.mock;
-
 public class PortalControllerTest {
 
     private MockMvc mvc = MockMvcBuilders.standaloneSetup(new DigipostSpringConnector()).build();
@@ -29,11 +27,11 @@ public class PortalControllerTest {
 
         PortalSignedDocumentFetcher portalSignedDocumentFetcher = Mockito.mock(PortalSignedDocumentFetcher.class);
 
-        portalController.setPortalSignedDocumentFetcher(portalSignedDocumentFetcher);;
+        portalController.setPortalSignedDocumentFetcher(portalSignedDocumentFetcher);
         Assert.assertEquals(portalController.getPortalXades(), null);
     }
 
-    @Test
+    @Test(groups = "not-docker")
     public void getPortalXades_returnes_getXades_if_signedDocumentFetcher_is_null() throws IOException, URISyntaxException {
         PortalController portalController = new PortalController();
         PortalAsiceMaker portalAsiceMaker = new PortalAsiceMaker();
@@ -72,7 +70,7 @@ public class PortalControllerTest {
         Assert.assertEquals(portalController.getPortalPades(), null);
     }
 
-    @Test
+    @Test(groups = "not-docker")
     public void getPortalPades_returns_getPades_if_signedDocumentFetcher_is_null() throws URISyntaxException, IOException {
         PortalController portalController = new PortalController();
         PortalAsiceMaker portalAsiceMaker = new PortalAsiceMaker();
@@ -98,7 +96,7 @@ public class PortalControllerTest {
         Assert.assertEquals(portalController.getPortalXades(), "no xades available");
     }
 
-    @Test
+    @Test(groups = "not-docker")
     public void getPortalPades_returnes_getPades_if_signedDocumentFetcher_is_null() throws IOException {
         PortalController portalController = new PortalController();
 
@@ -112,7 +110,7 @@ public class PortalControllerTest {
         Assert.assertEquals(portalController.getPortalPades(), null);
     }
 
-    @Test
+    @Test(groups = "not-docker")
     public void startPortalJob_sendsPortalRequest_if_signingSerViceConnector_not_null() throws IOException, URISyntaxException {
         PortalController portalController = new PortalController();
         SigningServiceConnector signingServiceConnector = new SigningServiceConnector();
@@ -122,7 +120,7 @@ public class PortalControllerTest {
 
     }
 
-    @Test
+    @Test(groups = "not-docker")
     public void startPortalJob_sendsPortalRequest_if_signingSerViceConnector_is_null() throws IOException, URISyntaxException {
         PortalController portalController = new PortalController();
         portalController.startPortalJob();
@@ -130,7 +128,7 @@ public class PortalControllerTest {
 
     }
 
-    @Test
+    @Test(groups = "not-docker")
     public void poll_returns_status() throws URISyntaxException, IOException {
         PortalController portalController = new PortalController();
         PortalAsiceMaker portalAsiceMaker = new PortalAsiceMaker();

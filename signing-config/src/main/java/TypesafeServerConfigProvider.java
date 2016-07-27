@@ -1,5 +1,4 @@
 import com.typesafe.config.Config;
-import no.motif.single.A;
 
 import java.net.URISyntaxException;
 import java.util.Map;

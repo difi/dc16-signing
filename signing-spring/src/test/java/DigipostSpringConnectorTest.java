@@ -2,7 +2,6 @@ import no.digipost.signature.client.asice.DocumentBundle;
 import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.security.KeyStoreConfig;
 import org.testng.Assert;
-import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
@@ -33,7 +32,7 @@ public class DigipostSpringConnectorTest {
     }
 
 
-    @Test
+    @Test(groups = "not-docker")
     public void testMakeAsice() throws Exception {
         DigipostSpringConnector connector = new DigipostSpringConnector();
 
@@ -60,7 +59,7 @@ public class DigipostSpringConnectorTest {
         Assert.assertTrue(asice.contains("redirect:https://difitest.signering.posten.no/redirect"));
     }
 
-    @Test
+    @Test(groups = "not-docker")
     public void testGetPadesIfSignedDocumentFetcherNotNull() throws IOException, URISyntaxException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
         DigipostSpringConnector connector = new DigipostSpringConnector();
 
@@ -86,7 +85,7 @@ public class DigipostSpringConnectorTest {
         Assert.assertNotSame(padesStatus, "".getBytes());
     }
 
-    @Test
+    @Test(groups = "not-docker")
     public void testGetPadesIfSigningServiceConnectorNotNull() throws IOException, URISyntaxException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
         DigipostSpringConnector connector = new DigipostSpringConnector();
 
@@ -109,7 +108,7 @@ public class DigipostSpringConnectorTest {
         Assert.assertNotSame(padesStatus, "".getBytes());
     }
 
-    @Test
+    @Test(groups = "not-docker")
     public void testGetXadesSignedDocumentFetcherNotNull() throws IOException, URISyntaxException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
         DigipostSpringConnector connector = new DigipostSpringConnector();
 
@@ -131,7 +130,7 @@ public class DigipostSpringConnectorTest {
         Assert.assertNotSame(xadesStatus, "".getBytes());
     }
 
-    @Test
+    @Test(groups = "not-docker")
     public void testGetXadesSigningServiceConnectorNotNull() throws IOException, URISyntaxException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
         DigipostSpringConnector connector = new DigipostSpringConnector();
 
@@ -155,7 +154,7 @@ public class DigipostSpringConnectorTest {
 
     }
 
-    @Test
+    @Test(groups = "not-docker")
     public void whenSigningComplete_return_status() throws URISyntaxException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException {
         DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
 
@@ -182,7 +181,7 @@ public class DigipostSpringConnectorTest {
         Assert.assertEquals(digipostSpringConnector.whenSigningComplete("token"), "status<br> <a href='http://localhost:8080/getXades'> Click here to get Xades </a><br> <a href='http://localhost:8080/getPades'> Click here to get Pades");
     }
 
-    @Test
+    @Test(groups = "not-docker")
     public void whenSigningFails_return_status() throws URISyntaxException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException {
         DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
 
@@ -209,7 +208,7 @@ public class DigipostSpringConnectorTest {
         Assert.assertEquals(digipostSpringConnector.whenSigningFails("token"), "status");
     }
 
-    @Test
+    @Test(groups = "not-docker")
     public void whenUserRejects_return_status() throws URISyntaxException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException {
         DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
 
@@ -235,7 +234,4 @@ public class DigipostSpringConnectorTest {
         digipostSpringConnector.whenUserRejects("token");
         Assert.assertEquals(digipostSpringConnector.whenUserRejects("token"), "status");
     }
-
-
-
 }
