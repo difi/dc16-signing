@@ -1,6 +1,9 @@
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.security.KeyStoreConfig;
 import org.hibernate.validator.constraints.URL;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +29,6 @@ import java.security.cert.CertificateException;
 @EnableAutoConfiguration
 public class DigipostSpringConnector {
 
-    //TODO: Decide which of these are stored here or just in the signingServiceConnector object.
     private URL completionURL; //Can not remove
     private String statusQueryToken;
     private StatusReader statusReader;
@@ -34,11 +36,19 @@ public class DigipostSpringConnector {
     private PortalSignedDocumentFetcher portalSignedDocumentFetcher;
     private PortalJobPoller poller;
 
+    private TypesafeDocumentConfigProvider documentConfigProvider;
+    private TypesafeDocumentConfig documentConfig;
+
+    private TypesafeServerConfigProvider serverConfigProvider;
+    private TypesafeServerConfig serverConfig;
+
+    private TypesafeKeystoreConfigProvider keystoreConfigProvider;
+    private TypesafeKeystoreConfig keystoreConfig;
+
     private SigningServiceConnector signingServiceConnector;
 
-    private String[] exitUrls = {
-            "http://localhost:8080/onCompletion", "http://localhost:8080/onRejection", "http://localhost:8080/onError"
-    };
+    private String[] exitUrls;
+
     public DatabaseSignatureStorage storage = new DatabaseSignatureStorage();
     public SignatureJobModel s;
     private String senderPid;
@@ -51,6 +61,19 @@ public class DigipostSpringConnector {
      * @throws IOException
      */
 
+    @Autowired
+    public void setupConfig() throws URISyntaxException{
+        Config configFile = ConfigFactory.load("application.conf");
+        documentConfigProvider = new TypesafeDocumentConfigProvider(configFile);
+        serverConfigProvider = new TypesafeServerConfigProvider(configFile);
+        keystoreConfigProvider = new TypesafeKeystoreConfigProvider(configFile);
+
+        this.documentConfig = documentConfigProvider.getByEmail("eulverso2@gmail.com");
+        this.serverConfig = serverConfigProvider.getByName("default");
+        this.keystoreConfig = keystoreConfigProvider.getByName("default");
+        exitUrls = new String[] {serverConfig.getCompletionUri().toString(),serverConfig.getRejectionUri().toString(),serverConfig.getErrorUri().toString()};
+    }
+
     @RequestMapping("/test")
     public String test() {
         return "Hello";
@@ -58,16 +81,17 @@ public class DigipostSpringConnector {
 
     @RequestMapping("/asice")
     public ModelAndView makeAsice(HttpServletRequest request) throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, URISyntaxException {
+        setupConfig();
         senderPid = request.getHeader("X-DifiProxy-pid");
-        s = new SignatureJobModel("Ikke signert", "123456789", "17079493538", senderPid);
+        System.out.println(documentConfig.getSender());
+        System.out.println(documentConfig.getSigner());
+        s = new SignatureJobModel("Ikke signert", documentConfig.getSender(), documentConfig.getSigner(), senderPid);
         storage.insertSignaturejobToDB(s);
 
         AsiceMaker asiceMaker = new AsiceMaker();
         SetupClientConfig clientConfig = new SetupClientConfig("Direct");
 
-        clientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
-        clientConfig.setupClientConfiguration();
-
+        clientConfig.initialize(asiceMaker.getContactInfo(),documentConfig.getSender());
         asiceMaker.createAsice(s.getSigner(), s.getSender(), exitUrls, clientConfig.getClientConfiguration());
 
         SignatureJob signatureJob = asiceMaker.getSignatureJob();
@@ -91,7 +115,6 @@ public class DigipostSpringConnector {
         if(this.statusReader == null){
             this.statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(), signingServiceConnector.getDirectJobResponse().get(), this.statusQueryToken);
         }
-        System.out.println("here");
         storage.updateStatus(s, statusReader.getStatus());
         return statusReader.getStatus().concat("<br> <a href='http://localhost:8080/getXades'> Click here to get Xades </a>")
                                         .concat("<br> <a href='http://localhost:8080/getPades'> Click here to get Pades");

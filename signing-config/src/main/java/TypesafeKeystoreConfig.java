@@ -1,5 +1,6 @@
 import com.typesafe.config.Config;
 
+import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,7 +18,6 @@ public class TypesafeKeystoreConfig {
     public TypesafeKeystoreConfig(Config keystoreConfig){
         System.out.println(keystoreConfig.entrySet().toString());
         this.id = UUID.randomUUID().toString();
-
         this.keystore = keystoreConfig.getString("keystore");
         this.name = keystoreConfig.getString("name");
         this.password = keystoreConfig.getString("password");

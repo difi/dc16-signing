@@ -19,7 +19,6 @@ public class TypesafeKeystoreConfigTest {
     @BeforeClass
     public void setup(){
         Config keystoreConfigFile = ConfigFactory.load();
-        Config specificConfig = keystoreConfigFile.getConfig("keystore");
         this.keystoreConfigProvider = new TypesafeKeystoreConfigProvider(keystoreConfigFile);
         this.keystoreConfig = keystoreConfigProvider.getByName("default");
     }

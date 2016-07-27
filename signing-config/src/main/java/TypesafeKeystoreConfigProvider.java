@@ -4,9 +4,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-/**
- * Created by camp-nto on 27.07.2016.
- */
 public class TypesafeKeystoreConfigProvider {
 
     private Map<String, TypesafeKeystoreConfig> documents;

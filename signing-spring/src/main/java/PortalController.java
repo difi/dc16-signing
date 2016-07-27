@@ -1,7 +1,10 @@
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import no.digipost.signature.client.portal.Notifications;
 import no.digipost.signature.client.portal.PortalJob;
 import no.digipost.signature.client.portal.PortalSigner;
 import no.digipost.signature.client.security.KeyStoreConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,12 +22,32 @@ public class PortalController {
     private PortalJobPoller portalJobPoller;
     private SigningServiceConnector signingServiceConnector;
 
-    private String[] exitUrls = {
-            "http://localhost:8081/onCompletion", "http://localhost:8081/onRejection", "http://localhost:8081/onError"
-    };
+    private TypesafeDocumentConfigProvider documentConfigProvider;
+    private TypesafeDocumentConfig documentConfig;
 
+    private TypesafeServerConfigProvider serverConfigProvider;
+    private TypesafeServerConfig serverConfig;
+
+    private TypesafeKeystoreConfigProvider keystoreConfigProvider;
+    private TypesafeKeystoreConfig keystoreConfig;
+
+    private String[] exitUrls;
+
+    @Autowired
+    private void setupConfig()throws URISyntaxException{
+        Config configFile = ConfigFactory.load("application.conf");
+        documentConfigProvider = new TypesafeDocumentConfigProvider(configFile);
+        serverConfigProvider = new TypesafeServerConfigProvider(configFile);
+        keystoreConfigProvider = new TypesafeKeystoreConfigProvider(configFile);
+        this.documentConfig = documentConfigProvider.getByEmail("eulverso2@gmail.com");
+        this.serverConfig = serverConfigProvider.getByName("default");
+        this.keystoreConfig = keystoreConfigProvider.getByName("default");
+        exitUrls = new String[] {serverConfig.getCompletionUri().toString(),serverConfig.getRejectionUri().toString(),serverConfig.getErrorUri().toString()};
+
+    }
     @RequestMapping("/portalXades")
     public String getPortalXades() throws IOException {
+
         if (portalSignedDocumentFetcher != null) {
             return portalSignedDocumentFetcher.getXades();
         } else {
@@ -47,15 +70,16 @@ public class PortalController {
 
     @RequestMapping("/portal")
     public void startPortalJob() throws IOException, URISyntaxException {
+        setupConfig();
         PortalAsiceMaker portalAsiceMaker = new PortalAsiceMaker();
         SetupClientConfig clientConfig = new SetupClientConfig("Portal");
 
         clientConfig.setupKeystoreConfig(portalAsiceMaker.getContactInfo());
         clientConfig.setupClientConfiguration();
         List<PortalSigner> portalSigners = new ArrayList<>();
-        portalSigners.add(PortalSigner.builder("17079493538", Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
-        portalSigners.add(PortalSigner.builder("17079493457", Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
-        portalSigners.add(PortalSigner.builder("17079493295", Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
+        for(String signer : documentConfig.getSigners()){
+            portalSigners.add(PortalSigner.builder(signer, Notifications.builder().withEmailTo(documentConfig.getEmail()).build()).build());
+        }
 
         portalAsiceMaker.createPortalAsice(portalSigners, clientConfig.getClientConfiguration());
 
