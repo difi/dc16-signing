@@ -27,11 +27,8 @@ public class PortalSignedDocumentFetcherTest {
     }
     @BeforeClass
     public void setUp() throws IOException, URISyntaxException {
-
         setUpWithCorrectXadesAndPades();
         setUpWithFailedXadesAndPades();
-
-
 
     }
 
@@ -57,7 +54,6 @@ public class PortalSignedDocumentFetcherTest {
 
         this.signedDocumentFetcher = new PortalSignedDocumentFetcher(poller, portalClient);
 
-
     }
 
     public void setUpWithFailedXadesAndPades() throws URISyntaxException, IOException {
@@ -77,10 +73,8 @@ public class PortalSignedDocumentFetcherTest {
 
         SigningServiceConnector connector = new SigningServiceConnector();
         connector.sendPortalRequest(portalAsiceMaker.getPortalJob(), clientConfig.getKeyStoreConfig(), new URI("http://localhost:8082/"));
-        //poller.poll();
 
         this.failedSignedDocumentFetcher = new PortalSignedDocumentFetcher(poller, portalClient);
-
     }
 
     @Test

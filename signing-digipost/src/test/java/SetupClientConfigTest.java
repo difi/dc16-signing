@@ -1,5 +1,3 @@
-
-
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -14,7 +12,6 @@ public class SetupClientConfigTest {
         SetupClientConfig setupClientConfig = new SetupClientConfig("Direct");
         setupClientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
         Assert.assertNotNull(setupClientConfig);
-
     }
 
     @Test

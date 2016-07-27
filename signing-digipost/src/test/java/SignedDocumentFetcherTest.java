@@ -17,8 +17,6 @@ import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
 import java.util.Optional;
 
-import static org.mockito.Mockito.mock;
-
 public class SignedDocumentFetcherTest {
 
     private SignedDocumentFetcher signedDocumentFetcher;
@@ -82,7 +80,6 @@ public class SignedDocumentFetcherTest {
 
         if(signingServiceConnector.getDirectClient().isPresent() && signingServiceConnector.getDirectJobResponse().isPresent()){
             StatusReader statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(),signingServiceConnector.getDirectJobResponse().get(),"tt");
-            //statusReader.getStatus();
 
             signedDocumentFetcher = new SignedDocumentFetcher(signingServiceConnector.getDirectClient().get(),statusReader);
             return Optional.ofNullable(signedDocumentFetcher);
@@ -94,7 +91,6 @@ public class SignedDocumentFetcherTest {
     public void getPadesReturnedFetchedPade() throws IOException{
         byte[] padesStatus = signedDocumentFetcher.getPades();
         byte[] comparisonStatus = ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/pAdES.pdf"));
-        //Assert.assertEquals(padesStatus,comparisonStatus);
         Assert.assertNotSame(padesStatus, "".getBytes());
     }
     @Test

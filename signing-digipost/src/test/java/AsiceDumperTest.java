@@ -27,7 +27,6 @@ public class AsiceDumperTest {
 
     SignatureJob signatureJob = asiceMaker.getSignatureJob();
 
-
     Assert.assertEquals(AsiceDumper.dumper(preparedAsic,signatureJob),true);
 
     }

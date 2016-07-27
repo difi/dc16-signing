@@ -66,15 +66,13 @@ public class PortalController {
         } else {
             signingServiceConnector = new SigningServiceConnector();
             signingServiceConnector.sendPortalRequest(portalJob, keyStoreConfig);
-
         }
-
     }
 
     @RequestMapping("/poll")
 
     public String poll(){
-        if(this.portalJobPoller != null){
+        if(this.portalJobPoller == null){
             this.portalJobPoller = new PortalJobPoller(signingServiceConnector.getPortalClient().get()); //added extra line, before without "if" //Lage sjekk
         }
         String status = this.portalJobPoller.poll();
