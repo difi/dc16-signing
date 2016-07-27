@@ -65,8 +65,8 @@ public class SigningServiceConnector {
      */
     public Optional<DirectJobResponse> sendRequest(SignatureJob signatureJob, KeyStoreConfig keyStoreConfig, URI... server) throws URISyntaxException {
 
-        //URI ServerURI = URI.create("https://api.difitest.signering.posten.no/api");
-        URI ServerURI = serverConfig.getServiceUri();
+        URI ServerURI = URI.create("https://api.difitest.signering.posten.no/api");
+        //URI ServerURI = serverConfig.getServiceUri();
 
         if(server.length != 0){
             ServerURI = server[0];
@@ -100,7 +100,8 @@ public class SigningServiceConnector {
      * @throws URISyntaxException
      */
     public Optional<PortalJobResponse> sendPortalRequest(PortalJob portalJob, KeyStoreConfig keyStoreConfig, URI... server) throws URISyntaxException {
-        URI ServerURI = serverConfig.getServiceUri();
+        //URI ServerURI = serverConfig.getServiceUri();
+        URI ServerURI = URI.create("https://api.difitest.signering.posten.no/api");
 
         if(server.length != 0){
             ServerURI = server[0];
