@@ -26,7 +26,7 @@ public class PortalAsiceMakerTest {
 
     @Test
     public void findsFileAtGivenPath(){
-        PortalAsiceMaker portalAsiceMaker = new PortalAsiceMaker("Documents//Dokument til signering 5.pdf");
+        PortalAsiceMaker portalAsiceMaker = new PortalAsiceMaker();
         File file = portalAsiceMaker.getDokumentTilSignering();
         Assert.assertNotNull(file);
     }
