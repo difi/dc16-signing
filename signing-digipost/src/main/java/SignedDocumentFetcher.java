@@ -3,7 +3,6 @@ import no.digipost.signature.client.core.PAdESReference;
 import no.digipost.signature.client.core.XAdESReference;
 import no.digipost.signature.client.core.exceptions.TooEagerPollingException;
 import no.digipost.signature.client.direct.DirectClient;
-import no.digipost.signature.client.direct.DirectJobStatus;
 import no.digipost.signature.client.direct.DirectJobStatusResponse;
 
 import java.io.*;
@@ -22,9 +21,12 @@ public class SignedDocumentFetcher {
             System.out.print(nextAvailablePollingTime);
         }
         this.statusReader = statusReader;
-
     }
 
+    /**
+     * Returns the signed pades-package.
+     * @throws IOException
+     */
     public byte[] getPades() throws IOException {
         PAdESReference pAdESReference = null;
         if(this.statusReader != null){
@@ -32,15 +34,16 @@ public class SignedDocumentFetcher {
                 DirectJobStatusResponse directJobStatusResponse = this.statusReader.getStatusResponse().get();
                 if (directJobStatusResponse.is(directJobStatusResponse.getStatus().SIGNED)) {
                     pAdESReference = directJobStatusResponse.getpAdESUrl();
-
                     return ByteStreams.toByteArray(client.getPAdES(pAdESReference));
                 }
             } return "".getBytes();
-
         }
         return "".getBytes();
     }
 
+    /**
+     * Returns the signed xades-package
+     */
     public byte[] getXades() throws IOException {
         XAdESReference xAdESReference = null;
         if (this.statusReader != null) {

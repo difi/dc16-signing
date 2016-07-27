@@ -51,13 +51,13 @@ public class PortalController {
         SetupClientConfig clientConfig = new SetupClientConfig("Portal");
 
         clientConfig.setupKeystoreConfig(portalAsiceMaker.getContactInfo());
-        clientConfig.setupClientConfiguration("991825827");
+        clientConfig.setupClientConfiguration();
         List<PortalSigner> portalSigners = new ArrayList<>();
         portalSigners.add(PortalSigner.builder("17079493538", Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
         portalSigners.add(PortalSigner.builder("17079493457", Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
         portalSigners.add(PortalSigner.builder("17079493295", Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
 
-        portalAsiceMaker.createPortalAsice(portalSigners, exitUrls, clientConfig.getClientConfiguration());
+        portalAsiceMaker.createPortalAsice(portalSigners, clientConfig.getClientConfiguration());
 
         PortalJob portalJob = portalAsiceMaker.getPortalJob();
         KeyStoreConfig keyStoreConfig = clientConfig.getKeyStoreConfig();
@@ -66,15 +66,13 @@ public class PortalController {
         } else {
             signingServiceConnector = new SigningServiceConnector();
             signingServiceConnector.sendPortalRequest(portalJob, keyStoreConfig);
-
         }
-
     }
 
     @RequestMapping("/poll")
 
     public String poll(){
-        if(this.portalJobPoller != null){
+        if(this.portalJobPoller == null){
             this.portalJobPoller = new PortalJobPoller(signingServiceConnector.getPortalClient().get()); //added extra line, before without "if" //Lage sjekk
         }
         String status = this.portalJobPoller.poll();
