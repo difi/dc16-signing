@@ -12,9 +12,16 @@
     <artifactId>signing-dist</artifactId>
 
     <dependencies>
+        <!-- Signing -->
         <dependency>
             <groupId>no.difi.idporten.signing</groupId>
             <artifactId>signing-spring</artifactId>
+        </dependency>
+
+        <!-- Logging -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
         </dependency>
     </dependencies>
 
