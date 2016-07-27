@@ -1,3 +1,5 @@
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import no.digipost.signature.client.asice.DocumentBundle;
 import no.digipost.signature.client.core.SignatureJob;
 import org.testng.Assert;
@@ -12,22 +14,28 @@ import java.security.cert.CertificateException;
 
 public class AsiceDumperTest {
 
-@Test
+    private TypesafeServerConfigProvider serverConfigProvider;
+    private TypesafeServerConfig serverConfig;
+
+    @Test
     public void testThatDocumentbundleIsDumpedToDisk() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException, URISyntaxException {
-    String[] exitUrls = {
-            "http://localhost:8081/onCompletion","http://localhost:8081/onRejection","http://localhost:8081/onError"
-    };
+        Config configFile = ConfigFactory.load();
+        this.serverConfigProvider = new TypesafeServerConfigProvider(configFile);
+        this.serverConfig = serverConfigProvider.getByName("default");
+        String[] exitUrls = {serverConfig.getCompletionUri().toString(), serverConfig.getRejectionUri().toString(), serverConfig.getErrorUri().toString()};
 
-    AsiceMaker asiceMaker = new AsiceMaker();
-    SetupClientConfig clientConfig = new SetupClientConfig("Direct");
-    clientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
-    clientConfig.setupClientConfiguration();
+        AsiceMaker asiceMaker = new AsiceMaker();
+        SetupClientConfig clientConfig = new SetupClientConfig("Direct");
+        clientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
+        clientConfig.setupClientConfiguration();
 
-    DocumentBundle preparedAsic = asiceMaker.createAsice("17079493538","123456789",exitUrls, clientConfig.getClientConfiguration());
+        TypesafeDocumentConfigProvider documentConfigProvider = new TypesafeDocumentConfigProvider(configFile);
+        TypesafeDocumentConfig documentConfig = documentConfigProvider.getByEmail("eulverso2@gmail.com");
+        DocumentBundle preparedAsic = asiceMaker.createAsice(documentConfig.getSigner(), documentConfig.getSender(), exitUrls, clientConfig.getClientConfiguration());
 
-    SignatureJob signatureJob = asiceMaker.getSignatureJob();
+        SignatureJob signatureJob = asiceMaker.getSignatureJob();
 
-    Assert.assertEquals(AsiceDumper.dumper(preparedAsic,signatureJob),true);
+        Assert.assertEquals(AsiceDumper.dumper(preparedAsic,signatureJob),true);
 
     }
 
