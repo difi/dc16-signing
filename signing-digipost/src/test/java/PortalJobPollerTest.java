@@ -53,8 +53,6 @@ public class PortalJobPollerTest {
         when(statusChange.getSignatures()).thenReturn(signaturesList);
         when(secondStatusChange.getSignatures()).thenReturn(secondSignaturesList);
 
-
-
     }
 
     @Test

@@ -25,7 +25,7 @@ public class SetupClientConfig {
      */
     public void initialize(File kontaktinfo, String sender) throws URISyntaxException{
         setupKeystoreConfig(kontaktinfo);
-        setupClientConfiguration(sender);
+        setupClientConfiguration();
     }
 
     public void setupKeystoreConfig(File kontaktInfo) {
@@ -40,42 +40,22 @@ public class SetupClientConfig {
         }
     }
 
-
-    public void setupClientConfiguration(String sender) throws URISyntaxException{
-        //Creates a client configuration
-        //clientConfiguration = ClientConfiguration.builder(keyStoreConfig)
-        //        .globalSender(new Sender(sender))
-        //        .build();
-
+    /**
+     * Sets up the client configuration using a keystore and a truststore.
+     */
+    public void setupClientConfiguration() throws URISyntaxException{
         clientConfiguration = ClientConfiguration.builder(keyStoreConfig)
                 .serviceUri(new URI("http://localhost:8082/"))
-                //.serviceUri(ServiceUri.DIFI_TEST)
                 .trustStore(Certificates.TEST)
                 .globalSender(new Sender("991825827"))
                 .build();
     }
 
-    public KeyStore getKeyStore() {
-        return keyStore;
-    }
-
-    public void setKeyStore(KeyStore keyStore) {
-        this.keyStore = keyStore;
-    }
-
     public KeyStoreConfig getKeyStoreConfig() {
         return keyStoreConfig;
     }
-
-    public void setKeyStoreConfig(KeyStoreConfig keyStoreConfig) {
-        this.keyStoreConfig = keyStoreConfig;
-    }
-
     public ClientConfiguration getClientConfiguration() {
         return this.clientConfiguration;
     }
 
-    public void setClientConfiguration(ClientConfiguration clientConfiguration) {
-        this.clientConfiguration = clientConfiguration;
-    }
 }

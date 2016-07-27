@@ -22,26 +22,7 @@ public class StatusReader {
             return statusResponse.getStatus().toString();
     }
 
-    public void setDirectClient(DirectClient client){
-        this.client = client;
-    }
-
-    public void setJobResponse(DirectJobResponse jobResponse){
-        this.jobResponse = jobResponse;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-
-    public void confirmProcessedSignatureJob() {
-        this.client.confirm(statusResponse);
-    }
-
     public Optional<DirectJobStatusResponse> getStatusResponse() {
         return Optional.ofNullable(statusResponse);
     }
-
-
 }

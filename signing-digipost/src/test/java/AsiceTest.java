@@ -2,7 +2,6 @@ import no.digipost.signature.client.asice.DocumentBundle;
 import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.security.KeyStoreConfig;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.KeyStoreException;
@@ -24,7 +23,7 @@ public class AsiceTest {
         AsiceMaker asiceMaker = new AsiceMaker();
         SetupClientConfig clientConfig = new SetupClientConfig("Direct");
         clientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
-        clientConfig.setupClientConfiguration("123456789");
+        clientConfig.setupClientConfiguration();
 
         DocumentBundle preparedAsic = asiceMaker.createAsice("17079493538","123456789",exitUrls, clientConfig.getClientConfiguration());
 

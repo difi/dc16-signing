@@ -21,12 +21,11 @@ public class AsiceDumperTest {
     AsiceMaker asiceMaker = new AsiceMaker();
     SetupClientConfig clientConfig = new SetupClientConfig("Direct");
     clientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
-    clientConfig.setupClientConfiguration("123456789");
+    clientConfig.setupClientConfiguration();
 
     DocumentBundle preparedAsic = asiceMaker.createAsice("17079493538","123456789",exitUrls, clientConfig.getClientConfiguration());
 
     SignatureJob signatureJob = asiceMaker.getSignatureJob();
-
 
     Assert.assertEquals(AsiceDumper.dumper(preparedAsic,signatureJob),true);
 
