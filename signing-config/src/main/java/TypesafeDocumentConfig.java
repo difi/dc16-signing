@@ -25,10 +25,6 @@ public class TypesafeDocumentConfig {
         this.email = documentConfig.getString("e_mail");
         this.relativeDocumentPath = documentConfig.getString("relativeDocumentPath");
 
-        System.out.println(this.signer);
-        System.out.println(this.sender);
-        System.out.println(this.signers.toString());
-        System.out.println(this.email);
     }
 
     public String getSigner() {
