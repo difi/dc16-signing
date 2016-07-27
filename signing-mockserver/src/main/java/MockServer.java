@@ -7,14 +7,10 @@ import no.digipost.signature.client.direct.DirectJobResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.eclipse.jetty.http.HttpHeader;
-import org.junit.BeforeClass;
 import org.junit.Rule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.KeyStore;
 import java.security.KeyStoreException;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
