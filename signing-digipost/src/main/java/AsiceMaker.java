@@ -1,3 +1,5 @@
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import no.digipost.signature.client.ClientConfiguration;
 import no.digipost.signature.client.asice.CreateASiCE;
 import no.digipost.signature.client.asice.DocumentBundle;
@@ -16,12 +18,19 @@ import java.security.NoSuchProviderException;
 
 public class AsiceMaker {
 
+    private TypesafeKeystoreConfig keystoreConfig;
+    private TypesafeKeystoreConfigProvider keystoreConfigProvider;
+
+    private TypesafeDocumentConfigProvider documentConfigProvider;
+    private TypesafeDocumentConfig documentConfig;
+
     private CreateASiCE createASiCE;
     private ManifestCreator manifestCreator = new CreateDirectManifest();
     private SignatureJob signatureJob;
     private File dokumentTilSignering;
     private File kontaktInfoClientTest;
-    private String relativeDocumentPath = "Documents//Dokument til signering 3.pdf";
+    private String relativeDocumentPath;
+    private String keystorefile;
 
     /**
      * Creates classLoader to load file, Sets field kontaktInfoClientTest to file kontaktinfo-client-test.jks and sets the document for signing.
@@ -29,24 +38,20 @@ public class AsiceMaker {
      */
 
     public AsiceMaker() {
+        Config configFile = ConfigFactory.load();
+        this.documentConfigProvider = new TypesafeDocumentConfigProvider(configFile);
+        this.documentConfig = documentConfigProvider.getByEmail("eulverso2@gmail.com");
+        this.relativeDocumentPath = documentConfig.getRelativeDocumentPath();
+
+        this.keystoreConfigProvider = new  TypesafeKeystoreConfigProvider(configFile);
+        this.keystoreConfig = keystoreConfigProvider.getByName("default");
+        this.keystorefile = keystoreConfig.getKeystore();
+
         ClassLoader classLoader = getClass().getClassLoader();
-        kontaktInfoClientTest = new File(classLoader.getResource("kontaktinfo-client-test.jks").getFile());
+        kontaktInfoClientTest = new File(classLoader.getResource(keystorefile).getFile());
         dokumentTilSignering = new File(classLoader.getResource(relativeDocumentPath).getFile());
 
     }
-
-    /**
-     * Same as above, except with the document path as a parameter.
-     *
-     * @param relativeDocumentPath
-     */
-    public AsiceMaker(String relativeDocumentPath) {
-        ClassLoader classLoader = getClass().getClassLoader();
-        kontaktInfoClientTest = new File(classLoader.getResource("kontaktinfo-client-test.jks").getFile());
-        dokumentTilSignering = new File(classLoader.getResource(relativeDocumentPath).getFile());
-
-    }
-
     /**
      * Creates an asice package. Uses current keystore and a hardcoded document.
      *

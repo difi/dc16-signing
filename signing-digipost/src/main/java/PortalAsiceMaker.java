@@ -1,3 +1,5 @@
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import no.digipost.signature.client.ClientConfiguration;
 import no.digipost.signature.client.asice.CreateASiCE;
 import no.digipost.signature.client.asice.DocumentBundle;
@@ -12,32 +14,35 @@ import java.io.IOException;
 import java.util.List;
 
 public class PortalAsiceMaker {
+
+    private TypesafeDocumentConfig documentConfig;
+    private TypesafeDocumentConfigProvider documentConfigProvider;
+    private TypesafeKeystoreConfig keystoreConfig;
+    private TypesafeKeystoreConfigProvider keystoreConfigProvider;
     private CreateASiCE createASiCE;
     private ManifestCreator manifestCreator = new CreateDirectManifest();
     private PortalJob portalJob;
     private File dokumentTilSignering;
     private File kontaktInfoClientTest;
-    private String relativeDocumentPath = "Documents//Dokument til signering 3.pdf";
+    private String relativeDocumentPath;
+    private String keystorefile;
 
     /**
      * Creates classLoader to load file, Sets field kontaktInfoClientTest to file kontaktinfo-client-test.jks and sets the document for signing.
      * TODO: Set through a config file?
      */
     public PortalAsiceMaker() {
-        ClassLoader classLoader = getClass().getClassLoader();
-        kontaktInfoClientTest = new File(classLoader.getResource("kontaktinfo-client-test.jks").getFile());
-        dokumentTilSignering = new File(classLoader.getResource(relativeDocumentPath).getFile());
+        Config configFile = ConfigFactory.load();
+        this.documentConfigProvider = new TypesafeDocumentConfigProvider(configFile);
+        this.documentConfig = documentConfigProvider.getByEmail("eulverso2@gmail.com");
+        this.relativeDocumentPath = documentConfig.getRelativeDocumentPath();
 
-    }
+        this.keystoreConfigProvider = new  TypesafeKeystoreConfigProvider(configFile);
+        this.keystoreConfig = keystoreConfigProvider.getByName("default");
+        this.keystorefile = keystoreConfig.getKeystore();
 
-    /**
-     * Same as above, except with the document path as a parameter.
-     *
-     * @param relativeDocumentPath
-     */
-    public PortalAsiceMaker(String relativeDocumentPath) {
         ClassLoader classLoader = getClass().getClassLoader();
-        kontaktInfoClientTest = new File(classLoader.getResource("kontaktinfo-client-test.jks").getFile());
+        kontaktInfoClientTest = new File(classLoader.getResource(keystorefile).getFile());
         dokumentTilSignering = new File(classLoader.getResource(relativeDocumentPath).getFile());
 
     }
