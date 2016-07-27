@@ -29,7 +29,7 @@ public class SetupClientConfig {
     SetupClientConfig(String type) throws URISyntaxException {
         this.type = type;
 
-        Config configFile = ConfigFactory.load();
+        Config configFile = ConfigFactory.load("signing");
         this.typesafeKeystoreConfigProvider = new TypesafeKeystoreConfigProvider(configFile);
         this.typeSafeKeystoreConfig = typesafeKeystoreConfigProvider.getByName("default");
         this.typesafeServerConfigProvider = new TypesafeServerConfigProvider(configFile);

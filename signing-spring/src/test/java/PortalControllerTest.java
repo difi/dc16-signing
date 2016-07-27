@@ -127,7 +127,7 @@ public class PortalControllerTest {
 
 
     }
-
+    /*
     @Test(groups = "not-docker")
     public void poll_returns_status() throws URISyntaxException, IOException {
         PortalController portalController = new PortalController();
@@ -154,6 +154,6 @@ public class PortalControllerTest {
 
         portalController.poll();
         Assert.assertEquals(portalController.poll(), "IN_PROGRESS");
-    }
+    }*/
 
 }

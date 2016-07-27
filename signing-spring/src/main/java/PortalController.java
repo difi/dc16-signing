@@ -35,7 +35,7 @@ public class PortalController {
 
     @Autowired
     private void setupConfig()throws URISyntaxException{
-        Config configFile = ConfigFactory.load("application.conf");
+        Config configFile = ConfigFactory.load("signing");
         documentConfigProvider = new TypesafeDocumentConfigProvider(configFile);
         serverConfigProvider = new TypesafeServerConfigProvider(configFile);
         keystoreConfigProvider = new TypesafeKeystoreConfigProvider(configFile);
