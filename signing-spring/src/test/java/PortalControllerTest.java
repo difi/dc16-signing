@@ -18,8 +18,6 @@ import java.util.List;
 
 public class PortalControllerTest {
 
-    private TypesafeServerConfig serverConfig;
-    private TypesafeServerConfigProvider serverConfigProvider;
     private TypesafeKeystoreConfig keystoreConfig;
     private TypesafeKeystoreConfigProvider keystoreConfigProvider;
     private TypesafeDocumentConfigProvider documentConfigProvider;
@@ -30,22 +28,19 @@ public class PortalControllerTest {
     private String relativeDocumentPath;
     private String keystorefile;
     private PortalJobPoller poller;
+    private TypesafeServerConfigProvider mockserverConfigProvider;
+    private TypesafeServerConfig mockserverConfig;
 
     @BeforeClass
     public void setUp() throws URISyntaxException, IOException {
-        MockServer.setUp();
         Config configFile = ConfigFactory.load("signing");
         this.documentConfigProvider = new TypesafeDocumentConfigProvider(configFile);
         this.documentConfig = documentConfigProvider.getByEmail("eulverso2@gmail.com");
         this.relativeDocumentPath = documentConfig.getRelativeDocumentPath();
 
-        this.keystoreConfigProvider = new  TypesafeKeystoreConfigProvider(configFile);
-        this.keystoreConfig = keystoreConfigProvider.getByName("default");
-        this.keystorefile = keystoreConfig.getKeystore();
-
-        this.serverConfigProvider = new TypesafeServerConfigProvider(configFile);
-        this.serverConfig = serverConfigProvider.getByName("default");
-        exitUrls = new String[]{serverConfig.getCompletionUri().toString(), serverConfig.getRejectionUri().toString(), serverConfig.getErrorUri().toString()};
+        this.mockserverConfigProvider = new TypesafeServerConfigProvider(configFile);
+        this.mockserverConfig = mockserverConfigProvider.getByName("test");
+        exitUrls = new String[]{mockserverConfig.getCompletionUri().toString(), mockserverConfig.getRejectionUri().toString(), mockserverConfig.getErrorUri().toString()};
 
         PortalController portalController = new PortalController();
         PortalAsiceMaker portalAsiceMaker = new PortalAsiceMaker();
@@ -61,14 +56,14 @@ public class PortalControllerTest {
         DocumentBundle preparedAsice = portalAsiceMaker.createPortalAsice(portalSigners, clientConfig.getClientConfiguration());
 
         PortalClient portalClient = new PortalClient(clientConfig.getClientConfiguration());
-        PortalJobPoller poller = new PortalJobPoller(portalClient);
+
         SigningServiceConnector signingServiceConnector = new SigningServiceConnector();
-        signingServiceConnector.sendPortalRequest(portalAsiceMaker.getPortalJob(), clientConfig.getKeyStoreConfig(), serverConfig.getServiceUri());
+        signingServiceConnector.sendPortalRequest(portalAsiceMaker.getPortalJob(), clientConfig.getKeyStoreConfig(), mockserverConfig.getServiceUri());
         portalController.setSigningServiceConnector(signingServiceConnector);
 
         getPortalXades_returnes_getXades_if_signedDocumentFetcher_is_null(portalController);
         getPortalPades_returns_getPades_if_signedDocumentFetcher_is_null(portalController);
-        poll_returns_status(portalController, portalAsiceMaker, clientConfig);
+        poll_returns_status(portalController, portalAsiceMaker, clientConfig, portalClient);
     }
 
     @Test
@@ -138,15 +133,20 @@ public class PortalControllerTest {
     }
 
     @Test(groups = "not-docker")
-    public void poll_returns_status(PortalController portalController, PortalAsiceMaker portalAsiceMaker, SetupClientConfig clientConfig) throws URISyntaxException, IOException {
+    public void poll_returns_status(PortalController portalController, PortalAsiceMaker portalAsiceMaker, SetupClientConfig clientConfig, PortalClient portalClient) throws URISyntaxException, IOException {
         SigningServiceConnector signingServiceConnectorconnector = new SigningServiceConnector();
-        signingServiceConnectorconnector.sendPortalRequest(portalAsiceMaker.getPortalJob(), clientConfig.getKeyStoreConfig(), serverConfig.getServiceUri());
+        signingServiceConnectorconnector.sendPortalRequest(portalAsiceMaker.getPortalJob(), clientConfig.getKeyStoreConfig(), mockserverConfig.getServiceUri());
 
+        PortalJobPoller poller = new PortalJobPoller(portalClient);
         portalController.setPortalJobPoller(poller);
         portalController.setSigningServiceConnector(signingServiceConnectorconnector);
+        String message = portalController.poll();
 
-        portalController.poll();
-        Assert.assertEquals(portalController.poll(), "IN_PROGRESS");
+        Boolean isPolled = false;
+        if (message == "NO_CHANGES" || message.contains("Too frequent polling")) {
+             isPolled = true;
+        }
+        Assert.assertTrue(isPolled);
     }
 
 }
