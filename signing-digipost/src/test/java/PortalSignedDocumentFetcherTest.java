@@ -1,3 +1,5 @@
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import no.digipost.signature.client.asice.DocumentBundle;
 import no.digipost.signature.client.portal.Notifications;
 import no.digipost.signature.client.portal.PortalClient;
@@ -9,7 +11,6 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +18,12 @@ import java.util.List;
 public class PortalSignedDocumentFetcherTest {
     private PortalSignedDocumentFetcher signedDocumentFetcher;
     private PortalSignedDocumentFetcher failedSignedDocumentFetcher;
-    private String[] exitUrls = {
-            "http://localhost:8080/onCompletion","http://localhost:8080/onRejection","http://localhost:8080/onError"
-    };
+    private List<String> configSigners;
+
+    private TypesafeDocumentConfigProvider documentConfigProvider;
+    private TypesafeDocumentConfig documentConfig;
+    private TypesafeServerConfigProvider serverConfigProvider;
+    private TypesafeServerConfig serverConfig;
 
     @BeforeSuite
     public void setupServer() throws IOException{
@@ -27,9 +31,15 @@ public class PortalSignedDocumentFetcherTest {
     }
     @BeforeClass
     public void setUp() throws IOException, URISyntaxException {
+        Config configFile = ConfigFactory.load();
+        this.documentConfigProvider = new TypesafeDocumentConfigProvider(configFile);
+        this.documentConfig = documentConfigProvider.getByEmail("eulverso2@gmail.com");
+        this.serverConfigProvider = new TypesafeServerConfigProvider(configFile);
+        this.serverConfig = serverConfigProvider.getByName("default");
+        configSigners = documentConfig.getSigners();
+
         setUpWithCorrectXadesAndPades();
         setUpWithFailedXadesAndPades();
-
     }
 
     public void setUpWithCorrectXadesAndPades() throws IOException, URISyntaxException {
@@ -39,9 +49,9 @@ public class PortalSignedDocumentFetcherTest {
         clientConfig.setupClientConfiguration();
 
         List<PortalSigner> portalSigners = new ArrayList<>();
-        portalSigners.add( PortalSigner.builder("17079493538", Notifications.builder().withEmailTo("eulverso2@gmail.com").build()).build());
-        portalSigners.add( PortalSigner.builder("17079493457",Notifications.builder().withEmailTo("eulverso2@gmail.com").build()).build());
-        portalSigners.add( PortalSigner.builder("17079493295",Notifications.builder().withEmailTo("eulverso2@gmail.com").build()).build());
+        portalSigners.add( PortalSigner.builder(configSigners.get(0), Notifications.builder().withEmailTo("eulverso2@gmail.com").build()).build());
+        portalSigners.add( PortalSigner.builder(configSigners.get(1),Notifications.builder().withEmailTo("eulverso2@gmail.com").build()).build());
+        portalSigners.add( PortalSigner.builder(configSigners.get(2),Notifications.builder().withEmailTo("eulverso2@gmail.com").build()).build());
         DocumentBundle preparedAsice = portalAsiceMaker.createPortalAsice(portalSigners, clientConfig.getClientConfiguration());
 
 
@@ -49,7 +59,7 @@ public class PortalSignedDocumentFetcherTest {
         PortalJobPoller poller = new PortalJobPoller(portalClient);
 
         SigningServiceConnector connector = new SigningServiceConnector();
-        connector.sendPortalRequest(portalAsiceMaker.getPortalJob(), clientConfig.getKeyStoreConfig(), new URI("http://localhost:8082/"));
+        connector.sendPortalRequest(portalAsiceMaker.getPortalJob(), clientConfig.getKeyStoreConfig(), serverConfig.getServiceUri());
         poller.poll();
 
         this.signedDocumentFetcher = new PortalSignedDocumentFetcher(poller, portalClient);
@@ -63,16 +73,16 @@ public class PortalSignedDocumentFetcherTest {
         clientConfig.setupClientConfiguration();
 
         List<PortalSigner> portalSigners = new ArrayList<>();
-        portalSigners.add( PortalSigner.builder("17079493538", Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
-        portalSigners.add( PortalSigner.builder("11111111111",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
-        portalSigners.add( PortalSigner.builder("22222222222",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
+        portalSigners.add( PortalSigner.builder(configSigners.get(0), Notifications.builder().withEmailTo("eulverso2@gmail.com").build()).build());
+        portalSigners.add( PortalSigner.builder(configSigners.get(1),Notifications.builder().withEmailTo("eulverso2@gmail.com").build()).build());
+        portalSigners.add( PortalSigner.builder(configSigners.get(2),Notifications.builder().withEmailTo("eulverso2@gmail.com").build()).build());
         DocumentBundle preparedAsice = portalAsiceMaker.createPortalAsice(portalSigners, clientConfig.getClientConfiguration());
 
         PortalClient portalClient = new PortalClient(clientConfig.getClientConfiguration());
         PortalJobPoller poller = new PortalJobPoller(portalClient);
 
         SigningServiceConnector connector = new SigningServiceConnector();
-        connector.sendPortalRequest(portalAsiceMaker.getPortalJob(), clientConfig.getKeyStoreConfig(), new URI("http://localhost:8082/"));
+        connector.sendPortalRequest(portalAsiceMaker.getPortalJob(), clientConfig.getKeyStoreConfig(), serverConfig.getServiceUri());
 
         this.failedSignedDocumentFetcher = new PortalSignedDocumentFetcher(poller, portalClient);
     }

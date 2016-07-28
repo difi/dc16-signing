@@ -20,14 +20,14 @@ public class AsiceMakerTest {
     private TypesafeDocumentConfig documentConfig;
 
     @Test
-    public void defaultSignableDocumentNotNull(){
+    public void defaultSignableDocumentNotNull() throws URISyntaxException {
         AsiceMaker asiceMaker = new AsiceMaker();
         File file = asiceMaker.getDokumentTilSignering();
         Assert.assertNotNull(file);
     }
 
     @Test
-    public void findsFileAtGivenPath(){
+    public void findsFileAtGivenPath() throws URISyntaxException {
         AsiceMaker asiceMaker = new AsiceMaker();
         File file = asiceMaker.getDokumentTilSignering();
         Assert.assertNotNull(file);
