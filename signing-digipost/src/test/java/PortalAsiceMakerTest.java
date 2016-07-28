@@ -18,8 +18,6 @@ import java.util.List;
 
 public class PortalAsiceMakerTest {
 
-    private TypesafeServerConfigProvider serverConfigProvider;
-    private TypesafeServerConfig serverConfig;
     private TypesafeDocumentConfigProvider documentConfigProvider;
     private TypesafeDocumentConfig documentConfig;
 
@@ -40,9 +38,6 @@ public class PortalAsiceMakerTest {
     @Test
     public void signatureJobExistsAfterCreatingAsic() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException, URISyntaxException {
         Config configFile = ConfigFactory.load();
-        this.serverConfigProvider = new TypesafeServerConfigProvider(configFile);
-        this.serverConfig = serverConfigProvider.getByName("default");
-        String[] exitUrls = {serverConfig.getCompletionUri().toString(), serverConfig.getRejectionUri().toString(), serverConfig.getErrorUri().toString()};
         this.documentConfigProvider = new TypesafeDocumentConfigProvider(configFile);
         this.documentConfig = documentConfigProvider.getByEmail("eulverso2@gmail.com");
 
@@ -54,9 +49,11 @@ public class PortalAsiceMakerTest {
         clientConfig.setupClientConfiguration();
 
         List<PortalSigner> portalSigners = new ArrayList<>();
-        portalSigners.add( PortalSigner.builder("documentConfig.getSigner()", Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
-        portalSigners.add( PortalSigner.builder("17079493457",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
-        portalSigners.add( PortalSigner.builder("17079493295",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
+        List<String> configSigners = documentConfig.getSigners();
+
+        portalSigners.add( PortalSigner.builder(configSigners.get(0), Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
+        portalSigners.add( PortalSigner.builder(configSigners.get(1),Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
+        portalSigners.add( PortalSigner.builder(configSigners.get(2),Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
         DocumentBundle preparedAsic = portalAsiceMaker.createPortalAsice(portalSigners, clientConfig.getClientConfiguration());
         Assert.assertNotNull(portalAsiceMaker.getPortalJob());
     }
