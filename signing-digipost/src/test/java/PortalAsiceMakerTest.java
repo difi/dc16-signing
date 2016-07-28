@@ -50,7 +50,6 @@ public class PortalAsiceMakerTest {
 
         List<PortalSigner> portalSigners = new ArrayList<>();
         List<String> configSigners = documentConfig.getSigners();
-
         portalSigners.add( PortalSigner.builder(configSigners.get(0), Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
         portalSigners.add( PortalSigner.builder(configSigners.get(1),Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
         portalSigners.add( PortalSigner.builder(configSigners.get(2),Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
