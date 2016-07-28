@@ -71,8 +71,8 @@
             <!-- Proxy -->
             <dependency>
                 <groupId>com.github.difi.dc16-oidc-proxy</groupId>
-                <artifactId>proxy-proxy</artifactId>
-                <version>-0.5.0-g9eeb5f8-35</version>
+                <artifactId>proxy</artifactId>
+                <version>0.6.0</version>
             </dependency>
 
             <!-- Signature API -->

@@ -33,7 +33,7 @@ public class SetupClientConfig {
         this.typesafeKeystoreConfigProvider = new TypesafeKeystoreConfigProvider(configFile);
         this.typeSafeKeystoreConfig = typesafeKeystoreConfigProvider.getByName("default");
         this.typesafeServerConfigProvider = new TypesafeServerConfigProvider(configFile);
-        this.typesafeServerConfig = typesafeServerConfigProvider.getByName("test");
+        this.typesafeServerConfig = typesafeServerConfigProvider.getByName("default");
         this.typesafeDocumentConfigProvider = new TypesafeDocumentConfigProvider(configFile);
         this.typesafeDocumentConfig = typesafeDocumentConfigProvider.getByEmail("eulverso2@gmail.com");
 
@@ -64,7 +64,7 @@ public class SetupClientConfig {
      */
     public void setupClientConfiguration() throws URISyntaxException{
         clientConfiguration = ClientConfiguration.builder(keyStoreConfig)
-                .serviceUri(new URI("http://localhost:8082/"))
+                .serviceUri(typesafeServerConfig.getServiceUri())
                 .trustStore(Certificates.TEST)
                 .globalSender(new Sender(this.typesafeDocumentConfig.getSender()))
                 .build();

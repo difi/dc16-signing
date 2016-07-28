@@ -39,13 +39,13 @@ public class SigningServiceConnector {
     private TypesafeKeystoreConfig keystoreConfig;
 
     public SigningServiceConnector() throws IOException, URISyntaxException {
-        Config configFile = ConfigFactory.load("application.conf");
+        Config configFile = ConfigFactory.load("signing");
         documentConfigProvider = new TypesafeDocumentConfigProvider(configFile);
         serverConfigProvider = new TypesafeServerConfigProvider(configFile);
         keystoreConfigProvider = new TypesafeKeystoreConfigProvider(configFile);
 
         this.documentConfig = documentConfigProvider.getByEmail("eulverso2@gmail.com");
-        this.serverConfig = serverConfigProvider.getByName("test");
+        this.serverConfig = serverConfigProvider.getByName("default");
         this.keystoreConfig = keystoreConfigProvider.getByName("default");
     }
 
@@ -65,8 +65,8 @@ public class SigningServiceConnector {
      */
     public Optional<DirectJobResponse> sendRequest(SignatureJob signatureJob, KeyStoreConfig keyStoreConfig, URI... server) throws URISyntaxException {
 
-        URI ServerURI = URI.create("https://api.difitest.signering.posten.no/api");
-        //URI ServerURI = serverConfig.getServiceUri();
+        //URI ServerURI = URI.create("https://api.difitest.signering.posten.no/api");
+        URI ServerURI = serverConfig.getServiceUri();
 
         if(server.length != 0){
             ServerURI = server[0];
@@ -100,8 +100,8 @@ public class SigningServiceConnector {
      * @throws URISyntaxException
      */
     public Optional<PortalJobResponse> sendPortalRequest(PortalJob portalJob, KeyStoreConfig keyStoreConfig, URI... server) throws URISyntaxException {
-        //URI ServerURI = serverConfig.getServiceUri();
-        URI ServerURI = URI.create("https://api.difitest.signering.posten.no/api");
+        URI ServerURI = serverConfig.getServiceUri();
+        //URI ServerURI = URI.create("https://api.difitest.signering.posten.no/api");
 
         if(server.length != 0){
             ServerURI = server[0];
