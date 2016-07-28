@@ -1,3 +1,5 @@
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import no.digipost.signature.client.Certificates;
 import no.digipost.signature.client.ClientConfiguration;
 import no.digipost.signature.client.core.Sender;
@@ -27,13 +29,31 @@ public class SigningServiceConnector {
     private DirectClient directClient;
     private PortalClient portalClient;
 
-    public SigningServiceConnector() throws IOException {
+    private TypesafeDocumentConfigProvider documentConfigProvider;
+    private TypesafeDocumentConfig documentConfig;
+
+    private TypesafeServerConfigProvider serverConfigProvider;
+    private TypesafeServerConfig serverConfig;
+
+    private TypesafeKeystoreConfigProvider keystoreConfigProvider;
+    private TypesafeKeystoreConfig keystoreConfig;
+
+    public SigningServiceConnector() throws IOException, URISyntaxException {
+        Config configFile = ConfigFactory.load("application.conf");
+        documentConfigProvider = new TypesafeDocumentConfigProvider(configFile);
+        serverConfigProvider = new TypesafeServerConfigProvider(configFile);
+        keystoreConfigProvider = new TypesafeKeystoreConfigProvider(configFile);
+
+        this.documentConfig = documentConfigProvider.getByEmail("eulverso2@gmail.com");
+        this.serverConfig = serverConfigProvider.getByName("test");
+        this.keystoreConfig = keystoreConfigProvider.getByName("default");
     }
 
     /**
      * Check the status of a job. Currently just prints out information regarding the job.
      * @return
      */
+
 
     public String getRedirectUrl() {
         return this.redirectUrl;
@@ -46,6 +66,8 @@ public class SigningServiceConnector {
     public Optional<DirectJobResponse> sendRequest(SignatureJob signatureJob, KeyStoreConfig keyStoreConfig, URI... server) throws URISyntaxException {
 
         URI ServerURI = URI.create("https://api.difitest.signering.posten.no/api");
+        //URI ServerURI = serverConfig.getServiceUri();
+
         if(server.length != 0){
             ServerURI = server[0];
         }
@@ -53,7 +75,7 @@ public class SigningServiceConnector {
         client = ClientConfiguration.builder(keyStoreConfig)
                 .serviceUri(ServerURI)
                 .trustStore(Certificates.TEST)
-                .globalSender(new Sender("991825827"))
+                .globalSender(new Sender(documentConfig.getSender()))
                 .build();
 
         directClient = new DirectClient(client);
@@ -78,14 +100,16 @@ public class SigningServiceConnector {
      * @throws URISyntaxException
      */
     public Optional<PortalJobResponse> sendPortalRequest(PortalJob portalJob, KeyStoreConfig keyStoreConfig, URI... server) throws URISyntaxException {
+        //URI ServerURI = serverConfig.getServiceUri();
         URI ServerURI = URI.create("https://api.difitest.signering.posten.no/api");
+
         if(server.length != 0){
             ServerURI = server[0];
         }
         client = ClientConfiguration.builder(keyStoreConfig)
                 .serviceUri(ServerURI)
                 .trustStore(Certificates.TEST)
-                .globalSender(new Sender("991825827"))
+                .globalSender(new Sender(documentConfig.getSender()))
                 .build();
 
         portalClient =  new PortalClient(client);

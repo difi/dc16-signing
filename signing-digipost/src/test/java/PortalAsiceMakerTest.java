@@ -1,3 +1,5 @@
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import no.digipost.signature.client.asice.DocumentBundle;
 import no.digipost.signature.client.portal.Notifications;
 import no.digipost.signature.client.portal.PortalSigner;
@@ -16,6 +18,10 @@ import java.util.List;
 
 public class PortalAsiceMakerTest {
 
+    private TypesafeServerConfigProvider serverConfigProvider;
+    private TypesafeServerConfig serverConfig;
+    private TypesafeDocumentConfigProvider documentConfigProvider;
+    private TypesafeDocumentConfig documentConfig;
 
     @Test
     public void defaultSignableDocumentNotNull(){
@@ -26,28 +32,32 @@ public class PortalAsiceMakerTest {
 
     @Test
     public void findsFileAtGivenPath(){
-        PortalAsiceMaker portalAsiceMaker = new PortalAsiceMaker("Documents//Dokument til signering 5.pdf");
+        PortalAsiceMaker portalAsiceMaker = new PortalAsiceMaker();
         File file = portalAsiceMaker.getDokumentTilSignering();
         Assert.assertNotNull(file);
     }
 
     @Test
     public void signatureJobExistsAfterCreatingAsic() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException, URISyntaxException {
+        Config configFile = ConfigFactory.load();
+        this.serverConfigProvider = new TypesafeServerConfigProvider(configFile);
+        this.serverConfig = serverConfigProvider.getByName("default");
+        String[] exitUrls = {serverConfig.getCompletionUri().toString(), serverConfig.getRejectionUri().toString(), serverConfig.getErrorUri().toString()};
+        this.documentConfigProvider = new TypesafeDocumentConfigProvider(configFile);
+        this.documentConfig = documentConfigProvider.getByEmail("eulverso2@gmail.com");
+
         PortalAsiceMaker portalAsiceMaker = new PortalAsiceMaker();
         SetupClientConfig clientConfig = new SetupClientConfig("Direct");
-        clientConfig.initialize(portalAsiceMaker.getContactInfo(),"123456789");
+        clientConfig.initialize(portalAsiceMaker.getContactInfo(), documentConfig.getSender());
 
         clientConfig.setupKeystoreConfig(portalAsiceMaker.getContactInfo());
         clientConfig.setupClientConfiguration();
-        String[] exitUrls = {
-                "http://localhost:8081/onCompletion","http://localhost:8081/onRejection","http://localhost:8081/onError"
-        };
+
         List<PortalSigner> portalSigners = new ArrayList<>();
-        portalSigners.add( PortalSigner.builder("17079493538", Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
+        portalSigners.add( PortalSigner.builder("documentConfig.getSigner()", Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
         portalSigners.add( PortalSigner.builder("17079493457",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
         portalSigners.add( PortalSigner.builder("17079493295",Notifications.builder().withEmailTo("eulverso@gmail.com").build()).build());
         DocumentBundle preparedAsic = portalAsiceMaker.createPortalAsice(portalSigners, clientConfig.getClientConfiguration());
         Assert.assertNotNull(portalAsiceMaker.getPortalJob());
-        //Assert.assertNotNull(preparedAsic);
     }
 }

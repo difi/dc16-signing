@@ -26,6 +26,11 @@
             <artifactId>signing-mockserver</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>no.difi.idporten.signing</groupId>
+            <artifactId>signing-config</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
 
         <!-- Proxy -->
         <dependency>
@@ -73,6 +78,7 @@
             <version>7.0.21</version>
             <scope>provided</scope>
         </dependency>
+
 
         <!-- Logging -->
         <dependency>
