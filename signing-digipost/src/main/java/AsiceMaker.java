@@ -12,12 +12,15 @@ import no.digipost.signature.client.direct.DirectSigner;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 
 public class AsiceMaker {
 
+    private TypesafeServerConfig serverConfig;
+    private TypesafeServerConfigProvider serverConfigProvider;
     private TypesafeKeystoreConfig keystoreConfig;
     private TypesafeKeystoreConfigProvider keystoreConfigProvider;
 
@@ -31,14 +34,16 @@ public class AsiceMaker {
     private File kontaktInfoClientTest;
     private String relativeDocumentPath;
     private String keystorefile;
+    private String[] exitUrls;
 
     /**
      * Creates classLoader to load file, Sets field kontaktInfoClientTest to file kontaktinfo-client-test.jks and sets the document for signing.
      * TODO: Set through a config file?
      */
 
-    public AsiceMaker() {
-        Config configFile = ConfigFactory.load();
+    public AsiceMaker() throws URISyntaxException {
+
+        Config configFile = ConfigFactory.load("signing");
         this.documentConfigProvider = new TypesafeDocumentConfigProvider(configFile);
         this.documentConfig = documentConfigProvider.getByEmail("eulverso2@gmail.com");
         this.relativeDocumentPath = documentConfig.getRelativeDocumentPath();
@@ -46,6 +51,10 @@ public class AsiceMaker {
         this.keystoreConfigProvider = new  TypesafeKeystoreConfigProvider(configFile);
         this.keystoreConfig = keystoreConfigProvider.getByName("default");
         this.keystorefile = keystoreConfig.getKeystore();
+
+        this.serverConfigProvider = new TypesafeServerConfigProvider(configFile);
+        this.serverConfig = serverConfigProvider.getByName("default");
+        exitUrls = new String[]{serverConfig.getCompletionUri().toString(), serverConfig.getRejectionUri().toString(), serverConfig.getErrorUri().toString()};
 
         ClassLoader classLoader = getClass().getClassLoader();
         kontaktInfoClientTest = new File(classLoader.getResource(keystorefile).getFile());
@@ -61,7 +70,7 @@ public class AsiceMaker {
         createASiCE = new CreateASiCE(manifestCreator, clientConfiguration);
         DirectSigner signer = createDirectSigner(signerId);
         DirectDocument document = DocumentHandler.pdfToDirectDocument(PDFPath);
-        this.signatureJob = createSignatureJob(signer, document, exitUrls);
+        this.signatureJob = createSignatureJob(signer, document, this.exitUrls);
 
         return createASiCE.createASiCE(signatureJob);
     }

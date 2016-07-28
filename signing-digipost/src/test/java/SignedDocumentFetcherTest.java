@@ -1,8 +1,8 @@
 import com.google.common.io.ByteStreams;
-import no.digipost.signature.client.ClientConfiguration;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import no.digipost.signature.client.asice.DocumentBundle;
 import no.digipost.signature.client.core.SignatureJob;
-import no.digipost.signature.client.direct.DirectClient;
 import no.digipost.signature.client.security.KeyStoreConfig;
 import org.mockito.Mock;
 import org.testng.Assert;
@@ -11,7 +11,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -24,11 +23,22 @@ public class SignedDocumentFetcherTest {
     private SignedDocumentFetcher signedDocumentFetcher;
     private SignedDocumentFetcher failedSignedDocumentFetcher;
 
+    private TypesafeDocumentConfigProvider documentConfigProvider;
+    private TypesafeDocumentConfig documentConfig;
+    private TypesafeServerConfigProvider serverConfigProvider;
+    private TypesafeServerConfig serverConfig;
+    String[] exitUrls;
+
     @Mock
     StatusReader statusReader;
 
     @BeforeClass
     public void setUp() throws URISyntaxException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException {
+        Config configFile = ConfigFactory.load();
+        this.documentConfigProvider = new TypesafeDocumentConfigProvider(configFile);
+        this.documentConfig = documentConfigProvider.getByEmail("eulverso2@gmail.com");
+        this.serverConfigProvider = new TypesafeServerConfigProvider(configFile);
+        this.serverConfig = serverConfigProvider.getByName("default");
 
         Optional<SignedDocumentFetcher> optSignedDocumentFetcher = setUpDocumentFetcherAbleToRetrieve();
         if(optSignedDocumentFetcher.isPresent()){
@@ -39,21 +49,25 @@ public class SignedDocumentFetcherTest {
         if(optFailedSignedDocumentFetcher.isPresent()){
             this.failedSignedDocumentFetcher = optFailedSignedDocumentFetcher.get();
         }
+
+
+        exitUrls = new String[]{serverConfig.getCompletionUri().toString(), serverConfig.getRejectionUri().toString(), serverConfig.getErrorUri().toString()};
+        System.out.print("LOOOOOOOOOOOOOOOOOOOOOOL" +documentConfig.getSender());
+        System.out.print(documentConfig.getSigner());
+        System.out.print(exitUrls);
     }
 
     public Optional<SignedDocumentFetcher> setUpDocumentFetcherUnableToRetrieve() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException, URISyntaxException {
-        String[] exitUrls = {
-                "http://localhost:8081/onCompletion","http://localhost:8081/onRejection","http://localhost:8081/onError"
-        };
         AsiceMaker asiceMaker = new AsiceMaker();
         SetupClientConfig clientConfig = new SetupClientConfig("Direct");
         clientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
         clientConfig.setupClientConfiguration();
-        DocumentBundle preparedAsic = asiceMaker.createAsice("17079493538","123456789",exitUrls, clientConfig.getClientConfiguration());
+
+        DocumentBundle preparedAsic = asiceMaker.createAsice(documentConfig.getSigner(),documentConfig.getSender(),exitUrls, clientConfig.getClientConfiguration());
         SignatureJob signatureJob = asiceMaker.getSignatureJob();
         KeyStoreConfig keyStoreConfig = clientConfig.getKeyStoreConfig();
         SigningServiceConnector signingServiceConnector = new SigningServiceConnector();
-        signingServiceConnector.sendRequest(signatureJob, keyStoreConfig, new URI("http://localhost:8082/"));
+        signingServiceConnector.sendRequest(signatureJob, keyStoreConfig, serverConfig.getServiceUri());
 
         if(signingServiceConnector.getDirectClient().isPresent()){
             StatusReader statusReader = new StatusReader(signingServiceConnector.getDirectClient().get(),signingServiceConnector.getDirectJobResponse().get(),"???");
@@ -65,19 +79,16 @@ public class SignedDocumentFetcherTest {
     }
 
     public Optional<SignedDocumentFetcher> setUpDocumentFetcherAbleToRetrieve() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException, URISyntaxException {
-        String[] exitUrls = {
-                "http://localhost:8081/onCompletion","http://localhost:8081/onRejection","http://localhost:8081/onError"
-        };
         AsiceMaker asiceMaker = new AsiceMaker();
         SetupClientConfig clientConfig = new SetupClientConfig("Direct");
         clientConfig.initialize(asiceMaker.getContactInfo(),"123456789");
 
-        DocumentBundle preparedAsic = asiceMaker.createAsice("17079493538","123456789",exitUrls, clientConfig.getClientConfiguration());
+        DocumentBundle preparedAsic = asiceMaker.createAsice(documentConfig.getSigner(),documentConfig.getSender(),exitUrls, clientConfig.getClientConfiguration());
         SignatureJob signatureJob = asiceMaker.getSignatureJob();
         KeyStoreConfig keyStoreConfig = clientConfig.getKeyStoreConfig();
 
         SigningServiceConnector signingServiceConnector = new SigningServiceConnector();
-        signingServiceConnector.sendRequest(signatureJob, keyStoreConfig, new URI("http://localhost:8082/"));
+        signingServiceConnector.sendRequest(signatureJob, keyStoreConfig, serverConfig.getServiceUri());
 
 
         if(signingServiceConnector.getDirectClient().isPresent() && signingServiceConnector.getDirectJobResponse().isPresent()){
