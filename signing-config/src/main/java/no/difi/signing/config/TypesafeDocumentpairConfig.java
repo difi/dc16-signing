@@ -17,6 +17,7 @@ public class TypesafeDocumentpairConfig {
     public TypesafeDocumentpairConfig(Config documentpairConfig){
         this.title = documentpairConfig.getString("title");
         this.version = documentpairConfig.getString("version");
-
     }
+
+
 }

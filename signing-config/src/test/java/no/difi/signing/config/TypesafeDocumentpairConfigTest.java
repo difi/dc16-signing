@@ -39,7 +39,7 @@ public class TypesafeDocumentpairConfigTest {
                 }
             }
         }
-        this.documentpairConfigProvider = new TypesafeDocumentpairConfigProvider(configList);
+        this.documentpairConfigProvider = new TypesafeDocumentpairConfigProvider();
         this.documentpairConfig = documentpairConfigProvider.getByTitle("document");
 
 
