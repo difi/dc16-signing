@@ -11,7 +11,14 @@
 
     <artifactId>signing-docs</artifactId>
 
-    
+
+    <dependencies>
+        <!-- Config -->
+        <dependency>
+            <groupId>com.typesafe</groupId>
+            <artifactId>config</artifactId>
+        </dependency>
+    </dependencies>
 
 
 </project>
