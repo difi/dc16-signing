@@ -4,8 +4,6 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import no.difi.signing.config.*;
 import no.difi.signing.digipost.*;
-import no.difi.signing.spring.DigipostSpringConnector;
-import no.difi.signing.spring.PortalController;
 import no.digipost.signature.client.asice.DocumentBundle;
 import no.digipost.signature.client.portal.Notifications;
 import no.digipost.signature.client.portal.PortalClient;
@@ -66,10 +64,6 @@ public class PortalControllerTest {
         SigningServiceConnector signingServiceConnector = new SigningServiceConnector();
         signingServiceConnector.sendPortalRequest(portalAsiceMaker.getPortalJob(), clientConfig.getKeyStoreConfig(), mockserverConfig.getServiceUri());
         portalController.setSigningServiceConnector(signingServiceConnector);
-
-        getPortalXades_returnes_getXades_if_signedDocumentFetcher_is_null(portalController);
-        getPortalPades_returns_getPades_if_signedDocumentFetcher_is_null(portalController);
-        //poll_returns_status(portalController, portalAsiceMaker, clientConfig, portalClient);
     }
 
     @Test(groups = "not-docker")
@@ -137,7 +131,7 @@ public class PortalControllerTest {
         PortalController portalController = new PortalController();
         portalController.startPortalJob();
     }
-/*
+
     @Test(groups = "not-docker")
     public void poll_returns_status(PortalController portalController, PortalAsiceMaker portalAsiceMaker, SetupClientConfig clientConfig, PortalClient portalClient) throws URISyntaxException, IOException {
         SigningServiceConnector signingServiceConnectorconnector = new SigningServiceConnector();
@@ -154,6 +148,6 @@ public class PortalControllerTest {
              isPolled = true;
         }
         Assert.assertTrue(isPolled);
-    }*/
+    }
 
 }
