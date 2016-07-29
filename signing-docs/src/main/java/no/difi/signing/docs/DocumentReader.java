@@ -14,6 +14,7 @@ public class DocumentReader {
     private String version;
     private File file;
 
+    //Denne klassen skal ikke ta Config inn i konstruktøren, ta Configen inn i en annen metode
     public DocumentReader(Config documentConfig) throws IOException {
         this.title = documentConfig.getString("title");
         this.version = documentConfig.getString("version");
