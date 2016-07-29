@@ -69,12 +69,14 @@ public class MockServer {
         DirectJobResponse sampleJobResponse = getSampleSignatureJob();
         //XMLDirectSignatureJobResponse xmlSample = toJaxb();
         configureFor(8082);
-
+        //System.out.println(System.getenv("user.dir"));
+        //File sample = new File(MockServer.class.getResource("__files//JobResponse.xml").getFile());
+        //System.out.println(sample.getAbsolutePath());
         stubFor(post(urlMatching(directUrl))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(), "application/xml")
-                        .withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/JobResponse.xml")))));
+                        .withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("resources/__files/JobResponse.xml")))));
         stubFor(post(urlPathMatching(portalUrl))
                 .willReturn(aResponse()
                         .withStatus(200)
