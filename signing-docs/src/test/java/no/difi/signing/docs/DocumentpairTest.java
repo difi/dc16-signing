@@ -7,7 +7,7 @@ public class DocumentpairTest {
 
     @Test
     public void documentpairTest(){
-        Documentpair pair = new Documentpair("document");
+        Documentpair pair = new Documentpair("document1");
 
         Assert.assertNotNull(pair);
     }

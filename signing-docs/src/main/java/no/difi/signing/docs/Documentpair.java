@@ -16,7 +16,10 @@ public class Documentpair {
 
     public Documentpair(String name) {
         Config configFile = ConfigFactory.load(name);
-        this.documentpairConfig = new TypesafeDocumentpairConfig(configFile);
+        System.out.print(configFile);
+        this.documentpairConfigProvider = new TypesafeDocumentpairConfigProvider(configFile);
+        this.documentpairConfig = documentpairConfigProvider.getDocumentConfig(name);
+
         this.title = documentpairConfig.getTitle();
         this.version = documentpairConfig.getVersion();
 

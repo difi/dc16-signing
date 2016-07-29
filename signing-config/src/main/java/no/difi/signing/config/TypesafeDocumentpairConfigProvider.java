@@ -1,21 +1,26 @@
 package no.difi.signing.config;
 
 import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class TypesafeDocumentpairConfigProvider {
 
-    private Map<String, TypesafeDocumentpairConfig> documentpairs;
+    private Map<String, TypesafeDocumentpairConfig> documentpair;
 
-    public TypesafeDocumentpairConfigProvider() {
+    public TypesafeDocumentpairConfigProvider(Config config) {
+        documentpair = config.getObject("title").keySet().stream()
+                .map(key -> config.getConfig(String.format("document.%s", key)))
+                .map(c -> new TypesafeDocumentpairConfig(c))
+                .collect(Collectors.toMap(TypesafeDocumentpairConfig::getTitle, Function.identity()));
+    }
+
+    public TypesafeDocumentpairConfig getDocumentConfig(String name){return documentpair.get(name);}
+}
+
+    /*public TypesafeDocumentpairConfigProvider(String name) {
         System.out.println(System.getProperty("user.dir"));
         List<Config> configList = new ArrayList<>();
         System.out.println(System.getProperty("user.dir").concat("\\src\\test\\resources\\docs"));
@@ -59,3 +64,4 @@ public class TypesafeDocumentpairConfigProvider {
         return documentpairs.get(title);
     }
 }
+*/
