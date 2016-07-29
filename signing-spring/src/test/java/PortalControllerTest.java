@@ -143,7 +143,8 @@ public class PortalControllerTest {
         String message = portalController.poll();
 
         Boolean isPolled = false;
-        if (message == "NO_CHANGES" || message.contains("Too frequent polling")) {
+        System.out.println(message);
+        if (message == "IN_PROGRESS" || message.contains("Too frequent polling") || message == "NO_CHANGES") {
              isPolled = true;
         }
         Assert.assertTrue(isPolled);
