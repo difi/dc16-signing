@@ -13,7 +13,7 @@ public class StatusReader {
     private DirectJobResponse jobResponse;
     private String token;
 
-    StatusReader(DirectClient client, DirectJobResponse jobResponse, String token) {
+    public StatusReader(DirectClient client, DirectJobResponse jobResponse, String token) {
         this.client = client;
         this.jobResponse = jobResponse;
         this.token = token;

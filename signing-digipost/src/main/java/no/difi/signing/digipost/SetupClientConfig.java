@@ -29,7 +29,7 @@ public class SetupClientConfig {
 
 
 
-    SetupClientConfig(String type) throws URISyntaxException {
+    public SetupClientConfig(String type) throws URISyntaxException {
         this.type = type;
 
         Config configFile = ConfigFactory.load("signing");

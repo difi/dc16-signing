@@ -9,7 +9,7 @@ public class PortalJobPoller {
     private PortalClient client;
     private PortalJobStatusChanged statusChange;
 
-    PortalJobPoller(PortalClient portalClient) {
+    public PortalJobPoller(PortalClient portalClient) {
         this.client = portalClient;
     }
     /**

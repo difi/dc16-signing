@@ -14,7 +14,7 @@ public class SignedDocumentFetcher {
     private DirectJobStatusResponse statusResponse;
     private StatusReader statusReader;
 
-    SignedDocumentFetcher(DirectClient client, StatusReader statusReader) {
+    public SignedDocumentFetcher(DirectClient client, StatusReader statusReader) {
         this.client = client;
         try {
             this.statusResponse = client.getStatusChange();

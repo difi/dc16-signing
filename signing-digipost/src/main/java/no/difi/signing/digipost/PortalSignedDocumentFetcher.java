@@ -14,7 +14,7 @@ public class PortalSignedDocumentFetcher {
     private PortalJobPoller poller;
     private PortalClient client;
 
-       PortalSignedDocumentFetcher(PortalJobPoller poller, PortalClient portalClient) {
+       public PortalSignedDocumentFetcher(PortalJobPoller poller, PortalClient portalClient) {
         this.poller = poller;
         this.client = portalClient;
     }
