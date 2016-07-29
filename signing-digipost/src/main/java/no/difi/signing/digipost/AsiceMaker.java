@@ -26,7 +26,6 @@ public class AsiceMaker {
     private TypesafeServerConfigProvider serverConfigProvider;
     private TypesafeKeystoreConfig keystoreConfig;
     private TypesafeKeystoreConfigProvider keystoreConfigProvider;
-
     private TypesafeDocumentConfigProvider documentConfigProvider;
     private TypesafeDocumentConfig documentConfig;
 
