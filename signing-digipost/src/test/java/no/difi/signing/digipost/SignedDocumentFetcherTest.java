@@ -111,7 +111,7 @@ public class SignedDocumentFetcherTest {
     @Test
     public void getPadesReturnedFetchedPade() throws IOException{
         byte[] padesStatus = signedDocumentFetcher.getPades();
-        byte[] comparisonStatus = ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/pAdES.pdf"));
+        byte[] comparisonStatus = ByteStreams.toByteArray(Thread.currentThread().getContextClassLoader().getResourceAsStream("__files/pAdES.pdf"));
         Assert.assertNotSame(padesStatus, "".getBytes());
     }
     @Test
