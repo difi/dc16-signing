@@ -32,6 +32,10 @@
             <artifactId>signing-mockserver</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>no.difi.idporten.signing</groupId>
+            <artifactId>signing-config</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>no.difi.idporten.signing</groupId>
