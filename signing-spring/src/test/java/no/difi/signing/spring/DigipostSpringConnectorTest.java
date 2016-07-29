@@ -22,7 +22,6 @@ import java.security.cert.CertificateException;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-
 public class DigipostSpringConnectorTest {
 
     private DigipostSpringConnector digipostSpringConnector;
@@ -36,7 +35,7 @@ public class DigipostSpringConnectorTest {
     private StatusReader statusReader;
     private SignedDocumentFetcher signedDocumentFetcher;
 
-    @BeforeSuite
+    @BeforeSuite(groups = "not-docker")
     public void setup() throws URISyntaxException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException {
         MockServer.setUp();
 
@@ -55,7 +54,7 @@ public class DigipostSpringConnectorTest {
 
     }
 
-    @Test
+    @Test(groups = "not-docker")
     public void testCoverageTest(){
         DigipostSpringConnector digipostSpringConnector = new DigipostSpringConnector();
 

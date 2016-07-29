@@ -37,7 +37,7 @@ public class PortalControllerTest {
     private TypesafeServerConfigProvider mockserverConfigProvider;
     private TypesafeServerConfig mockserverConfig;
 
-    @BeforeClass
+    @BeforeClass(groups = "not-docker")
     public void setUp() throws URISyntaxException, IOException {
         Config configFile = ConfigFactory.load("signing");
         this.documentConfigProvider = new TypesafeDocumentConfigProvider(configFile);
@@ -72,7 +72,7 @@ public class PortalControllerTest {
         //poll_returns_status(portalController, portalAsiceMaker, clientConfig, portalClient);
     }
 
-    @Test
+    @Test(groups = "not-docker")
     public void getPortalXades_returns_getXades() throws IOException {
         PortalController portalController = new PortalController();
 
@@ -96,7 +96,7 @@ public class PortalControllerTest {
     }
 
 
-    @Test
+    @Test(groups = "not-docker")
     public void getPortalPades_returns_getPades() throws IOException{
         PortalController portalController = new PortalController();
 

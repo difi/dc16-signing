@@ -1,6 +1,5 @@
 package no.difi.signing.digipost;
 
-import com.sun.jndi.toolkit.url.Uri;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import no.difi.signing.config.*;
@@ -11,7 +10,6 @@ import no.digipost.signature.client.security.KeyStoreConfig;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.KeyStore;
 
