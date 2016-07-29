@@ -2,10 +2,8 @@ package no.difi.signing.docs;
 
 import com.typesafe.config.Config;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  *
@@ -14,14 +12,14 @@ public class DocumentReader {
 
     private String title;
     private String version;
-    private byte[] document;
+    private File file;
 
     public DocumentReader(Config documentConfig) throws IOException {
         this.title = documentConfig.getString("title");
         this.version = documentConfig.getString("version");
 
-        Path path = Paths.get("C:\\Users\\camp-nto\\dc16-signing\\signing-docs\\src\\main\\resources\\docs\\document.pdf");
-        this.document = Files.readAllBytes(path);
+        ClassLoader classLoader = getClass().getClassLoader();
+        this.file = new File(classLoader.getResource(this.title).getFile());
     }
 
     public String getTitle(){
@@ -32,7 +30,8 @@ public class DocumentReader {
         return this.version;
     }
 
-    public byte[] getDocument() {
-        return document;
+    public File getFile() {
+        return file;
     }
+
 }
