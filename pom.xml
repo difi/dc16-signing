@@ -21,6 +21,7 @@
         <module>signing-spring</module>
         <module>signing-config</module>
         <module>signing-dist</module>
+        <module>signing-docs</module>
     </modules>
 
     <properties>
