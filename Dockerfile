@@ -7,7 +7,7 @@ RUN cd $MAVEN_HOME \
  && mv $MAVEN_HOME/target /signing \
  && apt update \
  && apt install -y ruby \
- && gem install asciidoctor-pdf --pre \
+ && gem install --no-ri --no-rdoc asciidoctor-pdf --pre \
  && rm -r /var/lib/apt/lists \
  && rm -r $MAVEN_HOME
 
