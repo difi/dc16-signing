@@ -37,12 +37,6 @@
             <artifactId>signing-config</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>no.difi.idporten.signing</groupId>
-            <artifactId>signing-config</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
-        </dependency>
-
         <!-- Guava -->
         <dependency>
             <groupId>com.google.guava</groupId>
