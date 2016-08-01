@@ -4,10 +4,6 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.google.common.io.ByteStreams;
-import no.digipost.signature.client.direct.DirectJobResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.eclipse.jetty.http.HttpHeader;
 import org.junit.Rule;
 
@@ -20,14 +16,13 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 
 public class MockServer {
 
-    private static HttpClient httpClient;
     private final String BASEURL = "http://localhost:8081";
     private final String portalUrl = "/%s/portal/signature-jobs";
     private final String directUrl = "/%s/direct/signature-jobs";
     private static WireMockServer wireMockServer;
     @Rule
     public WireMockRule wireMockRule =
-           new WireMockRule(wireMockConfig().port(8082));
+            new WireMockRule(wireMockConfig().port(8082));
 
 
     public MockServer() throws KeyStoreException {
@@ -51,7 +46,6 @@ public class MockServer {
         System.out.println(wireMockServer.listAllStubMappings().getMappings());
         String filePath = new File("").getAbsolutePath();
         System.out.print(filePath);
-        httpClient = HttpClientBuilder.create().build();
         String directUrl = ".*/direct/signature-jobs";
         String portalUrl = ".*/portal/signature-jobs";
         String statusUrl = ".*/direct/signature-jobs";
@@ -64,9 +58,6 @@ public class MockServer {
         String confirmationPortalURL = ".*/portal/signature-jobs/1/complete";
 
 
-
-
-        DirectJobResponse sampleJobResponse = getSampleSignatureJob();
         //XMLDirectSignatureJobResponse xmlSample = toJaxb();
         configureFor(8082);
         //System.out.println(System.getenv("user.dir"));
@@ -76,76 +67,74 @@ public class MockServer {
                         .withStatus(200)
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(), "application/xml")
                         .withBodyFile("JobResponse.xml")));
-                        //.withBody(ByteStreams.toByteArray(MockServer.class.getClassLoader().getResourceAsStream("JobResponse.xml")))));
+        //.withBody(ByteStreams.toByteArray(MockServer.class.getClassLoader().getResourceAsStream("JobResponse.xml")))));
         stubFor(post(urlPathMatching(portalUrl))
                 .willReturn(aResponse()
                         .withStatus(200)
-                        .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
-                        //.withBody(ByteStreams.toByteArray(Thread.currentThread().getContextClassLoader().getResourceAsStream("__files/JobResponse.xml")))));
+                        .withHeader(HttpHeader.CONTENT_TYPE.toString(), "application/xml")
+                                //.withBody(ByteStreams.toByteArray(Thread.currentThread().getContextClassLoader().getResourceAsStream("__files/JobResponse.xml")))));
 
-        .withBodyFile("PortalJobResponse.xml")));
+                        .withBodyFile("PortalJobResponse.xml")));
 
         //.withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/PortalJobResponse.xml")))));
         stubFor(get(urlPathMatching(portalUrl))
-        .willReturn(aResponse()
-        .withStatus(200)
-        .withHeader(HttpHeader.CONTENT_TYPE.toString(), "application/xml")
-                //.withBody(ByteStreams.toByteArray(Thread.currentThread().getContextClassLoader().getResourceAsStream("__files/PortalPollResponse.xml")))));
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader(HttpHeader.CONTENT_TYPE.toString(), "application/xml")
+                                //.withBody(ByteStreams.toByteArray(Thread.currentThread().getContextClassLoader().getResourceAsStream("__files/PortalPollResponse.xml")))));
 
-        .withBodyFile("PortalPollResponse.xml")));
+                        .withBodyFile("PortalPollResponse.xml")));
 
         //.withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/PortalPollResponse.xml")))));
 
         stubFor(get(urlPathMatching(statusUrl))
                 .willReturn(aResponse()
                         .withStatus(200)
-                        .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
-                        //.withBody(ByteStreams.toByteArray(Thread.currentThread().getContextClassLoader().getResourceAsStream("__files/StatusResponse.xml")))));
+                        .withHeader(HttpHeader.CONTENT_TYPE.toString(), "application/xml")
+                                //.withBody(ByteStreams.toByteArray(Thread.currentThread().getContextClassLoader().getResourceAsStream("__files/StatusResponse.xml")))));
 
-        .withBodyFile("StatusResponse.xml")));
+                        .withBodyFile("StatusResponse.xml")));
 
         //.withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/StatusResponse.xml")))));
 
         stubFor(get(urlPathMatching(padesUrl))
                 .willReturn(aResponse()
-                        .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/pdf")
-                        //.withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/pAdES.pdf")))));
+                        .withHeader(HttpHeader.CONTENT_TYPE.toString(), "application/pdf")
+                                //.withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/pAdES.pdf")))));
                         .withBody("pAdES.pdf")));
-                        //.withBody(ByteStreams.toByteArray(Thread.currentThread().getContextClassLoader().getResourceAsStream("__files/pAdES.pdf")))));
+        //.withBody(ByteStreams.toByteArray(Thread.currentThread().getContextClassLoader().getResourceAsStream("__files/pAdES.pdf")))));
 
-       // .withBodyFile("pAdES.pdf")));
+        // .withBodyFile("pAdES.pdf")));
 
 
         stubFor(get(urlPathMatching(xadesUrl))
                 .willReturn(aResponse()
-                        .withHeader(HttpHeader.CONTENT_TYPE.toString(),"application/xml")
-                        //.withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/xAdES.xml")))))
-                        //.withBody(ByteStreams.toByteArray(Thread.currentThread().getContextClassLoader().getResourceAsStream("__files/xAdES.pdf")))));
+                        .withHeader(HttpHeader.CONTENT_TYPE.toString(), "application/xml")
+                                //.withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/xAdES.xml")))))
+                                //.withBody(ByteStreams.toByteArray(Thread.currentThread().getContextClassLoader().getResourceAsStream("__files/xAdES.pdf")))));
 
-        .withBodyFile("xAdES.pdf")));
+                        .withBodyFile("xAdES.pdf")));
 
         stubFor(get(urlPathMatching(cancellationURL))
-        .willReturn(aResponse().withHeader(HttpHeader.CONTENT_TYPE.toString(), "text/html")
-        .withBody("cancelled")));
+                .willReturn(aResponse().withHeader(HttpHeader.CONTENT_TYPE.toString(), "text/html")
+                        .withBody("cancelled")));
 
 
         stubFor(get(urlPathMatching(padesPortalURL))
                 .willReturn(aResponse().withHeader(HttpHeader.CONTENT_TYPE.toString(), "application/pdf")
-                //.withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/pAdESPortal.pdf"))))
+                        //.withBody(ByteStreams.toByteArray(MockServer.class.getResourceAsStream("__files/pAdESPortal.pdf"))))
                         //.withBody(ByteStreams.toByteArray(Thread.currentThread().getContextClassLoader().getResourceAsStream("__files/pAdESPortal.pdf")))));
 
-        .withBodyFile("pAdESPortal.pdf")));
+                        .withBodyFile("pAdESPortal.pdf")));
 
         stubFor(get(urlPathMatching(xadesPortalURL))
                 .willReturn(aResponse().withHeader(HttpHeader.CONTENT_TYPE.toString(), "application/pdf")
                         //.withBody(ByteStreams.toByteArray(Thread.currentThread().getContextClassLoader().getResourceAsStream("__files/xAdES.xml")))));
-        .withBody("xAdES.xml")));
+                        .withBody("xAdES.xml")));
 
         stubFor(post(urlPathMatching(confirmationPortalURL))
                 .willReturn(aResponse().withHeader(HttpHeader.CONTENT_TYPE.toString(), "text/html")
-                .withBody("confirmed")));
-
-
+                        .withBody("confirmed")));
 
 
         //En http-post mot ressurs. for å opprette signeringsoppdrag
@@ -153,13 +142,7 @@ public class MockServer {
 
     }
 
-    public static DirectJobResponse getSampleSignatureJob(){
-        return new DirectJobResponse(5, "redirect url", "status url");
-    }
-
-    public static void shutDown(){
+    public static void shutDown() {
         wireMockServer.shutdownServer();
     }
-
-
 }
