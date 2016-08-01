@@ -46,6 +46,10 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.difi.idporten.signing</groupId>
+            <artifactId>signing-docs</artifactId>
+        </dependency>
 
         <!-- Logging -->
         <!-- <dependency>

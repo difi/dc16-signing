@@ -40,7 +40,7 @@ public class PortalControllerTest {
         Config configFile = ConfigFactory.load("signing");
         this.documentConfigProvider = new TypesafeDocumentConfigProvider(configFile);
         this.documentConfig = documentConfigProvider.getByEmail("eulverso2@gmail.com");
-        this.relativeDocumentPath = documentConfig.getRelativeDocumentPath();
+       // this.relativeDocumentPath = documentConfig.getRelativeDocumentPath();
 
         this.mockserverConfigProvider = new TypesafeServerConfigProvider(configFile);
         this.mockserverConfig = mockserverConfigProvider.getByName("test");

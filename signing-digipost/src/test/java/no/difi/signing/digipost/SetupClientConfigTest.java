@@ -1,17 +1,16 @@
 package no.difi.signing.digipost;
 
-import no.difi.signing.digipost.AsiceMaker;
-import no.difi.signing.digipost.SetupClientConfig;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 public class SetupClientConfigTest {
 
 
     @Test
-    public void setupKeystoreConfigNotNull() throws URISyntaxException {
+    public void setupKeystoreConfigNotNull() throws URISyntaxException, IOException {
         AsiceMaker asiceMaker = new AsiceMaker();
         SetupClientConfig setupClientConfig = new SetupClientConfig("Direct");
         setupClientConfig.setupKeystoreConfig(asiceMaker.getContactInfo());
@@ -19,7 +18,7 @@ public class SetupClientConfigTest {
     }
 
     @Test
-    public void setUpClientConfigurationNotNull() throws URISyntaxException{
+    public void setUpClientConfigurationNotNull() throws URISyntaxException, IOException {
         AsiceMaker asiceMaker = new AsiceMaker();
         SetupClientConfig setupClientConfig = new SetupClientConfig("Direct");
         setupClientConfig.setupClientConfiguration();
