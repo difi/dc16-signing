@@ -11,6 +11,8 @@
 
     <artifactId>signing-test</artifactId>
 
+    <name>Signing :: Test resources</name>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>

@@ -6,8 +6,6 @@ import no.difi.signing.config.TypesafeDocumentConfig;
 import no.difi.signing.config.TypesafeDocumentConfigProvider;
 import no.difi.signing.config.TypesafeServerConfig;
 import no.difi.signing.config.TypesafeServerConfigProvider;
-import no.difi.signing.digipost.AsiceMaker;
-import no.difi.signing.digipost.SetupClientConfig;
 import no.digipost.signature.client.asice.DocumentBundle;
 import org.junit.Assert;
 import org.testng.annotations.Test;
@@ -47,6 +45,7 @@ public class AsiceMakerTest {
     @Test
     public void signatureJobExistsAfterCreatingAsic() throws CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException, URISyntaxException {
         Config configFile = ConfigFactory.load();
+
         this.serverConfigProvider = new TypesafeServerConfigProvider(configFile);
         this.serverConfig = serverConfigProvider.getByName("default");
         String[] exitUrls = {serverConfig.getCompletionUri().toString(), serverConfig.getRejectionUri().toString(), serverConfig.getErrorUri().toString()};

@@ -17,7 +17,6 @@ public class SetupClientConfig {
     private KeyStore keyStore;
     private KeyStoreConfig keyStoreConfig;
     private ClientConfiguration clientConfiguration;
-    private String type;
     private TypesafeKeystoreConfig typeSafeKeystoreConfig;
     private TypesafeKeystoreConfigProvider typesafeKeystoreConfigProvider;
     private TypesafeServerConfig typesafeServerConfig;
@@ -26,10 +25,7 @@ public class SetupClientConfig {
     private TypesafeDocumentConfigProvider typesafeDocumentConfigProvider;
 
 
-
     public SetupClientConfig(String type) throws URISyntaxException {
-        this.type = type;
-
         Config configFile = ConfigFactory.load("signing");
         this.typesafeKeystoreConfigProvider = new TypesafeKeystoreConfigProvider(configFile);
         this.typeSafeKeystoreConfig = typesafeKeystoreConfigProvider.getByName("default");
@@ -43,7 +39,7 @@ public class SetupClientConfig {
     /**
      * Setups the keystore and keystoreconfig
      */
-    public void initialize(File kontaktinfo, String sender) throws URISyntaxException{
+    public void initialize(File kontaktinfo, String sender) throws URISyntaxException {
         setupKeystoreConfig(kontaktinfo);
         setupClientConfiguration();
     }
@@ -63,7 +59,7 @@ public class SetupClientConfig {
     /**
      * Sets up the client configuration using a keystore and a truststore.
      */
-    public void setupClientConfiguration() throws URISyntaxException{
+    public void setupClientConfiguration() throws URISyntaxException {
         clientConfiguration = ClientConfiguration.builder(keyStoreConfig)
                 .serviceUri(typesafeServerConfig.getServiceUri())
                 .trustStore(Certificates.TEST)
@@ -71,9 +67,11 @@ public class SetupClientConfig {
                 .build();
     }
 
+    @Deprecated
     public KeyStoreConfig getKeyStoreConfig() {
         return keyStoreConfig;
     }
+
     public ClientConfiguration getClientConfiguration() {
         return this.clientConfiguration;
     }

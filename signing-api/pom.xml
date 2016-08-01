@@ -11,5 +11,6 @@
 
     <artifactId>signing-api</artifactId>
 
+    <name>Signing :: API</name>
 
 </project>

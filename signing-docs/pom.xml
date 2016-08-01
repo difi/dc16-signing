@@ -11,6 +11,8 @@
 
     <artifactId>signing-docs</artifactId>
 
+    <name>Signing :: Docs</name>
+
     <dependencies>
         <!-- Signing -->
         <dependency>

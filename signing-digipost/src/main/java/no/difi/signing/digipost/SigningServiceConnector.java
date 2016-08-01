@@ -38,18 +38,13 @@ public class SigningServiceConnector {
     private TypesafeServerConfigProvider serverConfigProvider;
     private TypesafeServerConfig serverConfig;
 
-    private TypesafeKeystoreConfigProvider keystoreConfigProvider;
-    private TypesafeKeystoreConfig keystoreConfig;
-
     public SigningServiceConnector() throws IOException, URISyntaxException {
         Config configFile = ConfigFactory.load("signing");
         documentConfigProvider = new TypesafeDocumentConfigProvider(configFile);
         serverConfigProvider = new TypesafeServerConfigProvider(configFile);
-        keystoreConfigProvider = new TypesafeKeystoreConfigProvider(configFile);
 
         this.documentConfig = documentConfigProvider.getByEmail("eulverso2@gmail.com");
         this.serverConfig = serverConfigProvider.getByName("default");
-        this.keystoreConfig = keystoreConfigProvider.getByName("default");
     }
 
     /**
