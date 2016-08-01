@@ -3,6 +3,7 @@ package no.difi.signing.digipost;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import no.difi.signing.config.*;
+import no.difi.signing.docs.Documentpair;
 import no.digipost.signature.client.ClientConfiguration;
 import no.digipost.signature.client.asice.CreateASiCE;
 import no.digipost.signature.client.asice.DocumentBundle;
@@ -60,8 +61,10 @@ public class AsiceMaker {
 
         ClassLoader classLoader = getClass().getClassLoader();
         kontaktInfoClientTest = new File(classLoader.getResource(keystorefile).getFile());
-        dokumentTilSignering = new File(classLoader.getResource(relativeDocumentPath).getFile());
+        //TODO: dokumentet må hentes i docsmodulen
 
+        Documentpair documentpair = new Documentpair("document1");
+        dokumentTilSignering = documentpair.getDocumentpairPdf();
     }
     /**
      * Creates an asice package. Uses current keystore and a hardcoded document.
