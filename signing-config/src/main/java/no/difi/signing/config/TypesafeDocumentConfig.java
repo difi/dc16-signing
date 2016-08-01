@@ -1,6 +1,5 @@
-package no.difi.signing.config; /**
- * Created by camp-nto on 27.07.2016.
- */
+package no.difi.signing.config;
+
 import com.typesafe.config.Config;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public class TypesafeDocumentConfig {
         return id;
     }
 
-    public TypesafeDocumentConfig(Config documentConfig){
+    public TypesafeDocumentConfig(Config documentConfig) {
         System.out.println(documentConfig.entrySet().toString());
         this.id = UUID.randomUUID().toString();
 

@@ -2,24 +2,14 @@ package no.difi.signing.config;
 
 import com.typesafe.config.Config;
 
-import java.io.File;
-import java.util.List;
-import java.util.UUID;
-
 public class TypesafeKeystoreConfig {
 
     private String keystore;
     private String name;
     private String password;
-    private String id;
-
-    public String getId() {
-        return id;
-    }
 
     public TypesafeKeystoreConfig(Config keystoreConfig){
         System.out.println(keystoreConfig.entrySet().toString());
-        this.id = UUID.randomUUID().toString();
         this.keystore = keystoreConfig.getString("keystore");
         this.name = keystoreConfig.getString("name");
         this.password = keystoreConfig.getString("password");

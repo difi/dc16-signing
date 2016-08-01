@@ -13,6 +13,7 @@ public class TestConfiguration {
 
     @Bean(name = "docs")
     public Path getDocsPath() throws URISyntaxException {
+        System.out.println(getClass().getResource("/.index").toURI());
         return new File(getClass().getResource("/.index").toURI()).toPath().getParent().resolve("docs");
     }
 }
