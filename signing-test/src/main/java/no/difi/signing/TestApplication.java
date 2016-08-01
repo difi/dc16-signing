@@ -1,4 +1,4 @@
-package no.difi.signing.docs;
+package no.difi.signing;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

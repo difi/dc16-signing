@@ -1,4 +1,4 @@
-package no.difi.signing.config;
+package no.difi.signing;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
