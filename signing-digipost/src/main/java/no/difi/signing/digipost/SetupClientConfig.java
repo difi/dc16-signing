@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.net.URISyntaxException;
 import java.security.KeyStore;
 
+@Deprecated
 public class SetupClientConfig {
     private KeyStore keyStore;
     private KeyStoreConfig keyStoreConfig;

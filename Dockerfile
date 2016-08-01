@@ -11,9 +11,11 @@ RUN cd $MAVEN_HOME \
  && rm -r /var/lib/apt/lists \
  && rm -r $MAVEN_HOME
 
-VOLUME /signing/docs
+ONBUILD ADD . /signing/docs
 
-EXPOSE 8080
-EXPOSE 8081
+ONBUILD VOLUME /signing/conf
 
-ENTRYPOINT ["sh", "/signing/bin/run.sh"]
+ONBUILD EXPOSE 8080
+ONBUILD EXPOSE 8081
+
+ONBUILD ENTRYPOINT ["sh", "/signing/bin/run.sh"]
