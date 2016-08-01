@@ -60,7 +60,7 @@ public class AsiceMaker {
 
         ClassLoader classLoader = getClass().getClassLoader();
         kontaktInfoClientTest = new File(classLoader.getResource(keystorefile).getFile());
-        //TODO: dokumentet må hentes i docsmodulen
+        dokumentTilSignering = new File(classLoader.getResource(relativeDocumentPath).getFile());
 
         this.dokumentTilSignering = new File(getClass().getResource("/Documents/Dokument til signering.pdf").toURI());
     }
