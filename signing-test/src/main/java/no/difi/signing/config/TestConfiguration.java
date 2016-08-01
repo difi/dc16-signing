@@ -1,4 +1,4 @@
-package no.difi.signing.docs;
+package no.difi.signing.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 
 @Configuration
+@SuppressWarnings("unused")
 public class TestConfiguration {
 
     @Bean(name = "docs")

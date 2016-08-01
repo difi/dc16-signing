@@ -4,7 +4,6 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import no.difi.signing.api.Document;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -40,5 +39,15 @@ public class DirectoryDocument implements Document {
     @Override
     public InputStream getInputStream() throws IOException {
         return Files.newInputStream(path);
+    }
+
+    @Override
+    public String toString() {
+        return "DirectoryDocument{" +
+                "token='" + getToken() + '\'' +
+                ", title='" + getTitle() + '\'' +
+                ", version='" + getVersion() + '\'' +
+                ", path='" + path + '\'' +
+                '}';
     }
 }

@@ -29,6 +29,10 @@
         <!-- Signing -->
         <dependency>
             <groupId>no.difi.idporten.signing</groupId>
+            <artifactId>signing-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.difi.idporten.signing</groupId>
             <artifactId>signing-mockserver</artifactId>
             <scope>test</scope>
         </dependency>

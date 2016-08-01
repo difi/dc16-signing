@@ -17,6 +17,10 @@
             <groupId>no.difi.idporten.signing</groupId>
             <artifactId>signing-spring</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.difi.idporten.signing</groupId>
+            <artifactId>signing-docs</artifactId>
+        </dependency>
 
         <!-- Logging -->
         <dependency>
