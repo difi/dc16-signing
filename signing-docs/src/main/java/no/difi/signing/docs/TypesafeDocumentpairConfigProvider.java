@@ -1,4 +1,4 @@
-package no.difi.signing.config;
+package no.difi.signing.docs;
 
 import com.typesafe.config.Config;
 
@@ -11,7 +11,7 @@ public class TypesafeDocumentpairConfigProvider {
     private Map<String, TypesafeDocumentpairConfig> documentpair;
 
     public TypesafeDocumentpairConfigProvider(Config config) {
-        documentpair = config.getObject("title").keySet().stream()
+        documentpair = config.getObject("document").keySet().stream()
                 .map(key -> config.getConfig(String.format("document.%s", key)))
                 .map(c -> new TypesafeDocumentpairConfig(c))
                 .collect(Collectors.toMap(TypesafeDocumentpairConfig::getTitle, Function.identity()));

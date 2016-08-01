@@ -1,6 +1,7 @@
-package no.difi.signing.config;
+package no.difi.signing.docs;
 
 import com.typesafe.config.Config;
+import no.difi.signing.config.TypesafeDocumentConfig;
 
 import java.util.Map;
 
