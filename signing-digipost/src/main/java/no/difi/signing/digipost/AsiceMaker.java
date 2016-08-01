@@ -62,6 +62,7 @@ public class AsiceMaker {
         kontaktInfoClientTest = new File(classLoader.getResource(keystorefile).getFile());
         dokumentTilSignering = new File(classLoader.getResource(relativeDocumentPath).getFile());
 
+        this.dokumentTilSignering = new File(getClass().getResource("/Documents/Dokument til signering.pdf").toURI());
     }
     /**
      * Creates an asice package. Uses current keystore and a hardcoded document.

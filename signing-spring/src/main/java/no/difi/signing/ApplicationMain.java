@@ -1,4 +1,4 @@
-package no.difi.signing.spring;
+package no.difi.signing;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -7,6 +7,11 @@ import no.difi.idporten.oidc.proxy.config.ConfigModule;
 import no.difi.idporten.oidc.proxy.proxy.NettyHttpListener;
 import no.difi.idporten.oidc.proxy.proxy.ProxyModule;
 import no.difi.idporten.oidc.proxy.storage.StorageModule;
+import no.difi.signing.docs.DirectoryDocumentRepository;
+import no.difi.signing.spring.ApplicationConfiguration;
+import no.difi.signing.spring.DigipostSpringConnector;
+import no.difi.signing.spring.IndexController;
+import no.difi.signing.spring.PortalController;
 import org.springframework.boot.SpringApplication;
 
 import java.util.ArrayList;
@@ -26,7 +31,7 @@ public class ApplicationMain {
 
 
 
-        Object[] sources = {DigipostSpringConnector.class, IndexController.class, PortalController.class};
+        Object[] sources = {DigipostSpringConnector.class, IndexController.class, PortalController.class, DirectoryDocumentRepository.class, ApplicationConfiguration.class};
 
         System.out.println("HEISANN: " );
         SpringApplication.run(sources, args);
