@@ -2,7 +2,6 @@ package no.difi.signing.spring;
 
 import no.difi.signing.digipost.*;
 import no.difi.signing.mockserver.MockServer;
-import no.difi.signing.spring.DigipostSpringConnector;
 import no.digipost.signature.client.asice.DocumentBundle;
 import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.security.KeyStoreConfig;

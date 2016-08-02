@@ -30,6 +30,7 @@ public class DirectoryDocumentRepository implements DocumentRepository {
 
     @PostConstruct
     public void postConstruct() throws IOException {
+        System.out.print("loooooool: " + docsPath);
         documentMap = Files.walk(docsPath)
                 .filter(p -> !Files.isDirectory(p))
                 .filter(p -> p.toString().endsWith(".conf"))

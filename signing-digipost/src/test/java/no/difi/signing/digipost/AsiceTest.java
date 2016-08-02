@@ -1,8 +1,5 @@
 package no.difi.signing.digipost;
 
-import no.difi.signing.digipost.AsiceMaker;
-import no.difi.signing.digipost.SetupClientConfig;
-import no.difi.signing.digipost.SigningServiceConnector;
 import no.digipost.signature.client.asice.DocumentBundle;
 import no.digipost.signature.client.core.SignatureJob;
 import no.digipost.signature.client.security.KeyStoreConfig;

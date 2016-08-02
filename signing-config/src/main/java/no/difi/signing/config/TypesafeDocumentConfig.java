@@ -11,7 +11,6 @@ public class TypesafeDocumentConfig {
     private String sender;
     private List<String> signers;
     private String email;
-    private String relativeDocumentPath;
     private String id;
 
     public String getId() {
@@ -26,7 +25,6 @@ public class TypesafeDocumentConfig {
         this.sender = documentConfig.getString("sender");
         this.signers = documentConfig.getStringList("signers");
         this.email = documentConfig.getString("e_mail");
-        this.relativeDocumentPath = documentConfig.getString("relativeDocumentPath");
 
     }
 
@@ -46,7 +44,4 @@ public class TypesafeDocumentConfig {
         return email;
     }
 
-    public String getRelativeDocumentPath() {
-        return relativeDocumentPath;
-    }
 }

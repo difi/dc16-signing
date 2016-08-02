@@ -2,8 +2,6 @@ package no.difi.signing.config;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import no.difi.signing.config.TypesafeDocumentConfig;
-import no.difi.signing.config.TypesafeDocumentConfigProvider;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -46,11 +44,6 @@ public class TypesafeDocumentConfigTest {
     @Test
     public void documentConfigHasCorrectEmail(){
         Assert.assertEquals(documentConfig.getEmail(),"eulverso2@gmail.com");
-    }
-
-    @Test
-    public void documentConfigHasCorrectPath(){
-        Assert.assertEquals(documentConfig.getRelativeDocumentPath(),"Documents//Dokument til signering 3.pdf");
     }
 
 }

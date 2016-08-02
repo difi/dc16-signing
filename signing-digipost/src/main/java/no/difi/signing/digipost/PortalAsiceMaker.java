@@ -41,7 +41,7 @@ public class PortalAsiceMaker {
         Config configFile = ConfigFactory.load();
         this.documentConfigProvider = new TypesafeDocumentConfigProvider(configFile);
         this.documentConfig = documentConfigProvider.getByEmail("eulverso2@gmail.com");
-        this.relativeDocumentPath = documentConfig.getRelativeDocumentPath();
+       // this.relativeDocumentPath = documentConfig.getRelativeDocumentPath();
 
         this.keystoreConfigProvider = new TypesafeKeystoreConfigProvider(configFile);
         this.keystoreConfig = keystoreConfigProvider.getByName("default");
