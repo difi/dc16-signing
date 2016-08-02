@@ -7,7 +7,6 @@ import no.difi.signing.config.TypesafeDocumentConfig;
 import no.difi.signing.config.TypesafeDocumentConfigProvider;
 import no.difi.signing.config.TypesafeServerConfig;
 import no.difi.signing.config.TypesafeServerConfigProvider;
-import no.difi.signing.digipost.*;
 import no.difi.signing.mockserver.MockServer;
 import no.digipost.signature.client.asice.DocumentBundle;
 import no.digipost.signature.client.core.SignatureJob;

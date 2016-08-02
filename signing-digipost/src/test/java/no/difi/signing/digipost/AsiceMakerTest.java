@@ -10,8 +10,8 @@ import no.digipost.signature.client.asice.DocumentBundle;
 import org.junit.Assert;
 import org.testng.annotations.Test;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -26,16 +26,16 @@ public class AsiceMakerTest {
     private TypesafeDocumentConfig documentConfig;
 
     @Test
-    public void defaultSignableDocumentNotNull() throws URISyntaxException {
-        AsiceMaker asiceMaker = new AsiceMaker();
-        File file = asiceMaker.getDokumentTilSignering();
+    public void defaultSignableDocumentNotNull() throws URISyntaxException, IOException {
+        AsiceMaker asiceMaker = new AsiceMaker("document1");
+        InputStream file = asiceMaker.getDokumentTilSignering();
         Assert.assertNotNull(file);
     }
 
     @Test
-    public void findsFileAtGivenPath() throws URISyntaxException {
-        AsiceMaker asiceMaker = new AsiceMaker();
-        File file = asiceMaker.getDokumentTilSignering();
+    public void findsFileAtGivenPath() throws URISyntaxException, IOException {
+        AsiceMaker asiceMaker = new AsiceMaker("document1");
+        InputStream file = asiceMaker.getDokumentTilSignering();
         Assert.assertNotNull(file);
     }
 
@@ -52,7 +52,7 @@ public class AsiceMakerTest {
 
         this.documentConfigProvider = new TypesafeDocumentConfigProvider(configFile);
         this.documentConfig = documentConfigProvider.getByEmail("eulverso2@gmail.com");
-        AsiceMaker asiceMaker = new AsiceMaker();
+        AsiceMaker asiceMaker = new AsiceMaker("document1");
         SetupClientConfig clientConfig = new SetupClientConfig("Direct");
         clientConfig.initialize(asiceMaker.getContactInfo(), documentConfig.getSender());
 

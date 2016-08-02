@@ -12,6 +12,7 @@ import org.hibernate.validator.constraints.URL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -177,6 +178,30 @@ public class DigipostSpringConnector {
         }
         return "Unable to fetch Xade".getBytes();
         // status was either REJECTED or FAILED, XAdES and PAdES are not available.
+    }
+
+
+    @RequestMapping("/sign/{documentToken}")
+    public ModelAndView sendDocumentToSigningservice(@PathVariable("documentToken") String documentToken) throws URISyntaxException, CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException, IOException {
+        setupConfig();
+        AsiceMaker asiceMaker = new AsiceMaker(documentToken);
+        System.out.println(documentConfig.getSender());
+        System.out.println(documentConfig.getSigner());
+        s = new SignatureJobModel("Ikke signert", documentConfig.getSender(), documentConfig.getSigner(), senderPid);
+        storage.insertSignaturejobToDB(s);
+
+        SetupClientConfig clientConfig = new SetupClientConfig("Direct");
+
+        clientConfig.initialize(asiceMaker.getContactInfo(),documentConfig.getSender());
+        asiceMaker.createAsice(s.getSigner(), s.getSender(), exitUrls, clientConfig.getClientConfiguration());
+
+        SignatureJob signatureJob = asiceMaker.getSignatureJob();
+        KeyStoreConfig keyStoreConfig = clientConfig.getKeyStoreConfig();
+
+        this.signingServiceConnector = new SigningServiceConnector();
+        signingServiceConnector.sendRequest(signatureJob, keyStoreConfig);
+
+        return new ModelAndView("redirect:" + signingServiceConnector.getRedirectUrl());
     }
 
 
