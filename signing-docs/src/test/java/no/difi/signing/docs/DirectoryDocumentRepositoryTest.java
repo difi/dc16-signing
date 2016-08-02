@@ -14,7 +14,7 @@ public class DirectoryDocumentRepositoryTest extends AbstractTestNGSpringContext
     @Autowired
     private DocumentRepository documentRepository;
 
-    @Test(groups = "ide")
+    @Test
     public void simple() {
         Assert.assertNotNull(documentRepository);
 

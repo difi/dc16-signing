@@ -22,11 +22,11 @@
         <dependency>
             <groupId>no.difi.signing</groupId>
             <artifactId>signing-docs</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>no.difi.signing</groupId>
-            <artifactId>signing-mockserver</artifactId>
-            <scope>test</scope>
+            <artifactId>signing-test</artifactId>
         </dependency>
 
         <!-- Signature API -->

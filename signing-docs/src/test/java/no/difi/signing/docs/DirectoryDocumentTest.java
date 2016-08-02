@@ -10,7 +10,7 @@ import java.nio.file.Path;
 
 public class DirectoryDocumentTest {
 
-    @Test(groups = "ide")
+    @Test
     public void simple() throws URISyntaxException {
         Path path = new File(getClass().getResource("/docs/document1.conf").toURI()).toPath();
         Document document = new DirectoryDocument(path);

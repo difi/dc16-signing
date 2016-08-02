@@ -17,10 +17,6 @@
         <!-- Signing -->
         <dependency>
             <groupId>no.difi.signing</groupId>
-            <artifactId>signing-docs</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.difi.signing</groupId>
             <artifactId>signing-digipost</artifactId>
         </dependency>
         <dependency>
@@ -28,10 +24,6 @@
             <artifactId>signing-database</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>no.difi.signing</groupId>
-            <artifactId>signing-mockserver</artifactId>
-        </dependency>
         <dependency>
             <groupId>no.difi.signing</groupId>
             <artifactId>signing-test</artifactId>
