@@ -17,7 +17,7 @@
         <!-- Signing -->
         <dependency>
             <groupId>no.difi.signing</groupId>
-            <artifactId>signing-spring</artifactId>
+            <artifactId>signing-server</artifactId>
         </dependency>
         <dependency>
             <groupId>no.difi.signing</groupId>

@@ -1,5 +1,7 @@
 package no.difi.signing.api;
 
+import com.google.common.io.ByteStreams;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -19,4 +21,9 @@ public interface Document {
      */
     InputStream getInputStream() throws IOException;
 
+    default byte[] getByteArray() throws IOException {
+        try (InputStream inputStream = getInputStream()) {
+            return ByteStreams.toByteArray(inputStream);
+        }
+    }
 }

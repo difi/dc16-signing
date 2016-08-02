@@ -21,7 +21,7 @@
         </dependency>
         <dependency>
             <groupId>no.difi.signing</groupId>
-            <artifactId>signing-config</artifactId>
+            <artifactId>signing-docs</artifactId>
         </dependency>
         <dependency>
             <groupId>no.difi.signing</groupId>
