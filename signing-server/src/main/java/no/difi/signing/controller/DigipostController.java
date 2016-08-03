@@ -15,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Optional;
 
 @Controller
@@ -32,12 +34,16 @@ public class DigipostController {
     @Autowired
     private SignatureRepository signatureRepository;
 
+    @Autowired
+    private HttpServletRequest httpServletRequest;
+
+
     @RequestMapping("/completion")
     public String onCompletion(@RequestParam("conversation") String conversationId,
-                               @RequestParam("status_query_token") String queryToken) throws SigningException{
+                               @RequestParam("status_query_token") String queryToken) throws IOException, SigningException {
         logger.info("[{}] Returned to 'completion'.", conversationId);
 
-        Conversation conversation = conversationRepository.findByIdentifier(conversationId);
+        Conversation conversation = getConversation(conversationId);
 
         Document document = documentRepository.findByToken(conversation.getDocumentToken());
         Signature signature = conversation.toSignature();
@@ -51,17 +57,35 @@ public class DigipostController {
 
         Optional<String> redirectUri = Optional.ofNullable(conversation.getRedirectUri());
         redirectUri = redirectUri.map(s -> String.format("%s%ssignature=%s", s, s.contains("?") ? "&" : "?", signature.getIdentifier()));
-
         return String.format("redirect:%s", redirectUri.orElse("/overview"));
     }
 
     @RequestMapping("/rejection")
-    public void onRejection(@RequestParam("conversation") String conversationId) {
+    public String onRejection(@RequestParam("conversation") String conversationId) throws SigningException {
+        logger.info("[{}] Returned to 'rejection'.", conversationId);
 
+        Conversation conversation = getConversation(conversationId);
+        conversationRepository.delete(conversation);
+
+        Optional<String> redirectUri = Optional.ofNullable(conversation.getRedirectUri());
+        return String.format("redirect:%s", redirectUri.orElse("/overview"));
     }
 
     @RequestMapping("/error")
-    public void onError(@RequestParam("conversation") String conversationId) {
+    public String onError(@RequestParam("conversation") String conversationId) throws SigningException {
+        logger.info("[{}] Returned to 'error'.", conversationId);
 
+        Conversation conversation = getConversation(conversationId);
+        conversationRepository.delete(conversation);
+
+        Optional<String> redirectUri = Optional.ofNullable(conversation.getRedirectUri());
+        return String.format("redirect:%s", redirectUri.orElse("/overview"));
+    }
+
+    private Conversation getConversation(String conversationId) throws SigningException {
+        return Optional.ofNullable(conversationRepository.findByIdentifier(conversationId))
+                // Make sure pid is the same when returning as when initiating signing.
+                .filter(c -> c.getPid().equals(httpServletRequest.getHeader("X-DifiProxy-pid")))
+                .orElseThrow(() -> new SigningException(String.format("Unable to find conversation '%s'.", conversationId)));
     }
 }
