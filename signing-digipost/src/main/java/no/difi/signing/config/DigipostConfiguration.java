@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+import java.net.URI;
+
 @Configuration
 @PropertySource("classpath:digipost.properties")
 @SuppressWarnings("all")
@@ -30,7 +32,8 @@ public class DigipostConfiguration {
     @Bean
     public ClientConfiguration getClientConfiguration() {
         return ClientConfiguration.builder(keyStoreConfig)
-                .serviceUri(serviceUri)
+                .serviceUri(URI.create("http://localhost:8082/"))
+                //.serviceUri(serviceUri)
                 .trustStore(certificates)
                 .globalSender(new Sender(sender))
                 .build();
