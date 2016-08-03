@@ -14,8 +14,8 @@ RUN cd $MAVEN_HOME \
 ONBUILD ADD . /signing/docs
 
 ONBUILD VOLUME /signing/conf
+ONBUILD VOLUME /singing/storage
 
 ONBUILD EXPOSE 8080
-ONBUILD EXPOSE 8081
 
-ONBUILD ENTRYPOINT ["sh", "/signing/bin/run.sh"]
+ONBUILD CMD ["sh", "/signing/bin/run.sh"]

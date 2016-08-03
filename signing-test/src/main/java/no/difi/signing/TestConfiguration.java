@@ -15,4 +15,9 @@ public class TestConfiguration {
     public Path getDocsPath() throws URISyntaxException {
         return new File(getClass().getResource("/.index").toURI()).toPath().getParent().resolve("docs");
     }
+
+    @Bean(name = "storage")
+    public Path getStoragePath() throws URISyntaxException {
+        return new File(getClass().getResource("/.index").toURI()).toPath().getParent().resolve("storage");
+    }
 }
