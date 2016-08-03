@@ -2,4 +2,4 @@
 
 cd %0\..\..
 
-java -classpath .;lib/*;conf ApplicationMain %*
+java -classpath .;lib/*;conf no.difi.signing.ApplicationMain %*

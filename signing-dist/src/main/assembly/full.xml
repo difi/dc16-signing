@@ -18,7 +18,7 @@
         <dependencySet>
             <outputDirectory>lib</outputDirectory>
             <excludes>
-                <exclude>no.difi.idporten.signing:signing-dist</exclude>
+                <exclude>no.difi.signing:signing-dist</exclude>
             </excludes>
         </dependencySet>
     </dependencySets>

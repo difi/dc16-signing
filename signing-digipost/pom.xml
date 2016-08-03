@@ -3,42 +3,41 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>signing</artifactId>
-        <groupId>no.difi.idporten.signing</groupId>
+        <groupId>no.difi.signing</groupId>
+        <artifactId>signing-parent</artifactId>
         <version>0.1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>signing-digipost</artifactId>
 
+    <name>Signing :: Digipost</name>
+
     <dependencies>
+        <!-- Signing -->
+        <dependency>
+            <groupId>no.difi.signing</groupId>
+            <artifactId>signing-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.difi.signing</groupId>
+            <artifactId>signing-docs</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.difi.signing</groupId>
+            <artifactId>signing-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.difi.signing</groupId>
+            <artifactId>signing-database</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Signature API -->
         <dependency>
             <groupId>no.digipost.signature</groupId>
             <artifactId>signature-api-client-java</artifactId>
-        </dependency>
-
-        <!-- Wiremock -->
-        <dependency>
-            <groupId>com.github.tomakehurst</groupId>
-            <artifactId>wiremock</artifactId>
-            <version>RELEASE</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Signing -->
-        <dependency>
-            <groupId>no.difi.idporten.signing</groupId>
-            <artifactId>signing-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.difi.idporten.signing</groupId>
-            <artifactId>signing-mockserver</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.difi.idporten.signing</groupId>
-            <artifactId>signing-config</artifactId>
         </dependency>
 
         <!-- Guava -->
@@ -46,22 +45,6 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
-        <dependency>
-            <groupId>no.difi.idporten.signing</groupId>
-            <artifactId>signing-docs</artifactId>
-        </dependency>
-
-        <!-- Logging -->
-        <!-- <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>log4j-over-slf4j</artifactId>
-            <version>1.7.21</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.21</version>
-        </dependency> -->
     </dependencies>
 
 </project>
