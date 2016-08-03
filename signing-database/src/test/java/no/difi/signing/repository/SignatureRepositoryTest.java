@@ -19,6 +19,7 @@ public class SignatureRepositoryTest extends AbstractTestNGSpringContextTests {
     @Test
     public void simple() {
         Signature signature = Signature.newInstance();
+        signature.setId(0);
         signature.setPid("12345678901234");
         signature.setDocumentTitle("Document 1");
         signature.setDocumentToken("document1");
@@ -27,7 +28,16 @@ public class SignatureRepositoryTest extends AbstractTestNGSpringContextTests {
 
         signatureRepository.save(signature);
 
-        Assert.assertNotNull(signatureRepository.findByIdentifier(signature.getIdentifier()));
+        Signature freshSignature = signatureRepository.findByIdentifier(signature.getIdentifier());
+
+        Assert.assertNotNull(freshSignature);
+
+        Assert.assertTrue(freshSignature.getId() != 0);
+        Assert.assertEquals(freshSignature.getPid(), "12345678901234");
+        Assert.assertEquals(freshSignature.getDocumentTitle(), "Document 1");
+        Assert.assertEquals(freshSignature.getDocumentToken(), "document1");
+        Assert.assertEquals(freshSignature.getDocumentVersion(), "1");
+        Assert.assertNotNull(freshSignature.getTimestamp());
     }
 
 }

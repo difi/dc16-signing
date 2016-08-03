@@ -26,6 +26,8 @@ public class Conversation implements ConversationStub {
 
     private String identifier;
 
+    private String pid;
+
     private String documentToken;
     private String redirectUri;
 
@@ -50,6 +52,14 @@ public class Conversation implements ConversationStub {
 
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
+    }
+
+    public String getPid() {
+        return pid;
+    }
+
+    public void setPid(String pid) {
+        this.pid = pid;
     }
 
     public String getDocumentToken() {
