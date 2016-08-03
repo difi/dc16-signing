@@ -41,6 +41,7 @@ public class TestApplication {
 
     @Test(groups = "manual")
     public void runWithProxy() throws Exception {
+
         SpringApplication.run(TestApplication.class);
 
         Guice.createInjector(new ArrayList<Module>() {{

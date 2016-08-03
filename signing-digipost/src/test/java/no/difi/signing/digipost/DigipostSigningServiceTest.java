@@ -55,4 +55,9 @@ public class DigipostSigningServiceTest extends AbstractTestNGSpringContextTests
         Assert.assertEquals(rederictUrl, "http://localhost:8082/mockSigning.html");
     }
 
+    @Test
+    public void fetchSignedResources_initiates_jobResponse(){
+
+    }
+
 }
