@@ -28,6 +28,11 @@
             <groupId>no.difi.signing</groupId>
             <artifactId>signing-test</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.difi.signing</groupId>
+            <artifactId>signing-database</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Signature API -->
         <dependency>

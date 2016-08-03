@@ -1,5 +1,6 @@
 package no.difi.signing.digipost;
 
+import no.difi.signing.api.ConversationStub;
 import no.difi.signing.api.Document;
 import no.difi.signing.api.SigningService;
 import no.digipost.signature.client.direct.*;
@@ -10,9 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 @Service
 public class DigipostSigningService implements SigningService {
@@ -29,25 +27,25 @@ public class DigipostSigningService implements SigningService {
     @Autowired
     private DirectClient directClient;
 
-    private Map<String, DirectJobResponse> jobResponseMap = new HashMap<>();
-
     @Override
-    public String initiateSigning(String conversationId, Document document, String pid) throws IOException {
+    public String initiateSigning(ConversationStub conversation, Document document, String pid) throws IOException {
         logger.info("Initiate document '{}' for '{}'.", document.getToken(), pid);
 
         DirectDocument directDocument = DirectDocument.builder(document.getTitle(), String.format("%s.pdf", document.getToken()), document.getByteArray()).build();
         DirectSigner signer = DirectSigner.builder(pid).build();
         DirectJob directJob = new DirectJob.Builder(signer, directDocument,
-                uriWithConversationId(uriCompletion, conversationId),
-                uriWithConversationId(uriRejection, conversationId),
-                uriWithConversationId(uriError, conversationId)).build();
+                uriWithConversationId(uriCompletion, conversation.getIdentifier()),
+                uriWithConversationId(uriRejection, conversation.getIdentifier()),
+                uriWithConversationId(uriError, conversation.getIdentifier())).build();
         DirectJobResponse response = directClient.create(directJob);
 
         if (response == null) {
             logger.info("Unable to initiate job.");
             return null;
         } else {
-            jobResponseMap.put(conversationId, response);
+            conversation.setDigipostSignatureJobId(response.getSignatureJobId());
+            conversation.setDigipostRedirectUrl(response.getRedirectUrl());
+            conversation.setDigipostStatusUrl(response.getStatusUrl());
 
             logger.info("Status url: {}", response.getStatusUrl());
             return response.getRedirectUrl();
@@ -55,9 +53,14 @@ public class DigipostSigningService implements SigningService {
     }
 
     @Override
-    public void fetchSignedResources(String conversationId, String queryToken) {
+    public void fetchSignedResources(ConversationStub conversation, String queryToken) {
+        DirectJobResponse response = new DirectJobResponse(
+                conversation.getDigipostSignatureJobId(),
+                conversation.getDigipostRedirectUrl(),
+                conversation.getDigipostStatusUrl());
+
         DirectJobStatusResponse directJobStatusResponse = directClient
-                .getStatus(StatusReference.of(jobResponseMap.get(conversationId)).withStatusQueryToken(queryToken));
+                .getStatus(StatusReference.of(response).withStatusQueryToken(queryToken));
 
         logger.info("{}", directJobStatusResponse);
     }

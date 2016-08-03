@@ -4,6 +4,8 @@ import no.difi.signing.TestApplication;
 import no.difi.signing.api.Document;
 import no.difi.signing.api.DocumentRepository;
 import no.difi.signing.mock.DigipostServerMock;
+import no.difi.signing.model.Conversation;
+import no.difi.signing.repository.ConversationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -46,11 +48,11 @@ public class DigipostSigningServiceTest extends AbstractTestNGSpringContextTests
 
     @Test
     public void inititatSigning_returns_redirectUrl() throws IOException {
-        String conversationId = UUID.randomUUID().toString();
+        Conversation conversation = Conversation.newInstance();
         Document document = documentRepository.findByToken("document1");
         String pid = "17079493538";
 
-        String rederictUrl = digipostSigningService.initiateSigning(conversationId, document, pid);
+        String rederictUrl = digipostSigningService.initiateSigning(conversation, document, pid);
 
         Assert.assertEquals(rederictUrl, "http://localhost:8082/mockSigning.html");
     }

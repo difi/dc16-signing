@@ -4,8 +4,8 @@ import java.io.IOException;
 
 public interface SigningService {
 
-    String initiateSigning(String conversationId, Document document, String pid) throws IOException;
+    String initiateSigning(ConversationStub conversation, Document document, String pid) throws IOException;
 
-    void fetchSignedResources(String conversationId, String queryToken);
+    void fetchSignedResources(ConversationStub conversation, String queryToken);
 
 }
