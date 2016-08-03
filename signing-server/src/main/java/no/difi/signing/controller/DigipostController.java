@@ -1,8 +1,12 @@
 package no.difi.signing.controller;
 
+import no.difi.signing.api.Document;
+import no.difi.signing.api.DocumentRepository;
 import no.difi.signing.api.SigningService;
 import no.difi.signing.model.Conversation;
+import no.difi.signing.model.Signature;
 import no.difi.signing.repository.ConversationRepository;
+import no.difi.signing.repository.SignatureRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +27,26 @@ public class DigipostController {
     @Autowired
     private ConversationRepository conversationRepository;
 
+    @Autowired
+    private DocumentRepository documentRepository;
+
+    @Autowired
+    private SignatureRepository signatureRepository;
+
     @RequestMapping("/completion")
     @ResponseBody
     public String onCompletion(@RequestParam("conversation") String conversationId, @RequestParam("status_query_token") String queryToken) {
         Conversation conversation = conversationRepository.findByIdentifier(conversationId);
 
+        Document document = documentRepository.findByToken(conversation.getDocumentToken());
+        Signature signature = conversation.toSignature();
+        signature.setDocumentTitle(document.getTitle());
+        signature.setDocumentVersion(document.getVersion());
+
         signingService.fetchSignedResources(conversation, queryToken);
+
+        signatureRepository.save(signature);
+        conversationRepository.delete(conversation);
 
         return String.format("QueryToken: %s", queryToken);
     }

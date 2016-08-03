@@ -115,4 +115,14 @@ public class Conversation implements ConversationStub {
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
+
+    public Signature toSignature(){
+        Signature signature = new Signature();
+        signature.setIdentifier(identifier);
+        signature.setTimestamp(new Date());
+        signature.setPid(pid);
+        signature.setDocumentToken(documentToken);
+
+        return Signature.newInstance();
+    }
 }
