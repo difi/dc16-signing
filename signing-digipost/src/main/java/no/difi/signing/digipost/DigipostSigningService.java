@@ -29,14 +29,15 @@ public class DigipostSigningService implements SigningService {
 
     @Override
     public String initiateSigning(ConversationStub conversation, Document document, String pid) throws IOException {
-        logger.info("Initiate document '{}' for '{}'.", document.getToken(), pid);
+        logger.info("[{}] Initiate document '{}' for '{}'.", conversation.getIdentifier(), document.getToken(), pid);
 
-        DirectDocument directDocument = DirectDocument.builder(document.getTitle(), String.format("%s.pdf", document.getToken()), document.getByteArray()).build();
+        DirectDocument directDocument = DirectDocument.builder(
+                document.getTitle(), String.format("%s.pdf", document.getToken()), document.getByteArray()).build();
         DirectSigner signer = DirectSigner.builder(pid).build();
         DirectJob directJob = new DirectJob.Builder(signer, directDocument,
-                uriWithConversationId(uriCompletion, conversation.getIdentifier()),
-                uriWithConversationId(uriRejection, conversation.getIdentifier()),
-                uriWithConversationId(uriError, conversation.getIdentifier())).build();
+                uriWithConversationId(uriCompletion, conversation),
+                uriWithConversationId(uriRejection, conversation),
+                uriWithConversationId(uriError, conversation)).build();
         DirectJobResponse response = directClient.create(directJob);
 
         if (response == null) {
@@ -59,13 +60,13 @@ public class DigipostSigningService implements SigningService {
                 conversation.getDigipostRedirectUrl(),
                 conversation.getDigipostStatusUrl());
 
-        DirectJobStatusResponse directJobStatusResponse = directClient
-                .getStatus(StatusReference.of(response).withStatusQueryToken(queryToken));
+        DirectJobStatusResponse directJobStatusResponse =
+                directClient.getStatus(StatusReference.of(response).withStatusQueryToken(queryToken));
 
-        logger.info("{}", directJobStatusResponse);
+        logger.info("[{}] {}", conversation.getIdentifier(), directJobStatusResponse);
     }
 
-    private String uriWithConversationId(String uri, String conversationId) {
-        return String.format("%s?conversation=%s", uri, conversationId);
+    private String uriWithConversationId(String uri, ConversationStub conversation) {
+        return String.format("%s?conversation=%s", uri, conversation.getIdentifier());
     }
 }

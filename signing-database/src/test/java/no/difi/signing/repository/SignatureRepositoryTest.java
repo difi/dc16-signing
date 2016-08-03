@@ -24,7 +24,7 @@ public class SignatureRepositoryTest extends AbstractTestNGSpringContextTests {
         signature.setDocumentTitle("Document 1");
         signature.setDocumentToken("document1");
         signature.setDocumentVersion("1");
-        signature.setTimestamp(new Date());
+        signature.setTag("test");
 
         signatureRepository.save(signature);
 
@@ -37,6 +37,7 @@ public class SignatureRepositoryTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(freshSignature.getDocumentTitle(), "Document 1");
         Assert.assertEquals(freshSignature.getDocumentToken(), "document1");
         Assert.assertEquals(freshSignature.getDocumentVersion(), "1");
+        Assert.assertEquals(freshSignature.getTag(), "test");
         Assert.assertNotNull(freshSignature.getTimestamp());
     }
 

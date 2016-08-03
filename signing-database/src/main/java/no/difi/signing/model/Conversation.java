@@ -27,6 +27,7 @@ public class Conversation implements ConversationStub {
     private String identifier;
 
     private String pid;
+    private String tag;
 
     private String documentToken;
     private String redirectUri;
@@ -60,6 +61,14 @@ public class Conversation implements ConversationStub {
 
     public void setPid(String pid) {
         this.pid = pid;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     public String getDocumentToken() {
@@ -118,11 +127,12 @@ public class Conversation implements ConversationStub {
 
     public Signature toSignature(){
         Signature signature = new Signature();
-        signature.setIdentifier(identifier);
+        signature.setIdentifier(getIdentifier());
         signature.setTimestamp(new Date());
-        signature.setPid(pid);
-        signature.setDocumentToken(documentToken);
+        signature.setPid(getPid());
+        signature.setDocumentToken(getDocumentToken());
+        signature.setTag(getTag());
 
-        return Signature.newInstance();
+        return signature;
     }
 }

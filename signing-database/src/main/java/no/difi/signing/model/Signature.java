@@ -24,6 +24,8 @@ public class Signature {
     private String identifier;
 
     private String pid;
+    private String tag;
+
     private String documentToken;
     private String documentTitle;
     private String documentVersion;
@@ -52,6 +54,14 @@ public class Signature {
 
     public void setPid(String pid) {
         this.pid = pid;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     public String getDocumentToken() {

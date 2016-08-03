@@ -11,4 +11,6 @@ public interface SignatureRepository extends CrudRepository<Signature, Long> {
 
     List<Signature> findByPid(String pid);
 
+    List<Signature> findByTag(String tag);
+
 }
