@@ -13,7 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/digipost")
@@ -23,19 +24,18 @@ public class DigipostController {
 
     @Autowired
     private SigningService signingService;
-
     @Autowired
     private ConversationRepository conversationRepository;
-
     @Autowired
     private DocumentRepository documentRepository;
-
     @Autowired
     private SignatureRepository signatureRepository;
 
     @RequestMapping("/completion")
-    @ResponseBody
-    public String onCompletion(@RequestParam("conversation") String conversationId, @RequestParam("status_query_token") String queryToken) {
+    public String onCompletion(@RequestParam("conversation") String conversationId,
+                               @RequestParam("status_query_token") String queryToken) {
+        logger.info("[{}] Returned to 'completion'.", conversationId);
+
         Conversation conversation = conversationRepository.findByIdentifier(conversationId);
 
         Document document = documentRepository.findByToken(conversation.getDocumentToken());
@@ -48,7 +48,10 @@ public class DigipostController {
         signatureRepository.save(signature);
         conversationRepository.delete(conversation);
 
-        return String.format("QueryToken: %s", queryToken);
+        Optional<String> redirectUri = Optional.ofNullable(conversation.getRedirectUri());
+        redirectUri = redirectUri.map(s -> String.format("%s%ssignature=%s", s, s.contains("?") ? "&" : "?", signature.getIdentifier()));
+
+        return String.format("redirect:%s", redirectUri.orElse("/overview"));
     }
 
     @RequestMapping("/rejection")
@@ -60,5 +63,4 @@ public class DigipostController {
     public void onError(@RequestParam("conversation") String conversationId) {
 
     }
-
 }

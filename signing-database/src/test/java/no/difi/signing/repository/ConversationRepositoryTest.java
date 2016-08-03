@@ -2,6 +2,7 @@ package no.difi.signing.repository;
 
 import no.difi.signing.TestApplication;
 import no.difi.signing.model.Conversation;
+import no.difi.signing.model.Signature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -24,6 +25,7 @@ public class ConversationRepositoryTest extends AbstractTestNGSpringContextTests
         conversation.setDigipostSignatureJobId(1337);
         conversation.setDigipostRedirectUrl("http://digipost");
         conversation.setDigipostStatusUrl("http://status");
+        conversation.setTag("test");
 
         conversationRepository.save(conversation);
 
@@ -39,6 +41,23 @@ public class ConversationRepositoryTest extends AbstractTestNGSpringContextTests
         Assert.assertEquals(freshConversation.getDigipostSignatureJobId(), 1337);
         Assert.assertEquals(freshConversation.getDigipostRedirectUrl(), "http://digipost");
         Assert.assertEquals(freshConversation.getDigipostStatusUrl(), "http://status");
+        Assert.assertEquals(freshConversation.getTag(), "test");
         Assert.assertNotNull(freshConversation.getTimestamp());
+    }
+
+    @Test
+    public void toSignature() {
+        Conversation conversation = Conversation.newInstance();
+        conversation.setPid("12345678901234");
+        conversation.setDocumentToken("document1");
+        conversation.setTag("test");
+
+        Signature signature = conversation.toSignature();
+
+        Assert.assertNotNull(signature.getIdentifier());
+        Assert.assertNotNull(signature.getTimestamp());
+        Assert.assertEquals(signature.getPid(), "12345678901234");
+        Assert.assertEquals(signature.getDocumentToken(), "document1");
+        Assert.assertEquals(signature.getTag(), "test");
     }
 }
