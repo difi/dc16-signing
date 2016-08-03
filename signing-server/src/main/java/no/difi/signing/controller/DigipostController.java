@@ -3,6 +3,7 @@ package no.difi.signing.controller;
 import no.difi.signing.api.Document;
 import no.difi.signing.api.DocumentRepository;
 import no.difi.signing.api.SigningService;
+import no.difi.signing.lang.SigningException;
 import no.difi.signing.model.Conversation;
 import no.difi.signing.model.Signature;
 import no.difi.signing.repository.ConversationRepository;
@@ -33,7 +34,7 @@ public class DigipostController {
 
     @RequestMapping("/completion")
     public String onCompletion(@RequestParam("conversation") String conversationId,
-                               @RequestParam("status_query_token") String queryToken) {
+                               @RequestParam("status_query_token") String queryToken) throws SigningException{
         logger.info("[{}] Returned to 'completion'.", conversationId);
 
         Conversation conversation = conversationRepository.findByIdentifier(conversationId);

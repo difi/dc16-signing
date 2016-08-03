@@ -3,6 +3,7 @@ package no.difi.signing.controller;
 import no.difi.signing.api.Document;
 import no.difi.signing.api.DocumentRepository;
 import no.difi.signing.api.SigningService;
+import no.difi.signing.lang.SigningException;
 import no.difi.signing.model.Conversation;
 import no.difi.signing.repository.ConversationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,8 @@ public class SignController {
     private ConversationRepository conversationRepository;
 
     @RequestMapping("/{token}")
-    public String home(@PathVariable String token, @RequestParam(required = false) String redirectUri, @RequestParam(required = false) String tag) throws IOException {
+    public String home(@PathVariable String token, @RequestParam(required = false) String redirectUri,
+                       @RequestParam(required = false) String tag) throws IOException, SigningException {
         // Initiate conversation.
         Conversation conversation = Conversation.newInstance();
         conversation.setRedirectUri(redirectUri);

@@ -2,6 +2,7 @@ package no.difi.signing.docs;
 
 import no.difi.signing.api.Document;
 import no.difi.signing.api.DocumentRepository;
+import no.difi.signing.lang.SigningException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -39,7 +40,10 @@ public class DirectoryDocumentRepository implements DocumentRepository {
     }
 
     @Override
-    public Document findByToken(String token) {
+    public Document findByToken(String token) throws SigningException {
+        if (!documentMap.containsKey(token))
+            throw new SigningException(String.format("Document '%s' not found.", token));
+
         return documentMap.get(token);
     }
 
