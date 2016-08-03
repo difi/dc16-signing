@@ -29,6 +29,17 @@
             <artifactId>signing-test</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>no.difi.signing</groupId>
+            <artifactId>signing-docs</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>no.difi.signing</groupId>
+            <artifactId>signing-digipost</artifactId>
+        </dependency>
+
         <!-- Proxy -->
         <dependency>
             <groupId>com.github.difi.dc16-oidc-proxy</groupId>

@@ -48,11 +48,11 @@ public class DigipostServerMock {
                         .withHeader(HttpHeader.CONTENT_TYPE.toString(), "application/xml")
                         .withBody(ByteStreams.toByteArray(getClass().getResourceAsStream("/mockfiles/xAdES.xml")))));
 
-        wireMockServer.stubFor(get(urlPathMatching(".*/portal/signature-jobs/1/cancel"))
+        wireMockServer.stubFor(get(urlPathMatching(".*/direct/signature-jobs/1/cancel"))
                 .willReturn(aResponse().withHeader(HttpHeader.CONTENT_TYPE.toString(), "text/html")
                         .withBody("cancelled")));
 
-        wireMockServer.stubFor(get(urlPathMatching(".*/portal/signature-jobs/1/complete"))
+        wireMockServer.stubFor(get(urlPathMatching(".*/direct/signature-jobs/1/complete"))
                 .willReturn(aResponse().withHeader(HttpHeader.CONTENT_TYPE.toString(), "text/html")
                         .withBody("completed")));
 

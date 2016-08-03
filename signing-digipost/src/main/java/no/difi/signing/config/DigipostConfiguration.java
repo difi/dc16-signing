@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+import java.net.URI;
+
 @Configuration
 @PropertySource("classpath:digipost.properties")
 @SuppressWarnings("all")
@@ -20,7 +22,7 @@ public class DigipostConfiguration {
     @Value("${digipost.mode}")
     private Certificates certificates;
     @Value("${digipost.serviceUri}")
-    private ServiceUri serviceUri;
+    private String serviceUri;
     @Value("${digipost.sender}")
     private String sender;
 
@@ -29,11 +31,17 @@ public class DigipostConfiguration {
 
     @Bean
     public ClientConfiguration getClientConfiguration() {
-        return ClientConfiguration.builder(keyStoreConfig)
-                .serviceUri(serviceUri)
+        ClientConfiguration.Builder builder = ClientConfiguration.builder(keyStoreConfig)
                 .trustStore(certificates)
-                .globalSender(new Sender(sender))
-                .build();
+                .globalSender(new Sender(sender));
+
+        try {
+            builder.serviceUri(ServiceUri.valueOf(serviceUri));
+        } catch (IllegalArgumentException e) {
+            builder.serviceUri(URI.create(serviceUri));
+        }
+
+        return builder.build();
     }
 
     @Bean
