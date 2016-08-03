@@ -12,6 +12,7 @@ RUN cd $MAVEN_HOME \
  && rm -r $MAVEN_HOME
 
 ONBUILD ADD . /signing/docs
+ONBUILD RUN ["sh", "/signing/bin/prepare-docs.sh"]
 
 ONBUILD VOLUME /signing/conf
 ONBUILD VOLUME /singing/storage
