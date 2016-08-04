@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 
 @Controller
@@ -16,11 +17,14 @@ public class OverviewController {
     @Autowired
     private SignatureRepository signatureRepository;
 
+    @Autowired
+    private HttpServletRequest httpServletRequest;
+
     @RequestMapping("/overview")
     @ResponseBody
-    public ArrayList<Signature> viewSignatures(){
-        return Lists.newArrayList(signatureRepository.findAll());
-
+    public ArrayList<Signature> viewSignaturesByPid(){
+        String pid = httpServletRequest.getHeader("X-DifiProxy-pid");
+        return Lists.newArrayList(signatureRepository.findByPid(pid));
     }
 
 }
