@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html lang="no" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <title>Mine signaturer</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Mine signaturer</h1>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th style="width: 55%;">Dokument</th>
+            <th style="width: 10%;">Versjon</th>
+            <th style="width: 10%;">Tag</th>
+            <th style="width: 25%;">Tidspunkt</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="signature : ${signatures}">
+            <td th:text="${signature.documentTitle}">Mitt dokument</td>
+            <td th:text="${signature.documentVersion}">0</td>
+            <td th:text="${signature.tag}">test</td>
+            <td th:text="${#dates.format(signature.timestamp, 'dd MMM yyyy HH:mm')}">0000-00-00</td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>
