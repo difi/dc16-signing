@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 @SpringBootTest(classes = TestApplication.class)
@@ -29,7 +28,6 @@ public class OverviewControllerTest  extends AbstractTestNGSpringContextTests {
         signatureRepository.save(signature);
 
         OverviewController overviewController = new OverviewController();
-        ArrayList<Signature> s = overviewController.viewSignatures();
-//        System.out.println(overviewController.viewSignatures());
+
     }
 }
