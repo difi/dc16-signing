@@ -20,7 +20,6 @@ public class OverviewController {
     @Autowired
     private HttpServletRequest httpServletRequest;
 
-
     @RequestMapping("/overview")
     public String viewSignatures(ModelMap modelMap) throws SigningException {
         modelMap.put("signatures", signatureRepository.findByPid(httpServletRequest.getHeader("X-DifiProxy-pid")));
