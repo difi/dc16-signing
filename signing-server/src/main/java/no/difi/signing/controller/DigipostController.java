@@ -50,7 +50,7 @@ public class DigipostController {
         signature.setDocumentTitle(document.getTitle());
         signature.setDocumentVersion(document.getVersion());
 
-        signingService.fetchSignedResources(conversation, queryToken);
+        signingService.fetchSignedResources(conversation, queryToken, httpServletRequest.getHeader("X-DifiProxy-pid"));
 
         signatureRepository.save(signature);
         conversationRepository.delete(conversation);

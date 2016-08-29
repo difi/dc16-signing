@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * This is the class implementing functionality for Digipost as provider of a signing service.
@@ -50,7 +52,7 @@ public class DigipostSigningService implements SigningService {
         DirectSigner signer = DirectSigner.builder(pid).build();
 
         // Create signing job.
-        DirectJob directJob = new DirectJob.Builder(signer, directDocument,
+        DirectJob directJob = new DirectJob.Builder(Collections.singletonList(signer), directDocument,
                 uriWithConversationId(uriCompletion, conversation),
                 uriWithConversationId(uriRejection, conversation),
                 uriWithConversationId(uriError, conversation)).build();
@@ -61,20 +63,20 @@ public class DigipostSigningService implements SigningService {
 
         // Add relevant information to conversation until signing is completed.
         conversation.setDigipostSignatureJobId(response.getSignatureJobId());
-        conversation.setDigipostRedirectUrl(response.getRedirectUrl());
+        conversation.setDigipostRedirectUrl(response.getRedirectUrls().getFor(pid));
         conversation.setDigipostStatusUrl(response.getStatusUrl());
 
         logger.info("Status url: {}", response.getStatusUrl());
 
-        return response.getRedirectUrl();
+        return response.getRedirectUrls().getFor(pid);
     }
 
     @Override
-    public void fetchSignedResources(ConversationStub conversation, String queryToken) throws IOException, SigningException {
+    public void fetchSignedResources(ConversationStub conversation, String queryToken, String pid) throws IOException, SigningException {
         // Recreate DirectJobResponse to fetch status.
         DirectJobResponse response = new DirectJobResponse(
                 conversation.getDigipostSignatureJobId(),
-                conversation.getDigipostRedirectUrl(),
+                Collections.singletonList(new RedirectUrls.RedirectUrl(pid, conversation.getDigipostStatusUrl())),
                 conversation.getDigipostStatusUrl());
 
         // Fetch status
@@ -84,7 +86,7 @@ public class DigipostSigningService implements SigningService {
         logger.info("[{}] {}", conversation.getIdentifier(), directJobStatusResponse);
 
         // Make sure status is as expected.
-        if (!directJobStatusResponse.is(DirectJobStatus.SIGNED))
+        if (!directJobStatusResponse.is(DirectJobStatus.COMPLETED_SUCCESSFULLY))
             throw new SigningException(String.format("Received status '%s'.", directJobStatusResponse.getStatus()));
 
         // Initiate storage folder.
@@ -97,9 +99,9 @@ public class DigipostSigningService implements SigningService {
         }
 
         // Download XAdES resource.
-        try (OutputStream outputStream = Files.newOutputStream(jobPath.resolve("xades.xml"))) {
+        /* try (OutputStream outputStream = Files.newOutputStream(jobPath.resolve("xades.xml"))) {
             ByteStreams.copy(directClient.getXAdES(directJobStatusResponse.getxAdESUrl()), outputStream);
-        }
+        } */
 
         // Notify Digipost when resources are fetched.
         directClient.confirm(directJobStatusResponse);
