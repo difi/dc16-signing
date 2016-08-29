@@ -20,4 +20,5 @@ ONBUILD VOLUME /singing/storage
 
 ONBUILD EXPOSE 8080
 
+ONBUILD ENTRYPOINT []
 ONBUILD CMD ["sh", "/signing/bin/run.sh"]
