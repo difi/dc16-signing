@@ -5,6 +5,7 @@ ADD . $MAVEN_HOME
 RUN cd $MAVEN_HOME \
  && mvn -B clean package -Pdocker-build \
  && mv $MAVEN_HOME/target /signing \
+ && export DEBIAN_FRONTEND=noninteractive \
  && apt update \
  && apt install -y ruby \
  && gem install --no-ri --no-rdoc asciidoctor-pdf --pre \

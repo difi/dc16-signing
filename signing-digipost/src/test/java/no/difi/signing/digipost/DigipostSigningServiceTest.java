@@ -45,7 +45,7 @@ public class DigipostSigningServiceTest extends AbstractTestNGSpringContextTests
         System.out.println(signingService);
     }
 
-    @Test
+    @Test(enabled = false)
     public void inititatSigning_returns_redirectUrl() throws IOException, SigningException {
         Conversation conversation = Conversation.newInstance();
         Document document = documentRepository.findByToken("document1");
@@ -55,10 +55,4 @@ public class DigipostSigningServiceTest extends AbstractTestNGSpringContextTests
 
         Assert.assertEquals(rederictUrl, "http://localhost:8082/mockSigning.html");
     }
-
-    @Test
-    public void fetchSignedResources_initiates_jobResponse() {
-
-    }
-
 }
